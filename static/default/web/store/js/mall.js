@@ -80,7 +80,7 @@ function dr_select_cart(mid, fid, id) {
                 shadeClose: true,
                 shade: 0,
                 area: ['600px', '350px'],
-                btn: ['加入购物车', 'Cancel'],
+                btn: ['加入购物车', '取消'],
                 yes: function(index, layero){
                     var sku = $('#dr_sku_value').val();
                     if (!sku) {

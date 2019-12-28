@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Home extends \Phpcmf\Common
 {
@@ -132,8 +129,8 @@ class Home extends \Phpcmf\Common
                         }
                     }
                 }
-                $_left = 0; // 是否第一个分组菜单，0表示第一个
-                $_link = 0; // 是否第一个链接菜单，0表示第一个
+                $_left = 0; // 是否第一个分组菜单, 0表示第一个
+                $_link = 0; // 是否第一个链接菜单, 0表示第一个
                 $left_string = '';
                 $mleft_string = [];
                 !$first && $first = $tid;
@@ -235,7 +232,7 @@ class Home extends \Phpcmf\Common
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        '.implode($mleft_string, '<li class="divider"> </li>').'
+                        '.implode('<li class="divider"> </li>', $mleft_string).'
                     </ul>
                 </li>';
                 unset($top['left']);

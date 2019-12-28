@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="zh-cn" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="zh-cn" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
-<html lang="en">
+<html lang="zh-cn">
 <!--<![endif]-->
 <head>
     <meta charset="utf-8" />
@@ -57,16 +57,16 @@
                 <div class="page-header-top-index">
                     <div class="container">
                         <div class="page-top-index-left">
-                            <a href="{SITE_URL}"> Главная </a> <span>|</span>
-                            <a href="javascript:dr_pc_or_mobile('{$my_web_url}');">手机网站</a><span>|</span>
-                            <a href="{MEMBER_URL}">User Center</a>
+                            <a href="{SITE_URL}">网站首页</a> <span>|</span>
+                            <a href="javascript:dr_pc_or_mobile('{$my_web_url}');">手机网站</a> <span>|</span>
+                            <a href="{MEMBER_URL}">用户中心</a>
                         </div>
                         <div class="page-top-index-right">
                             {if dr_is_module('store')}
                             <a href="/index.php?s=store&c=cart">我的购物车（<b id="dr_cart_nums">0</b>）</a> <span>|</span>
                             <a href="/index.php?s=store&c=zhe">折扣商品</a> <span>|</span>
                             {/if}
-                            <a href="{MEMBER_URL}">User Center</a>
+                            <a href="{MEMBER_URL}">用户中心</a>
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                                             {/cache}
                                         </ul>
                                     </div>
-                                    <input type="text" placeholder="Search..." name="keyword" class="fc-search-keyword form-control">
+                                    <input type="text" placeholder="搜索内容..." name="keyword" class="fc-search-keyword form-control">
                                     <div class="input-group-btn">
                                         <button class="btn default" type="submit"> <i class="fa fa-search"></i> </button>
                                     </div>
@@ -133,7 +133,7 @@
                         <div class="hor-menu">
                             <ul class="nav navbar-nav">
                                 <li id="dr_nav_0" class="menu-dropdown classic-menu-dropdown {if $indexc}active{/if}">
-                                    <a href="{SITE_URL}" title="{SITE_TITLE}">Home</a>
+                                    <a href="{SITE_URL}" title="{SITE_TITLE}">首页</a>
                                 </li>
 
                                 <!--调用共享栏目-->

@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -200,7 +200,7 @@ class Member_paylog extends \Phpcmf\Table
 
         $i = 0;
         foreach ($data as $t) {
-            $rt = \Phpcmf\Service::M('member')->sendsms_text($t['phone'], dr_lang('您还有未付款的交易，请尽快付款；若已付，请忽略此消息'));
+            $rt = \Phpcmf\Service::M('member')->sendsms_text($t['phone'], dr_lang('您还有未付款的交易, 请尽快付款;若已付, 请忽略此消息'));
             if ($rt['code']) {
                 $i ++;
             }

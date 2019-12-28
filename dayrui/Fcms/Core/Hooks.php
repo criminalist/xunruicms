@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
@@ -23,7 +23,7 @@ class Hooks extends \CodeIgniter\Events\Events
         {
             return;
         }
-        require WEBPATH.'config/hooks.php';
+        require ROOTPATH.'config/hooks.php';
 
         self::on('pre_system', function () {
             while (\ob_get_level() > 0)

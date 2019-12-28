@@ -3,7 +3,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -17,8 +17,9 @@ class System_cache extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
 
-            !\Phpcmf\Service::L('Config')->file($file, '缓存配置文件')->to_require_one(\Phpcmf\Service::L('input')->post('data', true))
-            && $this->_json(0, dr_lang('配置文件写入失败'));
+            if (!\Phpcmf\Service::L('Config')->file($file, '缓存配置文件')->to_require_one(\Phpcmf\Service::L('input')->post('data'))) {
+                $this->_json(0, dr_lang('配置文件写入失败'));
+            }
 
             $site = \Phpcmf\Service::L('input')->post('site', true);
             foreach ($this->site_info as $sid => $t) {

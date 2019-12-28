@@ -50,15 +50,15 @@ class BaiduApi {
 
         $res = self::_https_json_data($url, '');
         if (!$res['code']) {
-            return dr_return_data(0, 'BaiduApiToken：'.$res['msg']);
+            return dr_return_data(0, 'BaiduApiToken:'.$res['msg']);
         } elseif ($res['data']['error']) {
-            return dr_return_data(0, 'BaiduApiToken：'.$res['data']['error'].'-'.$res['data']['error_description']);
+            return dr_return_data(0, 'BaiduApiToken:'.$res['data']['error'].'-'.$res['data']['error_description']);
         }
 
         $res['data']['endtime'] = SYS_TIME + 100000;
         $rt = \Phpcmf\Service::L('cache')->init('file')->save('baidu_api_access_token', $res['data'], 1000000);
         if (!$rt) {
-            return dr_return_data(0, 'BaiduApi AccessToken：/cache/temp/目录不可写，文件写入失败');
+            return dr_return_data(0, 'BaiduApi AccessToken:/cache/temp/目录不可写, 文件写入失败');
         }
 
         return dr_return_data(1, $res['data']['access_token']);
@@ -74,9 +74,9 @@ class BaiduApi {
         $url = $url.'?access_token='.$rt['msg'];
         $res = self::_https_json_data($url, $data, $is_gbk);
         if (!$res['code']) {
-            return dr_return_data(0, 'BaiduApiData：'.$res['msg']);
+            return dr_return_data(0, 'BaiduApiData:'.$res['msg']);
         } elseif ($res['data']['error_code']) {
-            return dr_return_data(0, 'BaiduApiData：'.$res['data']['error_code'].'-'.$res['data']['error_msg']);
+            return dr_return_data(0, 'BaiduApiData:'.$res['data']['error_code'].'-'.$res['data']['error_msg']);
         }
 
         return dr_return_data(1, '', $res['data']);

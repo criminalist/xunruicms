@@ -1,0 +1,2 @@
+SELECT count(*) as total
+FROM `xunruicms_member_scorelog`

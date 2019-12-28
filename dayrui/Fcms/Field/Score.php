@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -39,7 +36,7 @@ class Score extends \Phpcmf\Library\A_Field  {
         return $sql;
     }
 
-    // 测试字段是否被创建成功，默认成功为0，需要继承开发
+    // 测试字段是否被创建成功, 默认成功为0, 需要继承开发
     public function test_sql($tables, $field) {
 
         if (!$tables) {

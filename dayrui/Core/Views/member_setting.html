@@ -50,14 +50,14 @@
                             <label class="col-md-2 control-label">{dr_lang('登录超时时间')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[config][logintime]" value="{$data['config']['logintime']}" ></label>
-                                <span class="help-block">{dr_lang('单位秒，默认为86400秒，超时之后自动退出账号')}</span>
+                                <span class="help-block">{dr_lang('单位秒, 默认为86400秒, 超时之后自动退出账号')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('用户组拒绝审核理由')}</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" style="height:150px; width:100%;" name="data[config][verify_msg]">{$data['config']['verify_msg']}</textarea>
-                                <span class="help-block">{dr_lang('申请用户组时常用的拒绝审核理由，一行一个')}</span>
+                                <span class="help-block">{dr_lang('申请用户组时常用的拒绝审核理由, 一行一个')}</span>
                             </div>
                         </div>
                     </div>
@@ -158,6 +158,7 @@
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="username" {if @in_array('username', (array)$data.register.field)} checked{/if} /> {dr_lang('账号')} <span></span></label>
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="phone" {if @in_array('phone', (array)$data.register.field)} checked{/if} /> {dr_lang('手机号')} <span></span></label>
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="email" {if @in_array('email', (array)$data.register.field)} checked{/if} /> {dr_lang('邮箱')} <span></span></label>
+    								<label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="data[register][field][]" value="name" {if @in_array('name', (array)$data.register.field)} checked{/if} /> {dr_lang('姓名')} <span></span></label>
                                 </div>
                                 <span class="help-block">{dr_lang('至少选择一个字段或多个字段组合')}</span>
                             </div>
@@ -166,28 +167,28 @@
                             <label class="col-md-2 control-label">{dr_lang('用户姓名长度')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[register][cutname]" value="{intval($data['register']['cutname'])}" ></label>
-                                <span class="help-block">{dr_lang('用户姓名的最大长度，设置0表示不限制，最大设置100')}</span>
+                                <span class="help-block">{dr_lang('用户姓名的最大长度, 设置0表示不限制, 最大设置100')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('随机用户名前缀')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[register][unprefix]" value="{$data['register']['unprefix']}" ></label>
-                                <span class="help-block">{dr_lang('当注册字段没有选择"账号"时，系统会随机注册一个账号，格式为：前缀+随机用户名字符')}</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">{dr_lang('注册验证码')}</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" name="data[register][code]" value="1" {if $data['register']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
+                                <span class="help-block">{dr_lang('当注册字段没有选择"账号"时, 系统会随机注册一个账号, 格式为:前缀+随机用户名字符')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('注册短信验证')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[register][sms]" value="1" {if $data['register']['sms']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('注册字段必须包含手机号码才能使用此功能，用于手机短信验证码')}</span>
+                                <span class="help-block">{dr_lang('注册字段必须包含手机号码才能使用此功能, 用于手机短信验证码')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('注册图片验证码')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[register][code]" value="1" {if $data['register']['code']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('网页中的图片验证码')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -271,7 +272,7 @@
                                         <td>微信公众号</td>
                                         <td colspan="3">
 										{if dr_is_app('weixin')}<input type="checkbox" name="data[oauth][wechat][id]" value="1" {if $data['oauth']['wechat']['id']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-											&nbsp;用于关注微信公众号绑定账号使用{else}<font color="red">没有安装[微信]插件，无法使用此功能</font>{/if}</td>
+											&nbsp;用于关注微信公众号绑定账号使用{else}<font color="red">没有安装[微信]插件, 无法使用此功能</font>{/if}</td>
                                     </tr>
                                     </tbody>
                                 </table>

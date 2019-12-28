@@ -1,0 +1,6 @@
+SELECT *
+FROM `xunruicms_admin_login`
+WHERE `uid` = 1
+AND `id` = 1
+ORDER BY `logintime` desc
+ LIMIT 10

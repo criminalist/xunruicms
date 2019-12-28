@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -105,7 +105,7 @@ function dr_get_double_search($param, $value) {
 
     $arr = explode('|', $param);
     if (in_array($value, $arr)) {
-        // 如果存在，那么久移除他
+        // 如果存在, 那么久移除他
         $arr = array_merge(array_diff($arr, array($value)));
     } else {
         // 没有就加上
@@ -315,7 +315,7 @@ if (!function_exists('dr_domain_301')) {
         }
 
         if (IS_DEV) {
-            \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
+            \Phpcmf\Service::C()->_admin_msg(1, '开发者模式:正在做自动识别终端（关闭开发者模式时即可自动跳转）', $url);exit;
         }
 
         dr_redirect($url, 'auto', 301);exit;
@@ -401,7 +401,7 @@ function dr_cat_value(...$get) {
     }
 
     if (is_numeric($get[0]) && MOD_DIR) {
-        // 值是栏目id时，表示当前模块
+        // 值是栏目id时, 表示当前模块
         $name = 'module-'.SITE_ID.'-'.MOD_DIR;
     } else {
         // 指定模块
@@ -509,10 +509,6 @@ function dr_avatar_path() {
 function dr_avatar($uid) {
 
     if ($uid) {
-        if (defined('UCSSO_API')) {
-            return ucsso_get_avatar($uid);
-        }
-
         list($cache_path, $cache_url) = dr_avatar_path();
         if (is_file($cache_path.$uid.'.jpg')) {
             return $cache_url.$uid.'.jpg';
@@ -561,17 +557,15 @@ function dr_member_username_info($username, $name = '', $cache = -1) {
  * @return
  */
 function dr_member_invite($uid, $name = 'uid') {
-
     $data = \Phpcmf\Service::M()->db->where('rid', $uid)->get('member_invite')->row_array();
     return $data[$name] ? $data[$name] : '';
-
 }
 
 
 /**
  * 执行函数
  */
-function dr_list_function($func, $value, $param = [], $data = []) {
+function dr_list_function($func, $value, $param = [], $data = [], $field = []) {
 
     if (!$func) {
         return $value;
@@ -579,11 +573,11 @@ function dr_list_function($func, $value, $param = [], $data = []) {
 
     $obj = \Phpcmf\Service::L('Function_list');
     if (method_exists($obj, $func)) {
-        return call_user_func_array([$obj, $func], ['value'=>$value, 'param' => $param, $data]);
+        return call_user_func_array([$obj, $func], [$value, $param, $data, $field]);
     } elseif (function_exists($func)) {
-        return call_user_func_array($func, ['value'=>$value, 'param' => $param, $data]);
+        return call_user_func_array($func, [$value, $param, $data, $field]);
     } else {
-        log_message('error', '你没有定义字段列表回调函数：'.$func);
+        log_message('error', '你没有定义字段列表回调函数:'.$func);
     }
 
     return $value;
@@ -633,7 +627,7 @@ function dr_catpos($catid, $symbol = ' > ', $url = true, $html= '', $dirname = M
  * @param	string	$code	联动菜单代码
  * @param	intval	$id		id
  * @param	string	$symbol	间隔符号
- * @param	string	$url	url地址格式，必须存在[linkage]，否则返回不带url的字符串
+ * @param	string	$url	url地址格式, 必须存在[linkage], 否则返回不带url的字符串
  * @param	string	$html	格式替换
  * @return	string
  */
@@ -673,8 +667,8 @@ function dr_linkagepos($code, $id, $symbol = ' > ', $url = '', $html = '') {
  *
  * @param	string	$code	菜单代码
  * @param	intval	$id		菜单id
- * @param	intval	$level	调用级别，1表示顶级，2表示第二级，等等
- * @param	string	$name	菜单名称，如果有显示它的值，否则返回数组
+ * @param	intval	$level	调用级别, 1表示顶级, 2表示第二级, 等等
+ * @param	string	$name	菜单名称, 如果有显示它的值, 否则返回数组
  * @return	array
  */
 function dr_linkage($code, $id, $level = 0, $name = '') {
@@ -951,7 +945,7 @@ function dr_get_file_url($data, $w = 0, $h = 0) {
 }
 
 /**
- * 任意字段的选项值（用于options参数的字段，如复选框、下拉选择框、单选按钮）
+ * 任意字段的选项值（用于options参数的字段, 如复选框, 下拉选择框, 单选按钮）
  *
  * @param	intval	$id
  * @return	array
@@ -1010,7 +1004,6 @@ function dr_notice_info() {
         ],
 
     ];
-
 }
 
 /**
@@ -1071,11 +1064,11 @@ function dr_member_auth_id($authid, $postid) {
 // 微信端的错误码转中文解释
 function dr_weixin_error_msg($code) {
     $msg = array (
-        '-1' => '系统繁忙，此时请开发者稍候再试',
+        '-1' => '系统繁忙, 此时请开发者稍候再试',
         '0' => '请求成功',
-        '40001' => '获取access_token时AppSecret错误，或者access_token无效。',
+        '40001' => '获取access_token时AppSecret错误, 或者access_token无效.',
         '40002' => '不合法的凭证类型',
-        '40003' => '不合法的OpenID，请开发者确认OpenID（该用户）是否已关注公众号，或是否是其他公众号的OpenID',
+        '40003' => '不合法的OpenID, 请开发者确认OpenID（该用户）是否已关注公众号, 或是否是其他公众号的OpenID',
         '40004' => '不合法的媒体文件类型',
         '40005' => '不合法的文件类型',
         '40006' => '不合法的文件大小',
@@ -1085,8 +1078,8 @@ function dr_weixin_error_msg($code) {
         '40010' => '不合法的语音文件大小',
         '40011' => '不合法的视频文件大小',
         '40012' => '不合法的缩略图文件大小',
-        '40013' => '不合法的AppID，请开发者检查AppID的正确性，避免异常字符，注意大小写',
-        '40014' => '不合法的access_token，请开发者认真比对access_token的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口',
+        '40013' => '不合法的AppID, 请开发者检查AppID的正确性, 避免异常字符, 注意大小写',
+        '40014' => '不合法的access_token, 请开发者认真比对access_token的有效性（如是否过期）, 或查看是否正在为恰当的公众号调用接口',
         '40015' => '不合法的菜单类型',
         '40016' => '不合法的按钮个数',
         '40017' => '不合法的按钮个数',
@@ -1105,7 +1098,7 @@ function dr_weixin_error_msg($code) {
         '40030' => '不合法的refresh_token',
         '40031' => '不合法的openid列表',
         '40032' => '不合法的openid列表长度',
-        '40033' => '不合法的请求字符，不能包含\uxxxx格式的字符',
+        '40033' => '不合法的请求字符, 不能包含\uxxxx格式的字符',
         '40035' => '不合法的参数',
         '40038' => '不合法的请求格式',
         '40039' => '不合法的URL长度',
@@ -1127,7 +1120,7 @@ function dr_weixin_error_msg($code) {
         '41007' => '缺少子菜单数据',
         '41008' => '缺少oauth code',
         '41009' => '缺少openid',
-        '42001' => 'access_token超时，请检查access_token的有效期，请参考基础支持-获取access_token中，对access_token的详细机制说明',
+        '42001' => 'access_token超时, 请检查access_token的有效期, 请参考基础支持-获取access_token中, 对access_token的详细机制说明',
         '42002' => 'refresh_token超时',
         '42003' => 'oauth_code超时',
         '43001' => '需要GET请求',
@@ -1150,7 +1143,7 @@ function dr_weixin_error_msg($code) {
         '45009' => '接口调用超过限制',
         '45010' => '创建菜单个数超过限制',
         '45015' => '回复时间超过限制',
-        '45016' => '系统分组，不允许修改',
+        '45016' => '系统分组, 不允许修改',
         '45017' => '分组名字过长',
         '45018' => '分组数量超过上限',
         '46001' => '不存在媒体数据',
@@ -1158,13 +1151,13 @@ function dr_weixin_error_msg($code) {
         '46003' => '不存在的菜单数据',
         '46004' => '不存在的用户',
         '47001' => '解析JSON/XML内容错误',
-        '48001' => 'api功能未授权，请确认公众号已获得该接口，可以在公众平台官网-开发者中心页中查看接口权限',
+        '48001' => 'api功能未授权, 请确认公众号已获得该接口, 可以在公众平台官网-开发者中心页中查看接口权限',
         '50001' => '用户未授权该api',
-        '50002' => '用户受限，可能是违规后接口被封禁',
+        '50002' => '用户受限, 可能是违规后接口被封禁',
         '61451' => '参数错误(invalid parameter)',
         '61452' => '无效客服账号(invalid kf_account)',
         '61453' => '客服帐号已存在(kf_account exsited)',
-        '61454' => '客服帐号名长度超过限制(仅允许10个英文字符，不包括@及@后的公众号的微信号)(invalid kf_acount length)',
+        '61454' => '客服帐号名长度超过限制(仅允许10个英文字符, 不包括@及@后的公众号的微信号)(invalid kf_acount length)',
         '61455' => '客服帐号名包含非法字符(仅允许英文+数字)(illegal character in kf_account)',
         '61456' => '客服帐号个数超过限制(10个客服账号)(kf_account count exceeded)',
         '61457' => '无效头像文件类型(invalid file type)',
@@ -1182,15 +1175,15 @@ function dr_weixin_error_msg($code) {
         '9001009' => '上传素材的文件尺寸不合法',
         '9001010' => '上传失败',
         '9001020' => '帐号不合法',
-        '9001021' => '已有设备激活率低于50%，不能新增设备',
-        '9001022' => '设备申请数不合法，必须为大于0的数字',
+        '9001021' => '已有设备激活率低于50%, 不能新增设备',
+        '9001022' => '设备申请数不合法, 必须为大于0的数字',
         '9001023' => '已存在审核中的设备ID申请',
         '9001024' => '一次查询设备ID数量不能超过50',
         '9001025' => '设备ID不合法',
         '9001026' => '页面ID不合法',
         '9001027' => '页面参数不合法',
         '9001028' => '一次删除页面ID数量不能超过10',
-        '9001029' => '页面已应用在设备中，请先解除应用关系再删除',
+        '9001029' => '页面已应用在设备中, 请先解除应用关系再删除',
         '9001030' => '一次查询页面ID数量不能超过50',
         '9001031' => '时间区间不合法',
         '9001032' => '保存设备与页面的绑定关系参数错误',
@@ -1230,7 +1223,7 @@ function wx_get_https_json_data($url) {
     if (!$data) {
         return dr_return_data(0, $response.' 不是一个有效的json数据');
     } elseif (isset($data['errcode']) && $data['errcode']) {
-        return dr_return_data(0, '错误代码（'.$data['errcode'].'）：'.$data['errmsg']);
+        return dr_return_data(0, '错误代码（'.$data['errcode'].'）:'.$data['errmsg']);
     }
 
     return dr_return_data(1, 'ok', $data);
@@ -1262,7 +1255,7 @@ function wx_post_https_json_data($url, $param = []) {
     if (!$data) {
         return dr_return_data(0, $response);
     } elseif (isset($data['errcode']) && $data['errcode']) {
-        return dr_return_data(0, '错误代码（'.dr_weixin_error_msg($data['errcode']).'）：'.$data['errmsg']);
+        return dr_return_data(0, '错误代码（'.dr_weixin_error_msg($data['errcode']).'）:'.$data['errmsg']);
     }
 
     return dr_return_data(1, 'ok', $data);
@@ -1335,7 +1328,7 @@ function dr_sku_name($key, $data, $type = 0) {
         foreach ($data['name'][$gid] as $vid => $vname) {
             if (in_array("{$gid}_{$vid}", $sku)) {
                 $value[$gname] = $vname;
-                $string[] = $gname.'：'.$vname;
+                $string[] = $gname.':'.$vname;
             }
 
         }
@@ -1504,26 +1497,42 @@ function dr_list_field_order($field) {
         return [];
     }
 
-    $order = [];
-    foreach ($field as $name => $m) {
-        $m['order'] && $order[$m['order']] = $name;
-    }
-
-    ksort($order);
-
     $rt = [];
-    foreach ($order as $name) {
-        $field[$name]['use'] && $rt[$name] = $field[$name];
+    foreach ($field as $name => $m) {
+        $m['use'] && $rt[$name] = $m;
     }
-
+	
     return $rt;
+}
+
+function dr_list_field_value($value, $sys_field, $field) {
+	
+	foreach ($field as $t) {
+		$sys_field[$t['fieldname']] = $t;
+	}
+	
+	$rt = [];
+	foreach ($value as $name => $t) {
+		$rt[$name] = $sys_field[$name];
+		unset($sys_field[$name]);
+	}
+	
+	if (!$sys_field) {
+		return $rt;
+	}
+	
+	foreach ($sys_field as $name => $t) {
+		$rt[$name] = $t;
+	}
+	
+	return $rt;
 }
 
 /**
  * 格式化搜索关键词参数
  */
 function dr_get_keyword($s) {
-    return dr_safe_replace(str_replace(array('+', ' '), '%', urldecode($s)));
+    return dr_safe_replace(str_replace(['+', ' '], '%', urldecode($s)));
 }
 
 /**
@@ -1543,7 +1552,7 @@ function dr_array2array($a1, $a2) {
 }
 
 /**
- * 两数组覆盖合并，1是老数据，2是新数据
+ * 两数组覆盖合并, 1是老数据, 2是新数据
  */
 function dr_array22array($a1, $a2) {
 
@@ -1785,12 +1794,6 @@ function dr_file_map($source_dir) {
     return FALSE;
 }
 
-// 兼容错误提示
-function show_error($msg, $code = '', $o = '') {
-
-    exit($msg);
-}
-
 /**
  * 数据返回统一格式
  */
@@ -1891,7 +1894,7 @@ function dr_randcode() {
  *
  * @param	string	$dir		路径
  * @param	string	$is_all		包括删除当前目录
- * @return	bool	如果成功则返回 TRUE，失败则返回 FALSE
+ * @return	bool	如果成功则返回 TRUE, 失败则返回 FALSE
  */
 
 function dr_dir_delete($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
@@ -2097,7 +2100,7 @@ function dr_baidu_position_js($ak = SYS_BDMAP_API) {
       if(this.getStatus() == BMAP_STATUS_SUCCESS){
          $.ajax({type: "GET", url: "/index.php?s=api&c=api&m=baidu_position&value="+r.point.lng+\',\'+r.point.lat, dataType:"jsonp"});
       } else {
-         alert(\'定位失败：\'+this.getStatus());
+         alert(\'定位失败:\'+this.getStatus());
       }
    },{enableHighAccuracy: true});';
 	$code.= '</script>';
@@ -2118,7 +2121,7 @@ function dr_baidu_map_form_hidden($field, $ak = SYS_BDMAP_API) {
 		 $("#dr_'.$field.'").val(r.point.lng+\',\'+r.point.lat);
          $.ajax({type: "GET", url: "/index.php?s=api&c=api&m=baidu_position&value="+r.point.lng+\',\'+r.point.lat, dataType:"jsonp"});
       } else {
-         alert(\'定位失败：\'+this.getStatus());
+         alert(\'定位失败:\'+this.getStatus());
       }
    },{enableHighAccuracy: true});';
 	$code.= '</script>';
@@ -2214,7 +2217,7 @@ function dr_qq_map($value, $zoom = 10, $width = 600, $height = 400, $ui = 0, $cl
  * 显示星星
  *
  * @param	intval	$num
- * @param	intval	$starthreshold	星星数在达到此阈值(设为 N)时，N 个星星显示为 1 个月亮、N 个月亮显示为 1 个太阳。
+ * @param	intval	$starthreshold	星星数在达到此阈值(设为 N)时, N 个星星显示为 1 个月亮, N 个月亮显示为 1 个太阳.
  * @return	string
  */
 function dr_show_stars($num, $starthreshold = 4) {
@@ -2256,7 +2259,7 @@ function dr_module_comment($dir, $id) {
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
                 layer.closeAll();
-                alert(\"评论调用函数返回错误：\"+HttpRequest.responseText);
+                alert(\"评论调用函数返回错误:\"+HttpRequest.responseText);
             }
         });
 	}
@@ -2678,7 +2681,7 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
         return '';
     }
 
-    //sTime=源时间，cTime=当前时间，dTime=时间差
+    //sTime=源时间, cTime=当前时间, dTime=时间差
     $cTime = time();
     $dTime = $cTime - $sTime;
     $dDay = intval(date('z',$cTime)) - intval(date('z',$sTime));
@@ -2687,7 +2690,7 @@ function dr_fdate($sTime, $formt = 'Y-m-d') {
         return date($formt, $sTime);
     }
 
-    //n秒前，n分钟前，n小时前，日期
+    //n秒前, n分钟前, n小时前, 日期
     if ($dTime < 60 ) {
         if ($dTime < 10) {
             return '刚刚';
@@ -2991,12 +2994,12 @@ function dr_distance($new, $to, $mark = '米,千米') {
  *
  *@param lng float 经度
  *@param lat float 纬度
- *@param distance float 该点所在圆的半径，该圆与此正方形内切，默认值为0.5千米
+ *@param distance float 该点所在圆的半径, 该圆与此正方形内切, 默认值为0.5千米
  *@return array 正方形的四个点的经纬度坐标
  */
 function dr_square_point($lng, $lat, $distance = 0.5){
 
-    $r = 6371; //地球半径，平均半径为6371km
+    $r = 6371; //地球半径, 平均半径为6371km
     $distance = $distance ? $distance : 1;
     $dlng =  2 * asin(sin($distance / (2 * $r)) / cos(deg2rad($lat)));
     $dlng = rad2deg($dlng);
@@ -3226,7 +3229,7 @@ function dr_url_prefix($url, $domain = '', $siteid = SITE_ID, $is_mobile = '') {
 
     in_array($domain, ['MOD_DIR', 'share']) && $domain = '';
 
-    // 判断是否是模块，如果domain不是http开头
+    // 判断是否是模块, 如果domain不是http开头
     if ($domain && strpos($url, 'http') === false) {
         if (is_dir(APPSPATH.ucfirst($domain))) {
             $mod = \Phpcmf\Service::L('cache')->get('module-'.$siteid.'-'.$domain);
@@ -3266,7 +3269,7 @@ function dr_member_group_etime($days) {
     return SYS_TIME + $days * 3600 * 24;
 }
 
-// 处理带Emoji的数据，HTML转为emoji码
+// 处理带Emoji的数据, HTML转为emoji码
 function dr_html2emoji($msg){
 
     $txt = json_decode(str_replace('|', '\\', $msg));
@@ -3277,7 +3280,7 @@ function dr_html2emoji($msg){
     return trim($msg, '"');
 }
 
-// 处理带Emoji的数据，写入数据库前的emoji转为HTML
+// 处理带Emoji的数据, 写入数据库前的emoji转为HTML
 function dr_emoji2html($msg) {
     return str_replace('\\', '|', json_encode($msg));;
 }
@@ -3480,12 +3483,12 @@ function dr_mobile_url($url = SITE_MURL) {
     $host = $a['host'];
     $domain = require WRITEPATH.'config/domain_client.php';
     if (!$domain) {
-        return $url;
+        return IS_DEV ? '[开发者模式下]未找到域名的终端配置文件' : $url;
     } elseif (!isset($domain[$host])) {
-        return $url;
+        return IS_DEV ? '[开发者模式下]未找到PC域名['.$host.']所对应的移动端域名' : $url;
     }
 
-    return str_replace($host, $domain[$host], $url);
+    return dr_url_prefix(str_replace($host, $domain[$host], $url));
 }
 
 ////////////////////////////////////////////////////////////
@@ -3756,6 +3759,13 @@ if(!function_exists('mime_content_type')) {
     }
 }
 
+if (!function_exists('mb_strlen'))
+{
+    function mb_strlen($str)
+    {
+        return strlen($str);
+    }
+}
 if (!function_exists('array_key_first')) {
     function array_key_first(array $arr) {
         foreach($arr as $key => $unused) {

@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Module extends \Phpcmf\Model
@@ -88,7 +85,7 @@ class Module extends \Phpcmf\Model
                 $size = @file_put_contents($file, str_replace('$NAME$', $name, $c));
                 if (!$size && $call) {
                     @unlink($file);
-                    return dr_return_data(0, dr_lang('文件%s创建失败，无可写权限', str_replace(FCPATH, '', $file)));
+                    return dr_return_data(0, dr_lang('文件%s创建失败, 无可写权限', str_replace(FCPATH, '', $file)));
                 }
                 $ok ++;
             }
@@ -209,8 +206,8 @@ class Module extends \Phpcmf\Model
         $module = $this->db->table('module')->where('dirname', $dir)->get()->getRowArray();
         if (!$module) {
             if (isset($config['ftype']) && $config['ftype'] == 'module' && $is_app == 0) {
-                // 首次安装模块时，验证应用模块
-                return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去安装'));
+                // 首次安装模块时, 验证应用模块
+                return dr_return_data(0, dr_lang('此模块属于应用类型, 请到[本地应用]中去安装'));
             }
             $module = [
                 'site' => dr_array2string([
@@ -291,14 +288,14 @@ class Module extends \Phpcmf\Model
         // 创建相关栏目表字段
         if (isset($config['scategory']) && $config['scategory']) {
             if (!\Phpcmf\Service::M()->db->fieldExists('tid', $table.'_category')) {
-                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `tid` tinyint(1) NOT NULL COMMENT \'栏目类型，0单页，1模块，2外链\'');
+                \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `tid` tinyint(1) NOT NULL COMMENT \'栏目类型, 0单页, 1模块, 2外链\'');
             }
             if (!\Phpcmf\Service::M()->db->fieldExists('content', $table.'_category')) {
                 \Phpcmf\Service::M()->query('ALTER TABLE `'.$table.'_category` ADD `content` mediumtext NOT NULL COMMENT \'单页内容\'');
             }
         }
         // 第一次安装模块
-        // system = 2 2菜单不出现在内容下，由开发者自定义
+        // system = 2 2菜单不出现在内容下, 由开发者自定义
         if ($config['system'] == 2 && dr_count($module['site']) == 1 && $is_app == 0 && is_file($mpath.'Config/Menu.php')) {
             \Phpcmf\Service::M('Menu')->add_app($dir);
         }
@@ -423,7 +420,7 @@ class Module extends \Phpcmf\Model
             }
         }
 
-        return dr_return_data(1, dr_lang('操作成功，请刷新后台页面'), $module);
+        return dr_return_data(1, dr_lang('操作成功, 请刷新后台页面'), $module);
     }
 
     // 卸载模块
@@ -440,8 +437,8 @@ class Module extends \Phpcmf\Model
 
         $site = dr_string2array($module['site']);
         if (count($site) == 1 && isset($config['ftype']) && $config['ftype'] == 'module' && $is_app == 0) {
-            // 只有一个站点时，卸载需要 验证应用模块
-            return dr_return_data(0, dr_lang('此模块属于应用类型，请到[本地应用]中去卸载'));
+            // 只有一个站点时, 卸载需要 验证应用模块
+            return dr_return_data(0, dr_lang('此模块属于应用类型, 请到[本地应用]中去卸载'));
         }
 
         if (isset($site[SITE_ID]) && $site[SITE_ID]) {
@@ -745,7 +742,7 @@ class Module extends \Phpcmf\Model
                 }
             }
 
-            // 自定义栏目模型字段，把父级栏目的字段合并至当前栏目
+            // 自定义栏目模型字段, 把父级栏目的字段合并至当前栏目
             $like = [$cache['dirname'].'-'.$siteid];
             if ($cache['share']) {
                 $like[] = 'share-'.$siteid;

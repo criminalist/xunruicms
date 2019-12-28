@@ -5,7 +5,7 @@
     <div class="alert alert-danger">
         自定义后台首页界面的显示内容
     </div>
-    <h3 class="page-title"> 面板区 <small>系统可用的面板，单击即可加入到预设区</small>
+    <h3 class="page-title"> 面板区 <small>系统可用的面板, 单击即可加入到预设区</small>
     </h3>
     <div class="">
         {loop $tables $table $name}
@@ -38,7 +38,7 @@
                 success: function(json) {
                     if (json.code) {
                         $('#dr_init_add_table').html(json.msg);
-                        dr_cmf_tips(json.code, '面板添加成功，请手动进行移动调整');
+                        dr_cmf_tips(json.code, '面板添加成功, 请手动进行移动调整');
                     } else {
                         dr_cmf_tips(json.code, json.msg);
                     }

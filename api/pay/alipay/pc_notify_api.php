@@ -83,7 +83,7 @@ if($verify_result) {//验证成功
     if($_POST['trade_status'] == 'TRADE_FINISHED') {
 		//判断该笔订单是否在商户网站中已经做过处理
 			//如果没有做过处理, 根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细, 并执行商户的业务程序
-			//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+			//请务必判断请求时的total_fee, seller_id与通知时获取的total_fee, seller_id为一致的
 			//如果有做过处理, 不执行商户的业务程序
 				
 		//注意:
@@ -95,7 +95,7 @@ if($verify_result) {//验证成功
     else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
 		//判断该笔订单是否在商户网站中已经做过处理
 			//如果没有做过处理, 根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细, 并执行商户的业务程序
-			//请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+			//请务必判断请求时的total_fee, seller_id与通知时获取的total_fee, seller_id为一致的
 			//如果有做过处理, 不执行商户的业务程序
 				
 		//注意:

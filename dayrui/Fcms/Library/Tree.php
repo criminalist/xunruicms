@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -20,7 +17,7 @@ class Tree {
         '&nbsp;&nbsp;│&nbsp;',
         '&nbsp;&nbsp;├&nbsp;',
         '&nbsp;&nbsp;└&nbsp;'
-    ]; // 生成树型结构所需修饰符号，可以换成图片
+    ]; // 生成树型结构所需修饰符号, 可以换成图片
     private $arr; // 生成树型结构所需要的2维数组
     private $nbsp = "&nbsp;&nbsp;";
     private $deep = 1;
@@ -226,7 +223,7 @@ class Tree {
                 }
 
                 // 栏目发布权限判断,主要筛选栏目下是否有空白选项
-                unset($t['catids'][$t['id']]);
+                //unset($t['catids'][$t['id']]);
                 if ($is_push && $t['child'] == 1 && $t['catids']) {
                     $ispost = 0;
                     foreach ($t['catids'] as $i) {
@@ -241,13 +238,14 @@ class Tree {
                         continue;
                     }
                 }
+                // 第一个可用子栏目
+                if ($first == 0 && $t['child'] == 0) {
+                    $first = $t['id'];
+                }
                 // 选中操作
                 $t['selected'] = (is_array($id) ? in_array($t['id'], $id) : $id == $t['id']) ? 'selected' : '';
                 // 是否可选子栏目
                 $t['html_disabled'] = $onlysub && $t['child'] ? 1 : 0;
-
-                // 第一个可用子栏目
-                $first == 0 && $t['child'] == 0 && $first = $t['id'];
                 if (isset($t['setting'])) {
                     unset($t['setting']);
                 }
@@ -326,9 +324,9 @@ class Tree {
     /**
      * 得到树型结构
      *
-     * @param int ID，表示获得这个ID下的所有子级
-     * @param string 生成树型结构的基本代码，例如："<option value=\$id \$selected>\$spacer\$name</option>"
-     * @param int 被选中的ID，比如在做树型下拉框的时候需要用到
+     * @param int ID, 表示获得这个ID下的所有子级
+     * @param string 生成树型结构的基本代码, 例如:"<option value=\$id \$selected>\$spacer\$name</option>"
+     * @param int 被选中的ID, 比如在做树型下拉框的时候需要用到
      * @return string
      */
     public function get_tree($myid, $str, $sid = 0, $adds = '', $str_group = '') {
@@ -371,7 +369,7 @@ class Tree {
     /**
      * 得到树型结构
      *
-     * @param int ID，表示获得这个ID下的所有子级
+     * @param int ID, 表示获得这个ID下的所有子级
      * @return array
      */
     public function get_tree_array($myid, $str = '', $sid = 0, $adds = '', $str_group = '') {

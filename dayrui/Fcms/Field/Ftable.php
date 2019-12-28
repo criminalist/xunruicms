@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Ftable extends \Phpcmf\Library\A_Field {
 
@@ -77,7 +74,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
                         <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_is_add_hang(this.value)" name="data[setting][option][is_add]" value="1" '.($option['is_add'] ? 'checked' : '').'> '.dr_lang('开启').'  <span></span></label>
                         <label class="mt-radio mt-radio-outline"><input type="radio" onclick="dr_is_add_hang(this.value)" name="data[setting][option][is_add]" value="0" '.(!$option['is_add'] ? 'checked' : '').'> '.dr_lang('关闭').'  <span></span></label>
                     </div>
-                    <span class="help-block">'.dr_lang('开启后可以在录入数据时自由添加行数，关闭时就只能是固定行数').'</span>
+                    <span class="help-block">'.dr_lang('开启后可以在录入数据时自由添加行数, 关闭时就只能是固定行数').'</span>
                 </div>
 			</div>
             <div class="form-group is_add_hang">
@@ -95,14 +92,14 @@ class Ftable extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('表格行数').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][count]" value="'.$option['count'].'"></label>
-					<span class="help-block">'.dr_lang('填写表格的行数，1表示只有一行表格，至少属于1行表格').'</span>
+					<span class="help-block">'.dr_lang('填写表格的行数, 1表示只有一行表格, 至少属于1行表格').'</span>
 				</div>
 			</div>
 			<div class="form-group is_first_hang">
 				<label class="col-md-2 control-label">'.dr_lang('表格首行名').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][first_cname]" value="'.$option['first_cname'].'"></label>
-					<span class="help-block">'.dr_lang('表格第一行的显示名称，不填写就不显示名称').'</span>
+					<span class="help-block">'.dr_lang('表格第一行的显示名称, 不填写就不显示名称').'</span>
 				</div>
 			</div>'.$hang.'
 			</div>'.$html.'
@@ -111,10 +108,10 @@ class Ftable extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('名词解释').'</label>
 				<div class="col-md-9">
 					<div class="form-control-static">
-					    <p>'.dr_lang('列名称：是表格列的显示名称').'</p>
-					    <p>'.dr_lang('列宽度：是表格列的宽度，[整数]表示固定宽带；[整数%]表示百分比').'</p>
-					    <p>'.dr_lang('选择项：用于下拉选择框的选项，多个选项用半角,分开').'</p>
-					    <p>'.dr_lang('行名称：是表格每一行的显示名称，如果不填就按照默认行名称显示，如果默认行名称也没有填写就不显示行名').'</p>
+					    <p>'.dr_lang('列名称:是表格列的显示名称').'</p>
+					    <p>'.dr_lang('列宽度:是表格列的宽度, [整数]表示固定宽带;[整数%]表示百分比').'</p>
+					    <p>'.dr_lang('选择项:用于下拉选择框的选项, 多个选项用半角,分开').'</p>
+					    <p>'.dr_lang('行名称:是表格每一行的显示名称, 如果不填就按照默认行名称显示, 如果默认行名称也没有填写就不显示行名').'</p>
 					    <span class="help-block"> <a href="javascript:dr_help(\'644\');"> '.dr_lang('了解此字段的使用方法').'</a> </span>
                     </div>
 				</div>
@@ -124,7 +121,7 @@ class Ftable extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-					<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+					<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 				</div>
 			</div>
 			<div class="form-group">

@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 define('IS_INSTALL', 1);
@@ -22,18 +22,18 @@ class Install extends \Phpcmf\Common
         parent::__construct(...$params);
         $this->lock = WRITEPATH.'install.lock';
         if (is_file($this->lock)) {
-            exit('安装程序已经被锁定，重新安装请删除：WRITEPATH/install.lock');
-        } elseif (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            exit('安装程序已经被锁定, 重新安装请删除:WRITEPATH/install.lock');
+        } elseif (version_compare(PHP_VERSION, '7.1.0') < 0) {
             echo "<font color=red>PHP版本必须在7.2以上</font>";exit;
         } elseif ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') ) {
-            echo "<font color=red>请先关闭HTTPS，安装后再开启HTTPS</font>";exit;
+            echo "<font color=red>请先关闭HTTPS, 安装后再开启HTTPS</font>";exit;
         }
         define('SITE_LANGUAGE', 'zh-cn');
         define('SITE_ID', 1);
         define('IS_API_HTTP', 0);
         define('THEME_PATH', '/static/');
         define('ROOT_THEME_PATH', '/static/');
-        define('LANG_PATH', '/config/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', '/api/language/'.SITE_LANGUAGE.'/'); // 语言包
         if (is_file(MYPATH.'Config/Version.php')) {
             $app = require MYPATH.'Config/Version.php';
         } else {
@@ -125,6 +125,8 @@ class Install extends \Phpcmf\Common
                         $this->_json(0, '数据库账号不能为空');
                     } elseif (empty($data['db_name'])) {
                         $this->_json(0, '数据库名称不能为空');
+                    } elseif (empty($data['db_pass'])) {
+                        $this->_json(0, '数据库密码不能为空');
                     } elseif (empty($data['db_prefix'])) {
                         $this->_json(0, '数据表前缀不能为空');
                     } elseif (is_numeric($data['db_name'])) {
@@ -137,17 +139,17 @@ class Install extends \Phpcmf\Common
                     if (!$mysqli) {
                         exit($this->_json(0, '您的PHP环境必须启用Mysqli扩展'));
                     } elseif (!@mysqli_real_connect($mysqli, $data['db_host'], $data['db_user'], $data['db_pass'])) {
-                        exit($this->_json(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$data['db_host'].'），请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
+                        exit($this->_json(0, '[mysqli_real_connect] - ['.mysqli_connect_errno().'] 无法连接到数据库服务器（'.$data['db_host'].'）, 请检查用户名（'.$data['db_user'].'）和密码（'.$data['db_pass'].'）是否正确'));
                     } elseif (!@mysqli_select_db($mysqli, $data['db_name'])) {
                         if (!@mysqli_query($mysqli, 'CREATE DATABASE '.$data['db_name'])) {
-                            exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在，系统尝试创建失败，请通过其他方式建立数据库'));
+                            exit($this->_json(0, '指定的数据库（'.$data['db_name'].'）不存在, 系统尝试创建失败, 请通过其他方式建立数据库'));
                         }
                     }
 
                     // 存储缓存文件中
                     $size = @file_put_contents(WRITEPATH.'install.info', dr_array2string($data));
                     if (!$size || $size < 10) {
-                        $this->_json(0, '临时数据存储失败，cahce目录无法写入');
+                        $this->_json(0, '临时数据存储失败, cahce目录无法写入');
                     }
 
                     $data['db_prefix'] = strtolower($data['db_prefix']);
@@ -168,7 +170,7 @@ $db[\'default\']	= [
 ];';
                     $size = @file_put_contents(WEBPATH.'config/database.php', $database);
                     if (!$size || $size < 10) {
-                        $this->_json(0, '数据库配置文件创建失败，config目录无法写入');
+                        $this->_json(0, '数据库配置文件创建失败, config目录无法写入');
                     }
 
                     $this->_json(1, 'index.php?c=install&m=index&is_install_db='.intval($_POST['is_install_db']).'&step='.($step+1));
@@ -183,13 +185,13 @@ $db[\'default\']	= [
                 $error = '';
                 file_put_contents(WRITEPATH.'install.error', '');
                 if (empty($data)) {
-                    $error = '临时数据获取失败，请返回前一页重新执行';
+                    $error = '临时数据获取失败, 请返回前一页重新执行';
                 } else {
                     $this->db = \Config\Database::connect('default');
                     // 检查数据库是否存在
                     if (!$this->db->connect(false)) {
                         // 链接失败,尝试创建数据库
-                        $error = '数据库连接失败，请返回前一页重新执行';
+                        $error = '数据库连接失败, 请返回前一页重新执行';
                     } else {
                         // 导入默认安装数据
                         $sql = file_get_contents(CMSPATH.'Config/Install.sql');

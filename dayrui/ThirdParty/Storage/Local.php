@@ -54,7 +54,7 @@ class Local {
         // 目录不存在先创建它
         !is_dir($this->fullpath) && dr_mkdirs($this->fullpath);
         if (!is_dir($this->fullpath)) {
-            log_message('error', '目录创建失败：'.$this->fullpath);
+            log_message('error', '目录创建失败:'.$this->fullpath);
             return dr_return_data(0, dr_lang('创建目录%s失败', IS_ADMIN ? $this->fullpath : ''));
         }
 
@@ -66,7 +66,7 @@ class Local {
         } else {
             $filesize = file_put_contents($this->fullname, $this->data);
             if (!$filesize || !is_file($this->fullname)) {
-                log_message('error', '文件创建失败：'.$this->fullname);
+                log_message('error', '文件创建失败:'.$this->fullname);
                 return dr_return_data(0, dr_lang('文件创建失败'));
             }
         }

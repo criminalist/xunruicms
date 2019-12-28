@@ -9,18 +9,18 @@
  * https://github.com/baijunjie/jQuery-photoClip
  *
  * @brief	支持手势的裁图插件
- *			在移动设备上双指捏合为缩放，双指旋转可根据旋转方向每次旋转90度
- *			在PC设备上鼠标滚轮为缩放，每次双击则顺时针旋转90度
- * @option_param {array} size 截取框的宽和高组成的数组。默认值为[260,260]
- * @option_param {array} outputSize 输出图像的宽和高组成的数组。默认值为[0,0]，表示输出图像原始大小
- * //@option_param {string} outputType 指定输出图片的类型，可选 "jpg" 和 "png" 两种种类型，默认为 "jpg"
+ *			在移动设备上双指捏合为缩放, 双指旋转可根据旋转方向每次旋转90度
+ *			在PC设备上鼠标滚轮为缩放, 每次双击则顺时针旋转90度
+ * @option_param {array} size 截取框的宽和高组成的数组.默认值为[260,260]
+ * @option_param {array} outputSize 输出图像的宽和高组成的数组.默认值为[0,0], 表示输出图像原始大小
+ * //@option_param {string} outputType 指定输出图片的类型, 可选 "jpg" 和 "png" 两种种类型, 默认为 "jpg"
  * @option_param {string} file 上传图片的<input type="file">控件的选择器或者DOM对象
  * @option_param {string} view 显示截取后图像的容器的选择器或者DOM对象
  * @option_param {string} ok 确认截图按钮的选择器或者DOM对象
- * @option_param {function} loadStart 开始加载的回调函数。this指向 fileReader 对象，并将正在加载的 file 对象作为参数传入
- * @option_param {function} loadComplete 加载完成的回调函数。this指向图片对象，并将图片地址作为参数传入
- * @option_param {function} loadError 加载失败的回调函数。this指向 fileReader 对象，并将错误事件的 event 对象作为参数传入
- * @option_param {function} clipFinish 裁剪完成的回调函数。this指向原图片对象，会将裁剪出的图像数据DataURL作为参数传入
+ * @option_param {function} loadStart 开始加载的回调函数.this指向 fileReader 对象, 并将正在加载的 file 对象作为参数传入
+ * @option_param {function} loadComplete 加载完成的回调函数.this指向图片对象, 并将图片地址作为参数传入
+ * @option_param {function} loadError 加载失败的回调函数.this指向 fileReader 对象, 并将错误事件的 event 对象作为参数传入
+ * @option_param {function} clipFinish 裁剪完成的回调函数.this指向原图片对象, 会将裁剪出的图像数据DataURL作为参数传入
  */
 
 (function(root, factory) {
@@ -53,7 +53,7 @@
 
 	function PhotoClip(container, option) {
 		if (!window.FileReader) {
-			dr_tips(0, "您的浏览器不支持 HTML5 的 FileReader API， 因此无法初始化图片裁剪插件，请更换最新的浏览器！");
+			dr_tips(0, "您的浏览器不支持 HTML5 的 FileReader API,  因此无法初始化图片裁剪插件, 请更换最新的浏览器!");
 			return;
 		}
 
@@ -107,7 +107,7 @@
 			if (!this.files.length) return;
 			var files = this.files[0];
 			if (!/image\/\w+/.test(files.type)) {
-				dr_tips(0, "图片格式不正确，请选择正确格式的图片文件！");
+				dr_tips(0, "图片格式不正确, 请选择正确格式的图片文件!");
 				return false;
 			} else {
 				var fileReader = new FileReader();
@@ -140,14 +140,14 @@
 			this.value = "";
 		});
 
-		var $container, // 容器，包含裁剪视图层和遮罩层
-			$clipView, // 裁剪视图层，包含移动层
-			$moveLayer, // 移动层，包含旋转层
+		var $container, // 容器, 包含裁剪视图层和遮罩层
+			$clipView, // 裁剪视图层, 包含移动层
+			$moveLayer, // 移动层, 包含旋转层
 			$rotateLayer, // 旋转层
 			$view, // 最终截图后呈现的视图容器
 			canvas, // 图片裁剪用到的画布
 			hammerManager,
-			myScroll, // 图片的scroll对象，包含图片的位置与缩放信息
+			myScroll, // 图片的scroll对象, 包含图片的位置与缩放信息
 			containerWidth,
 			containerHeight;
 
@@ -225,10 +225,10 @@
 				"width": width,
 				"height": height
 			});
-			// 在移动设备上，尤其是Android设备，当为一个元素重置了宽高时
-			// 该元素的offsetWidth/offsetHeight、clientWidth/clientHeight等属性并不会立即更新，导致相关的js程序出现错误
+			// 在移动设备上, 尤其是Android设备, 当为一个元素重置了宽高时
+			// 该元素的offsetWidth/offsetHeight, clientWidth/clientHeight等属性并不会立即更新, 导致相关的js程序出现错误
 			// iscroll 在刷新方法中正是使用了 offsetWidth/offsetHeight 来获取scroller元素($moveLayer)的宽高
-			// 因此需要手动将元素重新添加进文档，迫使浏览器强制更新元素的宽高
+			// 因此需要手动将元素重新添加进文档, 迫使浏览器强制更新元素的宽高
 			$clipView.append($moveLayer);
 			myScroll.refresh();
 		}
@@ -293,9 +293,9 @@
 				originX = origin.x,
 				originY = origin.y,
 
-				// 旋转层以零位为参考点旋转到新角度后的位置，与以当前计算的参考点“从零度”旋转到新角度后的位置，之间的左上角偏移量
+				// 旋转层以零位为参考点旋转到新角度后的位置, 与以当前计算的参考点“从零度”旋转到新角度后的位置, 之间的左上角偏移量
 				offsetX = 0, offsetY = 0,
-				// 移动层当前的位置（即旋转层旋转前的位置），与旋转层以当前计算的参考点从当前角度旋转到新角度后的位置，之间的左上角偏移量
+				// 移动层当前的位置（即旋转层旋转前的位置）, 与旋转层以当前计算的参考点从当前角度旋转到新角度后的位置, 之间的左上角偏移量
 				parentOffsetX = 0, parentOffsetY = 0,
 
 				newAngle = curAngle + angle,
@@ -370,7 +370,7 @@
 			}
 
 			// 将触摸点设为旋转时的参考点
-			// 改变参考点的同时，要计算坐标的偏移，从而保证图片位置不发生变化
+			// 改变参考点的同时, 要计算坐标的偏移, 从而保证图片位置不发生变化
 			if (curAngle == 0) {
 				curX = 0;
 				curY = 0;
@@ -393,7 +393,7 @@
 				atRotation = false;
 				curAngle = newAngle % 360;
 				// 旋转完成后将参考点设回零位
-				// 同时加上偏移，保证图片位置看上去没有变化
+				// 同时加上偏移, 保证图片位置看上去没有变化
 				// 这里要另外要加上父容器（移动层）零位与自身之间的偏移量
 				curX += offsetX + parentOffsetX;
 				curY += offsetY + parentOffsetY;
@@ -456,7 +456,7 @@
 				containerHeight = $container.height();
 			});
 		}
-		function loaclToLoacl($layerOne, $layerTwo, x, y) { // 计算$layerTwo上的x、y坐标在$layerOne上的坐标
+		function loaclToLoacl($layerOne, $layerTwo, x, y) { // 计算$layerTwo上的x, y坐标在$layerOne上的坐标
 			x = x || 0;
 			y = y || 0;
 			var layerOneOffset, layerTwoOffset;
@@ -471,7 +471,7 @@
 				y: layerTwoOffset.top - layerOneOffset.top + y
 			};
 		}
-		function globalToLoacl($layer, x, y) { // 计算相对于窗口的x、y坐标在$layer上的坐标
+		function globalToLoacl($layer, x, y) { // 计算相对于窗口的x, y坐标在$layer上的坐标
 			x = x || 0;
 			y = y || 0;
 			var layerOffset;
@@ -529,7 +529,7 @@
 
 		function clearImg() {
 			if ($img &&　$img.length) {
-				// 删除旧的图片以释放内存，防止IOS设备的webview崩溃
+				// 删除旧的图片以释放内存, 防止IOS设备的webview崩溃
 				$img.remove();
 				delete $img[0];
 			}
@@ -554,8 +554,8 @@
 			$obj.css(style);
 		}
 		function setTransition($obj, x, y, angle, dur, fn) {
-			// 这里需要先读取之前设置好的transform样式，强制浏览器将该样式值渲染到元素
-			// 否则浏览器可能出于性能考虑，将暂缓样式渲染，等到之后所有样式设置完成后再统一渲染
+			// 这里需要先读取之前设置好的transform样式, 强制浏览器将该样式值渲染到元素
+			// 否则浏览器可能出于性能考虑, 将暂缓样式渲染, 等到之后所有样式设置完成后再统一渲染
 			// 这样就会导致之前设置的位移也被应用到动画中
 			$obj.css(prefix + "transform");
 			$obj.css(prefix + "transition", prefix + "transform " + dur + "ms");

@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Home;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -20,16 +17,16 @@ class Comment extends \Phpcmf\Common
         $this->_module_init();
         // 是否启用判断
         if (!$this->module['comment']) {
-            !\Phpcmf\Service::L('input')->get('callback') && $this->_msg(0, dr_lang('模块【%s】没有启用评论', MOD_DIR));
+            !\Phpcmf\Service::L('input')->get('callback') && $this->_msg(0, dr_lang('模块[%s]没有启用评论', MOD_DIR));
             exit('未开启评论'); // jsonp请求时不输出
         }
         // 关联内容数据
         $this->cid = intval(\Phpcmf\Service::L('input')->get('id'));
-        $this->index = \Phpcmf\Service::L('cache')->init()->get('module_'.MOD_DIR.'_show_id_'.$this->cid);
+        $this->index = \Phpcmf\Service::L('cache')->get_data('module_'.MOD_DIR.'_show_id_'.$this->cid);
         if (!$this->index) {
             $this->index = $this->content_model->get_data($this->cid);
             if (!$this->index) {
-                $this->_msg(0, dr_lang('内容【id#%s】不存在',  $this->cid));
+                $this->_msg(0, dr_lang('内容[id#%s]不存在',  $this->cid));
             }
             // 格式化输出自定义字段
             $fields = $this->module['category'][$this->index['catid']]['field'] ? array_merge($this->module['field'], $this->module['category'][$this->index['catid']]['field']) : $this->module['field'];
@@ -76,7 +73,7 @@ class Comment extends \Phpcmf\Common
         // 获取评论数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            exit($this->_msg(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid)));
+            exit($this->_msg(0, dr_lang('内容[id#%s]评论索引数据读取失败',  $this->cid)));
         }
 
         $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
@@ -156,7 +153,7 @@ class Comment extends \Phpcmf\Common
             $this->_json(0, dr_lang('请到我的订单中评论该商品'));
         } elseif ($this->module['comment']['num'] && \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_comment')->where('cid',  $this->cid)->where('uid', $this->uid)->countAllResults()) {
             // 只允许评论一次
-            $this->_json(0, dr_lang('您已经评论过了，请勿再次评论'));
+            $this->_json(0, dr_lang('您已经评论过了, 请勿再次评论'));
         }
 
         $rid = (int)\Phpcmf\Service::L('input')->get('rid');
@@ -190,7 +187,7 @@ class Comment extends \Phpcmf\Common
         // 获取评论数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            $this->_json(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid));
+            $this->_json(0, dr_lang('内容[id#%s]评论索引数据读取失败',  $this->cid));
         }
 
         // 判断评论内容
@@ -199,7 +196,7 @@ class Comment extends \Phpcmf\Common
             $this->_json(0, dr_lang('评论内容不能为空'));
         }
 
-        // 开启点评功能时，判断各项点评数，回复不做点评
+        // 开启点评功能时, 判断各项点评数, 回复不做点评
         $review = [];
         if (!$rid && $this->module['comment']['review'] && $this->module['comment']['review']['option']) {
             foreach ($this->module['comment']['review']['option'] as $i => $name) {
@@ -253,7 +250,7 @@ class Comment extends \Phpcmf\Common
         // 间隔30秒
         $this->session()->setTempdata($name, 1, 30);
 
-        $status ? $this->_json(1, dr_lang('评论成功')) : $this->_json(1, dr_lang('评论成功，等待管理员审核'));
+        $status ? $this->_json(1, dr_lang('评论成功')) : $this->_json(1, dr_lang('评论成功, 等待管理员审核'));
     }
     
     // 操作动作
@@ -271,7 +268,7 @@ class Comment extends \Phpcmf\Common
         // 获取评论索引数据
         $comment = $this->content_model->get_comment_index( $this->cid, $this->index['catid']);
         if (!$comment) {
-            $this->_msg(0, dr_lang('内容【id#%s】评论索引数据读取失败',  $this->cid));
+            $this->_msg(0, dr_lang('内容[id#%s]评论索引数据读取失败',  $this->cid));
         }
 
         // 验证操作间隔
@@ -318,7 +315,7 @@ class Comment extends \Phpcmf\Common
         }
     }
 
-    // 格式化评论内容，方便二次开发和重写
+    // 格式化评论内容, 方便二次开发和重写
     protected function _safe_replace($data) {
         return dr_safe_replace($data);
     }

@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Diy extends \Phpcmf\Library\A_Field {
 
@@ -52,7 +49,7 @@ class Diy extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                     <label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
                     <label>'.$this->member_field_select().'</label>
-                    <span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
+                    <span class="help-block">'.dr_lang('也可以设置会员表字段, 表示用当前登录会员信息来填充这个值').'</span>
                     </div>
                 </div>'.$this->field_type($option['fieldtype'], $option['fieldlength'])];
     }
@@ -105,7 +102,7 @@ class Diy extends \Phpcmf\Library\A_Field {
             $name = $field['fieldname'];
             require_once $file2;
         } elseif (!$field['setting']['option']['file']) {
-            $code = '<font color=red>没有选择文件，在字段属性中选择</font>';
+            $code = '<font color=red>没有选择文件, 在字段属性中选择</font>';
         } else {
             $code = '<font color=red>文件（'.$file.'）不存在</font>';
         }

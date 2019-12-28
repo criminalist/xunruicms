@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 内容维护
 class Content extends \Phpcmf\Common
@@ -41,15 +38,21 @@ class Content extends \Phpcmf\Common
     // 更新内容url
     protected function _Url() {
 
-        $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
         $psize = 500; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
 
-        // 计算数量
-        !$total && $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_index')->where('status', 9)->countAllResults();
-        if (!$total) {
-            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($this->content_model->mytable.'_index')->where('status', 9)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+
+            $url = \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page='.($page+1));
         }
+
 
         $tpage = ceil($total / $psize); // 总页数
 
@@ -75,9 +78,7 @@ class Content extends \Phpcmf\Common
             $this->content_model->update_url($t, $url);
         }
 
-        $this->_html_msg(
-            1,
-            dr_lang('正在执行中【%s】...', "$tpage/$page"),
+        $this->_html_msg( 1, dr_lang('正在执行中[%s]...', "$tpage/$page"),
             \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method, array('total' => $total, 'page' => $page + 1))
         );
 
@@ -87,15 +88,15 @@ class Content extends \Phpcmf\Common
     // 提取tag
     protected function _Tag() {
 
-        $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-        $psize = 500; // 每页处理的数量
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 10; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
         $table = $this->content_model->mytable;
 
         $where = 'status = 9';
         $catid = \Phpcmf\Service::L('input')->get('catid');
 
-        $url =\Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
+        $url = \Phpcmf\Service::L('Router')->url(APP_DIR.'/content/'.\Phpcmf\Service::L('Router')->method);
 
         // 获取生成栏目
         if ($catid) {
@@ -108,13 +109,16 @@ class Content extends \Phpcmf\Common
         }
 
         $keyword = \Phpcmf\Service::L('input')->get('keyword');
-        !$keyword && $where.= ' AND keywords=""';
-        $url.= '&keywords='.$keyword;
+        $keyword && $where.= ' AND keywords=""';
+        $url.= '&keyword='.$keyword;
 
-        // 计算数量
-        !$total && $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
-        if (!$total) {
-            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page=1', dr_lang('在使用网络分词接口时可能会很慢'));
         }
 
         $tpage = ceil($total / $psize); // 总页数
@@ -137,11 +141,7 @@ class Content extends \Phpcmf\Common
             }
         }
 
-        $this->_html_msg(
-            1,
-            dr_lang('正在执行中【%s】...', "$tpage/$page"),
-            $url.'&total='.$total.'&page='.($page+1)
-        );
+        $this->_html_msg(1, dr_lang('正在执行中[%s]...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1), dr_lang('在使用网络分词接口时可能会很慢'));
 
     }
 
@@ -149,8 +149,8 @@ class Content extends \Phpcmf\Common
     // 提取缩略图
     protected function _Thumb() {
 
-        $page = max(1, (int)\Phpcmf\Service::L('input')->get('page'));
-        $psize = 500; // 每页处理的数量
+        $page = (int)\Phpcmf\Service::L('input')->get('page');
+        $psize = 100; // 每页处理的数量
         $total = (int)\Phpcmf\Service::L('input')->get('total');
         $table = $this->content_model->mytable;
 
@@ -170,13 +170,17 @@ class Content extends \Phpcmf\Common
         }
 
         $thumb = \Phpcmf\Service::L('input')->get('thumb');
-        !$thumb && $where.= ' AND thumb=""';
+        $thumb && $where.= ' AND thumb=""';
         $url.= '&thumb='.$thumb;
 
-        // 计算数量
-        !$total && $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
-        if (!$total) {
-            $this->_html_msg(0, dr_lang('无可用内容更新'));
+        if (!$page) {
+            // 计算数量
+            $total = \Phpcmf\Service::M()->db->table($table)->where($where)->countAllResults();
+            if (!$total) {
+                $this->_html_msg(0, dr_lang('无可用内容更新'));
+            }
+
+            $this->_html_msg(1, dr_lang('正在执行中...'), $url.'&total='.$total.'&page='.($page+1));
         }
 
         $tpage = ceil($total / $psize); // 总页数
@@ -197,12 +201,7 @@ class Content extends \Phpcmf\Common
 
         }
 
-        $this->_html_msg(
-            1,
-            dr_lang('正在执行中【%s】...', "$tpage/$page"),
-            $url.'&total='.$total.'&page='.($page+1)
-        );
-
+        $this->_html_msg(1, dr_lang('正在执行中[%s]...', "$tpage/$page"), $url.'&total='.$total.'&page='.($page+1));
     }
 
 
@@ -318,7 +317,7 @@ class Content extends \Phpcmf\Common
                     }
                 }
                 if (!$ck) {
-                    $this->_json(0, dr_lang('存在不允许执行的SQL语句：%s', dr_strcut($sql, 20)));
+                    $this->_json(0, dr_lang('存在不允许执行的SQL语句:%s', dr_strcut($sql, 20)));
                 }
                 if (preg_match('/select(.*)into outfile(.*)/i', $sql)) {
                     $this->_json(0, dr_lang('存在非法select'));
@@ -345,7 +344,7 @@ class Content extends \Phpcmf\Common
                     $db = \Phpcmf\Service::M()->db->query($sql);
                     if (!$db) {
                         $rt = \Phpcmf\Service::M()->db->error();
-                        $this->_json(0, '查询错误：'.$rt['message']);
+                        $this->_json(0, '查询错误:'.$rt['message']);
                     }
                 }
             }

@@ -1,10 +1,7 @@
 <?php namespace Phpcmf\Library;
 
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -60,7 +57,7 @@ class Router
     public function get_back($uri, $param = [])
     {
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
-        $value = \Phpcmf\Service::L('cache')->init()->get($name);
+        $value = \Phpcmf\Service::L('cache')->get_data($name);
         if ($value) {
             $uri = $value[0];
             $param = dr_array22array($param, $value[1]);
@@ -73,7 +70,7 @@ class Router
     {
         $name = md5($_SERVER['HTTP_USER_AGENT'] . SELF . $uri . \Phpcmf\Service::C()->uid . SITE_ID . \Phpcmf\Service::L('input')->ip_address());
         $param['page'] = $_GET['page'];
-        \Phpcmf\Service::L('cache')->init()->save(
+        \Phpcmf\Service::L('cache')->set_data(
             $name,
             [$nuri ? $nuri : $uri, $param],
             3600
@@ -135,7 +132,7 @@ class Router
         // 跳转
         if ($url != dr_now_url()) {
             if (IS_DEV) {
-                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式：<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
+                \Phpcmf\Service::C()->_admin_msg(1, '开发者模式:<br>当前URL['.dr_now_url().']<br>与其本身地址['.$url.']不符<br>正在自动跳转本身地址（关闭开发者模式时即可自动跳转）', $url, 9);
             } else {
                 dr_redirect($url, 'location', '301');
             }
@@ -146,7 +143,7 @@ class Router
     /**
      * url函数
      *
-     * @param    string $url URL规则，如home/index
+     * @param    string $url URL规则, 如home/index
      * @param    array $query 相关参数
      * @return    string    项目入口文件.php?参数
      */
@@ -216,7 +213,7 @@ class Router
     /**
      * 会员url函数
      *
-     * @param    string $url URL规则，如home/index
+     * @param    string $url URL规则, 如home/index
      * @param    array $query 相关参数
      * @return    string    地址
      */
@@ -284,7 +281,7 @@ class Router
         // 获取自定义URL
         $rule = isset($data['setting']['urlrule']) ? \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value') : 0;
         if ($rule && $rule['list']) {
-            // URL模式为自定义，且已经设置规则
+            // URL模式为自定义, 且已经设置规则
             $data['fid'] = $fid;
             $data['modname'] = $mod['share'] ? '共享栏目不能使用modname标签' : $mod['dirname'];
             $data['pdirname'].= $data['dirname'];
@@ -322,7 +319,7 @@ class Router
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$cat['setting']['urlrule'], 'value');
         if ($rule && $rule['show']) {
-            // URL模式为自定义，且已经设置规则
+            // URL模式为自定义, 且已经设置规则
             $data['modname'] = $mod['dirname'];
             $cat['pdirname'] .= $cat['dirname'];
             $data['dirname'] = $cat['dirname'];
@@ -361,7 +358,7 @@ class Router
 
         $rule = \Phpcmf\Service::L('cache')->get('urlrule', (int)$data['setting']['urlrule'], 'value');
         if ($rule && $rule['page']) {
-            // URL模式为自定义，且已经设置规则
+            // URL模式为自定义, 且已经设置规则
             $data['pdirname'] == '/' && $data['pdirname'] = '';
             $data['dirname'] == '/' && $data['dirname'] = '';
             $data['pdirname'] .= $data['dirname'];
@@ -529,7 +526,7 @@ class Router
         $moddir && $dir = $moddir;
 
         if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
+            return '没有安装['.$dir.']模块';
         }
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
@@ -542,7 +539,7 @@ class Router
     {
 
         if (!dr_is_app('shang')) {
-            return '没有安装【打赏】应用';
+            return '没有安装[打赏]应用';
         }
 
         // 模块目录识别
@@ -550,7 +547,7 @@ class Router
         $moddir && $dir = $moddir;
 
         if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
+            return '没有安装['.$dir.']模块';
         }
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
@@ -567,7 +564,7 @@ class Router
         $moddir && $dir = $moddir;
 
         if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
+            return '没有安装['.$dir.']模块';
         }
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
@@ -584,7 +581,7 @@ class Router
         $moddir && $dir = $moddir;
 
         if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
+            return '没有安装['.$dir.']模块';
         }
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
@@ -601,7 +598,7 @@ class Router
         $moddir && $dir = $moddir;
 
         if (!dr_is_module($dir)) {
-            return '没有安装【'.$dir.'】模块';
+            return '没有安装['.$dir.']模块';
         }
 
         $module = \Phpcmf\Service::L('cache')->get('module-' . SITE_ID . '-' . $dir);
@@ -748,7 +745,7 @@ class Router
                 $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
                 if ($value['module']) {
                     $rule = $value['module'];
-                    $cname = "【".$r['name']."】模块首页（{$rule}）";
+                    $cname = "[".$r['name']."]模块首页（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -766,7 +763,7 @@ class Router
                 }
                 if ($value['list_page']) {
                     $rule = $value['list_page'];
-                    $cname = "【".$r['name']."】模块栏目列表(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块栏目列表(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -797,7 +794,7 @@ class Router
                 }
                 if ($value['list']) {
                     $rule = $value['list'];
-                    $cname = "【".$r['name']."】模块栏目列表（{$rule}）";
+                    $cname = "[".$r['name']."]模块栏目列表（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -826,7 +823,7 @@ class Router
                 }
                 if ($value['show_page']) {
                     $rule = $value['show_page'];
-                    $cname = "【".$r['name']."】模块内容页(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块内容页(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -848,7 +845,7 @@ class Router
                 }
                 if ($value['show']) {
                     $rule = $value['show'];
-                    $cname = "【".$r['name']."】模块内容页（{$rule}）";
+                    $cname = "[".$r['name']."]模块内容页（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -868,7 +865,7 @@ class Router
                 }
                 if ($value['search_page']) {
                     $rule = $value['search_page'];
-                    $cname = "【".$r['name']."】模块搜索页(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块搜索页(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -888,7 +885,7 @@ class Router
                 }
                 if ($value['search']) {
                     $rule = $value['search'];
-                    $cname = "【".$r['name']."】模块搜索页（{$rule}）";
+                    $cname = "[".$r['name']."]模块搜索页（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -911,7 +908,7 @@ class Router
                 $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
                 if ($value['list_page']) {
                     $rule = $value['list_page'];
-                    $cname = "【".$r['name']."】模块栏目列表(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块栏目列表(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -940,7 +937,7 @@ class Router
                 }
                 if ($value['list']) {
                     $rule = $value['list'];
-                    $cname = "【".$r['name']."】模块栏目列表（{$rule}）";
+                    $cname = "[".$r['name']."]模块栏目列表（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -967,7 +964,7 @@ class Router
                 }
                 if ($value['show_page']) {
                     $rule = $value['show_page'];
-                    $cname = "【".$r['name']."】模块内容页(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块内容页(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -987,7 +984,7 @@ class Router
                 }
                 if ($value['show']) {
                     $rule = $value['show'];
-                    $cname = "【".$r['name']."】模块内容页（{$rule}）";
+                    $cname = "[".$r['name']."]模块内容页（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -1009,7 +1006,7 @@ class Router
                 $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
                 if ($value['search_page']) {
                     $rule = $value['search_page'];
-                    $cname = "【".$r['name']."】模块搜索页(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]模块搜索页(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -1029,7 +1026,7 @@ class Router
                 }
                 if ($value['search']) {
                     $rule = $value['search'];
-                    $cname = "【".$r['name']."】模块搜索页（{$rule}）";
+                    $cname = "[".$r['name']."]模块搜索页（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -1051,7 +1048,7 @@ class Router
                 $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
                 if ($value['tag']) {
                     $rule = $value['tag'];
-                    $cname = "【".$r['name']."】TagURL（{$rule}）";
+                    $cname = "[".$r['name']."]TagURL（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -1074,7 +1071,7 @@ class Router
                 $code.= PHP_EOL.PHP_EOL.'	// '.$r['name'].'---解析规则----开始'.PHP_EOL.PHP_EOL;
                 if ($value['page_page']) {
                     $rule = $value['page_page'];
-                    $cname = "【".$r['name']."】自定义页面(分页)（{$rule}）";
+                    $cname = "[".$r['name']."]自定义页面(分页)（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";
@@ -1104,7 +1101,7 @@ class Router
                 }
                 if ($value['page']) {
                     $rule = $value['page'];
-                    $cname = "【".$r['name']."】自定义页面（{$rule}）";
+                    $cname = "[".$r['name']."]自定义页面（{$rule}）";
                     list($preg, $rname) = $this->_rule_preg_value($rule);
                     if (!$preg || !$rname) {
                         $error.= "<p>".$cname."格式不正确</p>";

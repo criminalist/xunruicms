@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 字段操作表
@@ -153,7 +150,7 @@ class Field extends \Phpcmf\Model
     public function get_mytable_field($table, $siteid = 0) {
 
         $name = 'table-'.$table;
-        $value = \Phpcmf\Service::L('cache')->init()->get($name);
+        $value = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$value) {
             $field = $this->db->table('field')
                         ->where('disabled', 0)
@@ -168,7 +165,7 @@ class Field extends \Phpcmf\Model
                     $value[$t['fieldname']] = $t;
                 }
             }
-            \Phpcmf\Service::L('cache')->init()->save($name, $value);
+            \Phpcmf\Service::L('cache')->set_data($name, $value);
         }
 
         return $value;
@@ -214,7 +211,7 @@ class Field extends \Phpcmf\Model
         // 先读取sql语句
         $sql = $field->create_sql($data['fieldname'], $data['setting']['option'], $data['name']);
 
-        // 当为编辑器类型时，关闭xss过滤
+        // 当为编辑器类型时, 关闭xss过滤
         $data['fieldtype'] == 'Ueditor' && $data['setting']['validate']['xss'] = 1;
 
         $data['ismain'] = (int)$data['ismain'];
@@ -235,7 +232,7 @@ class Field extends \Phpcmf\Model
             $this->_table_field = [];
             $this->update_table($sql, $data['ismain']);
             // 验证字段是否上传成功
-            $this->db->resetDataCache();// 清除缓存，影响字段存在的重复
+            $this->db->resetDataCache();// 清除缓存, 影响字段存在的重复
             if ($this->_table_field && $yz = $field->test_sql($this->_table_field, $data['fieldname'])) {
                 // 删除本字段
                 $this->table('field')->delete($rt['code']);
@@ -260,7 +257,7 @@ class Field extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('参数不完整'));
         }
 
-        // 如果字段类型、长度变化时，分别更新各站点
+        // 如果字段类型, 长度变化时, 分别更新各站点
         ($data['setting']['option']['fieldtype'] != $_data['setting']['option']['fieldtype']
             || $data['setting']['option']['fieldlength'] != $_data['setting']['option']['fieldlength'])
         && $this->update_table($sql, $_data['ismain']);
@@ -441,6 +438,10 @@ class Field extends \Phpcmf\Model
     }
     // 字段是否存在
     private function _field_member($name) {
+        // 保留
+        if (in_array($name, ['role', 'uid', 'authid', 'adminid', 'tableid', 'group', 'groupid', 'levelid'])) {
+            return 1;
+        }
         // 主表
         $table = $this->dbprefix('member_data');
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);
@@ -635,6 +636,10 @@ class Field extends \Phpcmf\Model
     }
     // 字段是否存在
     private function _field_module($name) {
+        // 保留字段
+        if (in_array($name, ['tags', 'tag', 'prev_page', 'next_page', 'fstatus', 'old'])) {
+            return 1;
+        }
         // 主表
         $table = $this->dbprefix(SITE_ID.'_'.$this->data['dirname']);
         $rt = $this->_field_exitsts('id', $name, $table, SITE_ID);

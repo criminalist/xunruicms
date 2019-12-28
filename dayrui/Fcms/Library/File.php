@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 /**
@@ -36,7 +33,7 @@ class File {
     }
 
     // 复制目录
-    // 源文件目录$basedir，源文件目录$filepath，新文件目录$savepath
+    // 源文件目录$basedir, 源文件目录$filepath, 新文件目录$savepath
     public function copy_dir($basedir, $filepath, $savepath){
         if ($dh = opendir($basedir)) {
             while (($file = readdir($dh)) !== false) {
@@ -120,8 +117,8 @@ class File {
         $zip = new \ZipArchive;//新建一个ZipArchive的对象
         /*
         通过ZipArchive的对象处理zip文件
-        $zip->open这个方法的参数表示处理的zip文件名。
-        如果对zip文件对象操作成功，$zip->open这个方法会返回TRUE
+        $zip->open这个方法的参数表示处理的zip文件名.
+        如果对zip文件对象操作成功, $zip->open这个方法会返回TRUE
         */
         if ($zip->open($zipfile) === TRUE)
         {

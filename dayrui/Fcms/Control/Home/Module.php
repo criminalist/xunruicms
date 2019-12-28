@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Home;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 用于前端模块内容显示
 class Module extends \Phpcmf\Common
@@ -53,7 +50,6 @@ class Module extends \Phpcmf\Common
                     echo $html;exit;
                 }
 
-
                 if (\Phpcmf\Service::IS_PC()) {
                     // 电脑端访问
                     file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname'], $file), $html);
@@ -85,8 +81,8 @@ class Module extends \Phpcmf\Common
                 echo $html;
             } else {
 
+                // 启用页面缓存
                 if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-                    // 启用页面缓存
                     $this->cachePage(SYS_CACHE_PAGE * 3600);
                 }
 
@@ -100,8 +96,8 @@ class Module extends \Phpcmf\Common
     // 模块打赏
     protected function _Donation($id = 0, $rt = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -141,14 +137,14 @@ class Module extends \Phpcmf\Common
         if ($catid) {
             $category = $this->module['category'][$catid];
             if (!$category) {
-                $this->goto_404_page(dr_lang('模块【%s】栏目（%s）不存在', $this->module['dirname'], $catid));
+                $this->goto_404_page(dr_lang('模块[%s]栏目（%s）不存在', $this->module['dirname'], $catid));
                 return;
             }
         } elseif ($catdir) {
             $catid = intval($this->module['category_dir'][$catdir]);
             $category = $this->module['category'][$catid];
             if (!$category) {
-                // 无法通过目录找到栏目时，尝试多及目录
+                // 无法通过目录找到栏目时, 尝试多及目录
                 foreach ($this->module['category'] as $t) {
                     if ($t['setting']['urlrule']) {
                         $rule = \Phpcmf\Service::L('cache')->get('urlrule', $t['setting']['urlrule']);
@@ -165,12 +161,12 @@ class Module extends \Phpcmf\Common
                 }
                 // 返回无法找到栏目
                 if (!$category) {
-                    $this->goto_404_page(dr_lang('模块【%s】栏目（%s）不存在', $this->module['dirname'], $catdir));
+                    $this->goto_404_page(dr_lang('模块[%s]栏目（%s）不存在', $this->module['dirname'], $catdir));
                     return;
                 }
             }
         } else {
-            $this->goto_404_page(dr_lang('模块【%s】栏目不存在', $this->module['dirname']));
+            $this->goto_404_page(dr_lang('模块[%s]栏目不存在', $this->module['dirname']));
             return;
         }
 
@@ -179,7 +175,7 @@ class Module extends \Phpcmf\Common
             dr_redirect(dr_url_prefix($category['url'], $this->module['dirname']), 'refresh');exit;
         }
 
-        // 单页验证是否存在子栏目，是否将下级第一个单页作为当前页
+        // 单页验证是否存在子栏目, 是否将下级第一个单页作为当前页
         if ($category['child'] && $category['setting']['getchild']) {
             $temp = explode(',', $category['childids']);
             if ($temp) {
@@ -262,8 +258,8 @@ class Module extends \Phpcmf\Common
     // 模块搜索
     protected function _Search($_catid = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -290,7 +286,9 @@ class Module extends \Phpcmf\Common
 
         // 搜索数据
         $data = $search->get($this->module, $get, $catid);
-        isset($data['code']) && $data['code'] == 0 && $data['msg'] && exit($this->_msg(0, $data['msg']));
+        if (isset($data['code']) && $data['code'] == 0 && $data['msg']) {
+            exit($this->_msg(0, $data['msg']));
+        }
         unset($data['params']['page']);
 
         // 获取同级栏目及父级栏目
@@ -299,7 +297,17 @@ class Module extends \Phpcmf\Common
             $catid
         );
 
-        $sototal = $data['contentid'] ? substr_count($data['contentid'], ',') + 1 : 0;
+        // 获取搜索总量
+        if (!$this->module['setting']['search']['total']) {
+            $sototal = intval($data['contentid']);
+        } else {
+            $sototal = $data['contentid'] ? substr_count($data['contentid'], ',') + 1 : 0;
+        }
+
+        // 存储缓存以便标签中使用
+        if ($data['id'] && $sototal) {
+            \Phpcmf\Service::L('cache')->set_data('search-'.$this->module['dirname'].'-'.$data['id'], $data, 3600);
+        }
 
         $list = [];
         if (IS_API_HTTP && $data['id']) {
@@ -317,14 +325,14 @@ class Module extends \Phpcmf\Common
         // 分页地址
         $urlrule = \Phpcmf\Service::L('Router')->search_url($data['params'], 'page', '{page}');
 
-        // 识别自定义地址，301定向
+        // 识别自定义地址, 301定向
         if (strpos(FC_NOW_URL, 'index.php') !== false && strpos($urlrule, 'index.php') === false) {
             $get['page'] > 1 && $data['params']['page'] = $get['page'];
             dr_redirect(\Phpcmf\Service::L('Router')->search_url($data['params']), 'auto', 301);exit;
         }
 
         \Phpcmf\Service::V()->assign($this->content_model->_format_search_seo($this->module, $catid, $data['params'], $get['page']));
-        \Phpcmf\Service::V()->assign(array(
+        \Phpcmf\Service::V()->assign([
             'cat' => $cat,
             'top' => $top,
             'get' => $get,
@@ -341,7 +349,7 @@ class Module extends \Phpcmf\Common
             'content_id' => $data['contentid'],
             'search_sql' => $data['sql'],
             'is_search_page' => 1,
-        ));
+        ]);
         \Phpcmf\Service::V()->module($this->module['dirname']);
 
         // 挂钩点 搜索完成之后
@@ -360,8 +368,8 @@ class Module extends \Phpcmf\Common
     // $param 自定义字段检索
     protected function _Show($id = 0, $param = [], $page = 1, $rt = 0) {
 
+        // 启用页面缓存
         if (SYS_CACHE && SYS_CACHE_PAGE && !defined('SC_HTML_FILE')) {
-            // 启用页面缓存
             $this->cachePage(SYS_CACHE_PAGE * 3600);
         }
 
@@ -373,7 +381,7 @@ class Module extends \Phpcmf\Common
         }
 
         $name = 'module_'.$this->module['dirname'].'_show_id_'.$id.($page > 1 ? $page : '');
-        $data = \Phpcmf\Service::L('cache')->init()->get($name);
+        $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             $data = $this->content_model->get_data($is_id ? $id : 0, 0, $param);
             if (!$data) {
@@ -403,15 +411,20 @@ class Module extends \Phpcmf\Common
                 }
             }
 
+            // 关闭插件嵌入
+            $is_fstatus = dr_is_app('fstatus') && isset($this->module['field']['fstatus']) && $this->module['field']['fstatus']['ismain'] ? 1 : 0;
+
             // 上一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
             $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id<', $id)->orderBy('id desc');
             $data['prev_page'] = $builder->limit(1)->get()->getRowArray();
 
             // 下一篇文章
             $builder = \Phpcmf\Service::M()->db->table($this->content_model->mytable);
             $builder->where('catid', (int)$data['catid'])->where('status', 9);
+            $is_fstatus && $builder->where('fstatus', 1);
             $builder->where('id>', $id)->orderBy('id asc');
             $data['next_page'] = $builder->limit(1)->get()->getRowArray();
 
@@ -432,10 +445,10 @@ class Module extends \Phpcmf\Common
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $data, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $data, SYS_CACHE_SHOW * 3600);
                     if (!$is_id) {
-                        // 表示自定义查询，再缓存一次ID
-                        \Phpcmf\Service::L('cache')->init()->save(str_replace($id, $data['id'], $name), $data, SYS_CACHE_SHOW * 3600);
+                        // 表示自定义查询, 再缓存一次ID
+                        \Phpcmf\Service::L('cache')->set_data(str_replace($id, $data['id'], $name), $data, SYS_CACHE_SHOW * 3600);
                     }
                 }
             }
@@ -446,7 +459,7 @@ class Module extends \Phpcmf\Common
 
         // 状态判断
         if ($data['status'] == 10 && !($this->uid == $data['uid'] || $this->member['is_admin'])) {
-            $this->goto_404_page(dr_lang('内容被删除，暂时无法访问'));
+            $this->goto_404_page(dr_lang('内容被删除, 暂时无法访问'));
             return;
         }
 
@@ -503,7 +516,7 @@ class Module extends \Phpcmf\Common
         return $data;
     }
 
-    // 模块草稿、审核、定时、内容页
+    // 模块草稿, 审核, 定时, 内容页
     protected function _MyShow($type, $id = 0, $page = 1) {
 
         switch($type) {
@@ -631,9 +644,9 @@ class Module extends \Phpcmf\Common
         if (!$cat) {
             return dr_return_data(0, '模块['.$this->module['name'].']栏目#'.$catid.'不存在');
         } elseif ($this->module['setting']['search']['catsync'] && $cat['tid'] == 1) {
-            return dr_return_data(0, '此模块开启了搜索集成栏目页，因此栏目无法生成静态');
+            return dr_return_data(0, '此模块开启了搜索集成栏目页, 因此栏目无法生成静态');
         } elseif ($this->module['setting']['html']) {
-            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
+            return dr_return_data(0, '栏目没有开启静态生成, 因此栏目无法生成静态');
         }
 
         // 无权限访问栏目内容
@@ -652,7 +665,7 @@ class Module extends \Phpcmf\Common
 
         $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
         if (!$hfile) {
-            return dr_return_data(0, '地址【'.$cat['url'].'】不规范');
+            return dr_return_data(0, '地址['.$cat['url'].']不规范');
         }
 
         // 标识变量
@@ -668,7 +681,7 @@ class Module extends \Phpcmf\Common
         // 格式化生成文件
         if (!@file_put_contents($hfile, $html, LOCK_EX)) {
             @unlink($hfile);
-            return dr_return_data(0, '文件【'.$hfile.'】写入失败');
+            return dr_return_data(0, '文件['.$hfile.']写入失败');
         }
 
         // 移动端生成
@@ -684,7 +697,7 @@ class Module extends \Phpcmf\Common
             $size = file_put_contents($hfile, $html, LOCK_EX);
             if (!$size) {
                 @unlink($hfile);
-                return dr_return_data(0, '无权限写入文件【' . $hfile . '】');
+                return dr_return_data(0, '无权限写入文件[' . $hfile . ']');
             }
         }
         return dr_return_data(1, 'ok');
@@ -715,7 +728,7 @@ class Module extends \Phpcmf\Common
         } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
             return dr_return_data(0, '请关闭站点访问权限');
         } elseif ($this->module['setting']['html']) {
-            return dr_return_data(0, '栏目没有开启静态生成，因此栏目无法生成静态');
+            return dr_return_data(0, '栏目没有开启静态生成, 因此栏目无法生成静态');
         }
 
         // 同步数据不执行生成
@@ -730,12 +743,12 @@ class Module extends \Phpcmf\Common
         $hfile = dr_to_html_file($file, $root);  // 格式化生成文件
 
         if (!$hfile) {
-            return dr_return_data(0, '地址【'.$data['url'].'】不规范');
+            return dr_return_data(0, '地址['.$data['url'].']不规范');
         }
 
         if (!@file_put_contents($hfile, $html, LOCK_EX)) {
             @unlink($hfile);
-            return dr_return_data(0, '文件【'.$hfile.'】写入失败');
+            return dr_return_data(0, '文件['.$hfile.']写入失败');
         }
 
         // 移动端生成
@@ -749,7 +762,7 @@ class Module extends \Phpcmf\Common
             $size = file_put_contents($hfile, $html, LOCK_EX);
             if (!$size) {
                 @unlink($hfile);
-                return dr_return_data(0, '无权限写入文件【'.$hfile.'】');
+                return dr_return_data(0, '无权限写入文件['.$hfile.']');
             }
 
             if ($page == 0 && $data['content_page']) {
@@ -765,7 +778,7 @@ class Module extends \Phpcmf\Common
     }
 
 
-    //==================生成静态部分 - 单个文件生成（继承，用于增加修改时实时生成）=========================
+    //==================生成静态部分 - 单个文件生成（继承, 用于增加修改时实时生成）=========================
 
 
     // 生成栏目静态页
@@ -773,16 +786,16 @@ class Module extends \Phpcmf\Common
 
         // 判断权限
         if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         }
 
         // 初始化模块
         $this->_module_init();
 
         if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+            $this->_json(0, '当前网站设置了访问权限, 无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
+            $this->_json(0, '当前模块设置了访问权限, 无法生成静态');
         }
 
         $this->_Create_Category_Html(intval(\Phpcmf\Service::L('input')->get('id')));
@@ -795,16 +808,16 @@ class Module extends \Phpcmf\Common
 
         // 判断权限
         if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         }
 
         // 初始化模块
         $this->_module_init();
 
         if ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+            $this->_json(0, '当前网站设置了访问权限, 无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
+            $this->_json(0, '当前模块设置了访问权限, 无法生成静态');
         }
 
         $this->_Create_Show_Html(intval(\Phpcmf\Service::L('input')->get('id')));
@@ -820,11 +833,11 @@ class Module extends \Phpcmf\Common
 
         // 判断权限
         if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+            $this->_json(0, '当前网站设置了访问权限, 无法生成静态');
         } elseif ($this->member_cache['auth_module'][SITE_ID][APP_DIR]['home']) {
-            $this->_json(0, '当前模块设置了访问权限，无法生成静态');
+            $this->_json(0, '当前模块设置了访问权限, 无法生成静态');
         }
 
         // 标识变量
@@ -834,7 +847,7 @@ class Module extends \Phpcmf\Common
         if (!$this->module['setting']['module_index_html']) {
             $this->_json(0, '当前模块未开启首页静态功能');
         } elseif ($this->module['setting']['search']['indexsync']) {
-            $this->_json(0, '当前模块设置了集成搜索页，无法生成静态');
+            $this->_json(0, '当前模块设置了集成搜索页, 无法生成静态');
         }
 
         $root = \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $this->module['dirname']);
@@ -862,7 +875,7 @@ class Module extends \Phpcmf\Common
             $mobile = file_put_contents($file, $html, LOCK_EX);
         }
 
-        $this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
+        $this->_json(1, dr_lang('电脑端 （%s）, 移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
     }
 
     // 生成内容静态选项
@@ -870,23 +883,23 @@ class Module extends \Phpcmf\Common
 
         // 判断权限
         if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         }
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'show-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
         if (!$pcount) {
-            $this->_json(0, '临时缓存数据不存在：'.$name2);
+            $this->_json(0, '临时缓存数据不存在:'.$name2);
         } elseif ($page > $pcount) {
             // 完成
             $this->_json(-1, '');
         }
 
         $name = 'show-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
-            $this->_json(0, '临时缓存数据不存在：'.$name);
+            $this->_json(0, '临时缓存数据不存在:'.$name);
         }
 
         $html = '';
@@ -938,23 +951,23 @@ class Module extends \Phpcmf\Common
 
         // 判断权限
         if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         }
 
         $page = max(1, intval($_GET['pp']));
         $name2 = 'category-'.APP_DIR.'-html-file';
-        $pcount = \Phpcmf\Service::L('cache')->init()->get($name2);
+        $pcount = \Phpcmf\Service::L('cache')->get_data($name2);
         if (!$pcount) {
-            $this->_json(0, '临时缓存数据不存在：'.$name2);
+            $this->_json(0, '临时缓存数据不存在:'.$name2);
         } elseif ($page > $pcount) {
             // 完成
             $this->_json(-1, '');
         }
 
         $name = 'category-'.APP_DIR.'-html-file-'.$page;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
-            $this->_json(0, '临时缓存数据不存在：'.$name);
+            $this->_json(0, '临时缓存数据不存在:'.$name);
         }
 
         if (APP_DIR) {

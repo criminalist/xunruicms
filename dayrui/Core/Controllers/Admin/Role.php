@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 class Role extends \Phpcmf\Common
@@ -88,7 +88,7 @@ class Role extends \Phpcmf\Common
 		exit;
 	}
 
-	// 角色组权限，超级管理员有权限
+	// 角色组权限, 超级管理员有权限
 	public function edit_auth() {
 
 		$id = intval(\Phpcmf\Service::L('input')->get('id'));

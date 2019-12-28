@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -28,7 +28,7 @@ class Category extends \Phpcmf\Home\Module
 			$id = intval($module['category_dir'][$dir]);
             $cat = $module['category'][$id];
 			if (!$cat) {
-				// 无法通过目录找到栏目时，尝试多及目录
+				// 无法通过目录找到栏目时, 尝试多及目录
 				foreach ($module['category'] as $t) {
 					if ($t['setting']['urlrule']) {
 						$rule = \Phpcmf\Service::L('cache')->get('urlrule', $t['setting']['urlrule']);

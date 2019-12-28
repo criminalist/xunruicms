@@ -44,7 +44,7 @@
 		this.cachePrefix = "data_";
 		//写入到选择框的option的样式名
 		this.OPTIONS_CLASS = "ld-option";
-		//缓存，为一个对象字面量。
+		//缓存, 为一个对象字面量.
 		this.cache = {};
 	}
 	yijs.Ld.prototype = {
@@ -57,7 +57,7 @@
 			var _opts = this.options;
 			if (this.$applyTo != null && this.size() > 0) {
 				_opts.style != null && this.css(_opts.style);
-				//加载默认数据，向第一个选择框填充数据
+				//加载默认数据, 向第一个选择框填充数据
 				this.load(_opts.defaultLoadSelectIndex,_opts.defaultParentId);
 				_opts.texts.length > 0 && this.selected(_opts.texts);
 				//给每个选择框绑定change事件
@@ -96,7 +96,7 @@
 			return this;
 		},
 		/**
-		 * 读取数据，并写入到选择框
+		 * 读取数据, 并写入到选择框
 		 * @param {Number} selectIndex 选择框数组的索引值
 		 * @param {String} parent_id  父级id
 		 */
@@ -106,7 +106,7 @@
 			for(var i = selectIndex ; i< _that.size();i++){
 				_that.removeOptions(i);
 			}
-			//存在缓存数据,直接使用缓存数据生成选择框的子项；不存在，则请求数据
+			//存在缓存数据,直接使用缓存数据生成选择框的子项;不存在, 则请求数据
 			if(_that.cache[parent_id]){
 				_that._create(_that.cache[parent_id],selectIndex);
 				_that.$applyTo.eq(selectIndex).trigger("afterLoad");
@@ -120,8 +120,8 @@
 				_ajaxOptions.data = _d;
 				//ajax获取数据成功后的回调函数
 				_ajaxOptions.success = function(data){
-						//遍历数据，获取html字符串
-						if (data.length > 0) { //本菜单有内容才显示，否者隐藏(dayrui添加)
+						//遍历数据, 获取html字符串
+						if (data.length > 0) { //本菜单有内容才显示, 否者隐藏(dayrui添加)
 							_that.$applyTo.eq(selectIndex).show();
 						} else {
 							_that.$applyTo.eq(selectIndex).hide();

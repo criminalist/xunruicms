@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -21,6 +21,8 @@ class Register extends \Phpcmf\Common
             $this->_msg(0, dr_lang('系统没有可注册的用户组'));
         } elseif (!$this->member_cache['register']['field']) {
             $this->_msg(0, dr_lang('系统没有可用的注册字段'));
+        } elseif (!array_intersect($this->member_cache['register']['field'], ['username', 'email', 'phone'])) {
+            $this->_msg(0, dr_lang('必须设置用户名, 邮箱, 手机的其中一个设为可注册字段'));
         }
 
         // 验证用户组
@@ -56,7 +58,7 @@ class Register extends \Phpcmf\Common
         }
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
             if (!\Phpcmf\Service::L('input')->post('is_protocol')) {
                 $this->_json(0, dr_lang('你没有同意注册协议'));
             } elseif ($this->member_cache['register']['code']
@@ -71,6 +73,9 @@ class Register extends \Phpcmf\Common
             } elseif (in_array('phone', $this->member_cache['register']['field'])
                 && !\Phpcmf\Service::L('Form')->check_phone($post['phone'])) {
                 $this->_json(0, dr_lang('手机号码格式不正确'), ['field' => 'phone']);
+            } elseif (in_array('name', $this->member_cache['register']['field'])
+                && !\Phpcmf\Service::L('Form')->check_name($post['name'])) {
+                $this->_json(0, dr_lang('姓名格式不正确'), ['field' => 'name']);
             } elseif (empty($post['password'])) {
                 $this->_json(0, dr_lang('密码必须填写'), ['field' => 'password']);
             } elseif ($post['password'] != $post['password2']) {
@@ -99,6 +104,7 @@ class Register extends \Phpcmf\Common
                     'phone' => (string)$post['phone'],
                     'email' => (string)$post['email'],
                     'password' => dr_safe_password($post['password']),
+                    'name' => dr_safe_replace($post['name']),
                 ], $data[1]);
                 if ($rt['code']) {
                     // 注册成功

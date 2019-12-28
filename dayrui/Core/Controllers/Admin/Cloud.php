@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
 
 // 云服务
 class Cloud extends \Phpcmf\Common
@@ -21,10 +19,10 @@ class Cloud extends \Phpcmf\Common
         if (is_file(MYPATH . 'Config/License.php')) {
             $this->license = require MYPATH . 'Config/License.php';
             if (!$this->license['license']) {
-                exit('程序不是最新，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
+                exit('程序不是最新, 请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
             }
         } else {
-            exit('当前程序版本：'.$this->cmf_version['version'].'，需要更新到正式版，请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
+            exit('当前程序版本:'.$this->cmf_version['version'].', 需要更新到正式版, 请在官网 http://www.xunruicms.com/down_zip/ 下载[安装包]并覆盖dayrui目录');
         }
 
         list($this->admin_url) = explode('?', FC_NOW_URL);
@@ -87,6 +85,9 @@ class Cloud extends \Phpcmf\Common
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module')
                     && is_file(dr_get_app_dir($dir).'Config/Version.php')) {
                     $vsn = require dr_get_app_dir($dir).'Config/Version.php';
+                    if (!IS_DEV && $vsn['license'] != $this->license['license']) {
+                        continue;
+                    }
                     $vsn['id'] && $id[] = $vsn['id'];
                 }
             }
@@ -138,6 +139,9 @@ class Cloud extends \Phpcmf\Common
                 $cfg = require $path.'Config/App.php';
                 if (($cfg['type'] != 'module' || $cfg['ftype'] == 'module') && is_file($path.'Config/Version.php')) {
                     $vsn = require $path.'Config/Version.php';
+                    if (!IS_DEV && strlen($vsn['license']) > 20 && $vsn['license'] != $this->license['license']) {
+                        continue;
+                    }
                     $data[$key] = [
                         'id' => $vsn['id'],
                         'name' => $cfg['name'],
@@ -170,7 +174,9 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !$dir && $this->_json(0, dr_lang('缺少模板参数'));
+        if (!$dir) {
+            $this->_json(0, dr_lang('缺少模板参数'));
+        }
 		
 		\Phpcmf\Service::M('Site')->set_theme($dir, SITE_ID);
 		\Phpcmf\Service::M('Site')->set_template($dir, SITE_ID);
@@ -181,7 +187,7 @@ class Cloud extends \Phpcmf\Common
         }
         
         \Phpcmf\Service::M('cache')->sync_cache('');
-        $this->_json(1, dr_lang('当前站点模板安装成功，请访问前台预览'));
+        $this->_json(1, dr_lang('当前站点模板安装成功, 请访问前台预览'));
     }
 
     // 安装程序
@@ -189,11 +195,15 @@ class Cloud extends \Phpcmf\Common
 
         $id = dr_safe_filename(\Phpcmf\Service::L('input')->get('id'));
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !is_file(dr_get_app_dir($dir).'Config/App.php') && $this->_json(0, dr_lang('安装程序App.php不存在'));
+        if (!is_file(dr_get_app_dir($dir).'Config/App.php')) {
+            $this->_json(0, dr_lang('安装程序App.php不存在'));
+        }
 
         // 开始安装
         $rt = \Phpcmf\Service::M('App')->install($dir);
-        !$rt['code'] && $this->_json(0, $rt['msg']);
+        if (!$rt['code']) {
+            $this->_json(0, $rt['msg']);
+        }
 
         // 运行安装脚本
         if (is_file(WRITEPATH.'temp/run-'.$id.'.php')) {
@@ -201,17 +211,21 @@ class Cloud extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::M('cache')->sync_cache('');
-        $this->_json(1, dr_lang('安装成功，请刷新后台页面'));
+        $this->_json(1, dr_lang('安装成功, 请刷新后台页面'));
     }
 
     // 卸载程序
     public function uninstall() {
 
         $dir = dr_safe_replace(\Phpcmf\Service::L('input')->get('dir'));
-        !preg_match('/^[a-z]+$/U', $dir) && $this->_json(0, dr_lang('目录[%s]格式不正确', $dir));
+        if (!preg_match('/^[a-z]+$/U', $dir)) {
+            $this->_json(0, dr_lang('目录[%s]格式不正确', $dir));
+        }
 
         $path = dr_get_app_dir($dir);
-        !is_dir($path) && $this->_json(0, dr_lang('目录[%s]不存在', $path));
+        if (!is_dir($path)) {
+            $this->_json(0, dr_lang('目录[%s]不存在', $path));
+        }
 
         $rt = \Phpcmf\Service::M('App')->uninstall($dir);
 
@@ -250,22 +264,22 @@ class Cloud extends \Phpcmf\Common
     function install_app() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站:授权验证过期, 请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (!is_file($file)) {
-            $this->_json(0, '本站：文件还没有被下载');
+            $this->_json(0, '本站:文件还没有被下载');
         } elseif (!class_exists('ZipArchive')) {
-            $this->_json(0, '本站：php_zip扩展未开启，无法在线安装功能');
+            $this->_json(0, '本站:php_zip扩展未开启, 无法在线安装功能');
         }
 
         // 解压目录
         $cmspath = WRITEPATH.'temp/'.$id.'/';
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-            cloud_msg(0, '本站：文件解压失败');
+            cloud_msg(0, '本站:文件解压失败');
         }
         unlink($file);
 
@@ -405,7 +419,7 @@ class Cloud extends \Phpcmf\Common
                 MYPATH,
             ];
             foreach ($dir as $t) {
-                !dr_check_put_path($t) && $this->_json(0, dr_lang('目录【%s】不可写', $t));
+                !dr_check_put_path($t) && $this->_json(0, dr_lang('目录[%s]不可写', $t));
             }
         }
 
@@ -440,7 +454,7 @@ class Cloud extends \Phpcmf\Common
 
         $data = dr_string2array($json);
         if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新下载', $json);
+            $this->_json(0, '服务端数据异常, 请重新下载', $json);
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
         } elseif (!$data['data']['size']) {
@@ -449,20 +463,20 @@ class Cloud extends \Phpcmf\Common
             $this->_json(0, '服务端文件下载地址异常');
         }
 
-        \Phpcmf\Service::L('cache')->init()->save('cloud-update-'.$id, $data['data'], 3600);
+        \Phpcmf\Service::L('cache')->set_data('cloud-update-'.$id, $data['data'], 3600);
 
         $this->_json(1, 'ok', $data['data']);
     }
     // 开始下载脚本
     public function update_file_down() {
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '授权验证过期，请重试');
+            $this->_json(0, '授权验证过期, 请重试');
         } elseif (!$cache['size']) {
-            $this->_json(0, '关键数据不存在，请重试');
+            $this->_json(0, '关键数据不存在, 请重试');
         } elseif (!function_exists('fsockopen')) {
-            $this->_json(0, '本站：PHP环境不支持fsockopen');
+            $this->_json(0, '本站:PHP环境不支持fsockopen');
         }
         // 执行下载文件
         $file = WRITEPATH.'temp/'.$id.'.zip';
@@ -472,13 +486,13 @@ class Cloud extends \Phpcmf\Common
         // 做些日志处理
         if ($fp = fopen($cache['url'], "rb")) {
             if (!$download_fp = fopen($file, "wb")) {
-                $this->_json(0, '本站：无法写入远程文件', $cache['url']);
+                $this->_json(0, '本站:无法写入远程文件', $cache['url']);
             }
             while (!feof($fp)) {
                 if (!is_file($file)) {
                     // 如果临时文件被删除就取消下载
                     fclose($download_fp);
-                    $this->_json(0, '本站：临时文件被删除', $cache['url']);
+                    $this->_json(0, '本站:临时文件被删除', $cache['url']);
                 }
                 fwrite($download_fp, fread($fp, 1024 * 8 ), 1024 * 8);
             }
@@ -488,18 +502,18 @@ class Cloud extends \Phpcmf\Common
             $this->_json(1, 'ok');
         } else {
             unlink($file);
-            $this->_json(0, '本站：fopen打开远程文件失败', $cache['url']);
+            $this->_json(0, '本站:fopen打开远程文件失败', $cache['url']);
         }
     }
     // 检测下载进度
     public function update_file_check() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站:授权验证过期, 请重试');
         } elseif (!$cache['size']) {
-            $this->_json(0, '本站：关键数据不存在，请重试');
+            $this->_json(0, '本站:关键数据不存在, 请重试');
         }
 
         // 执行下载文件
@@ -507,29 +521,29 @@ class Cloud extends \Phpcmf\Common
         if (is_file($file)) {
             $now = max(1, filesize($file));
             $jd = max(1, round($now / $cache['size'] * 100, 0));
-            $this->_json($jd, '<p><label class="rleft">需下载文件大小：'.dr_format_file_size($cache['size']).'，已下载：'.dr_format_file_size($now).'</label><label class="rright"><span class="ok">'.$jd.'%</span></label></p>');
+            $this->_json($jd, '<p><label class="rleft">需下载文件大小:'.dr_format_file_size($cache['size']).', 已下载:'.dr_format_file_size($now).'</label><label class="rright"><span class="ok">'.$jd.'%</span></label></p>');
         } else {
-            $this->_json(0, '本站：文件还没有被下载');
+            $this->_json(0, '本站:文件还没有被下载');
         }
     }
     // 升级程序
     public function update_file_install() {
 
         $id = dr_safe_replace($_GET['id']);
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-update-'.$id);
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-update-'.$id);
         if (!$cache) {
-            $this->_json(0, '本站：授权验证过期，请重试');
+            $this->_json(0, '本站:授权验证过期, 请重试');
         }
 
         $file = WRITEPATH.'temp/'.$id.'.zip';
         if (!is_file($file)) {
-            $this->_json(0, '本站：文件还没有被下载');
+            $this->_json(0, '本站:文件还没有被下载');
         }
 
         // 解压目录
         $cmspath = WRITEPATH.'temp/'.$id.'/';
         if (!\Phpcmf\Service::L('file')->unzip($file, $cmspath)) {
-            cloud_msg(0, '本站：文件解压失败');
+            cloud_msg(0, '本站:文件解压失败');
         }
         unlink($file);
 
@@ -634,12 +648,12 @@ class Cloud extends \Phpcmf\Common
 
         $data = dr_string2array($json);
         if (!$data) {
-            $this->_json(0, '服务端数据异常，请重新再试');
+            $this->_json(0, '服务端数据异常, 请重新再试');
         } elseif (!$data['code']) {
             $this->_json(0, $data['msg']);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save('cloud-bf', $data['data'], 3600);
+        \Phpcmf\Service::L('cache')->set_data('cloud-bf', $data['data'], 3600);
 
         $this->_json(dr_count($data['data']), $data['msg']);
     }
@@ -647,8 +661,10 @@ class Cloud extends \Phpcmf\Common
     public function bf_check() {
 
         $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('cloud-bf');
-        !$cache && $this->_json(0, '数据缓存不存在');
+        $cache = \Phpcmf\Service::L('cache')->get_data('cloud-bf');
+        if (!$cache) {
+            $this->_json(0, '数据缓存不存在');
+        }
 
         $data = $cache[$page];
         if ($data) {

@@ -1,6 +1,6 @@
 {template "header.html"}
 <div class="note note-danger">
-    <p>升级程序之前，请务必备份全站数据</p>
+    <p>升级程序之前, 请务必备份全站数据</p>
 </div>
 
 <div class="right-card-box">
@@ -28,7 +28,7 @@
                 <td>
                     {if !$is_syy}
                     <label style="display: none" id="dr_update_{$dir}">
-					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id])}', '{dr_lang('升级前请做好系统备份，你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
+					<button type="button" onclick="dr_update_cms('{dr_url('cloud/todo_update', ['id'=>$t.id])}', '{dr_lang('升级前请做好系统备份, 你确定要升级吗？')}', 1)" class="btn red btn-xs"> <i class="fa fa-cloud-upload"></i> {dr_lang('在线升级')}</button>
 					{if $dir == 'phpcmf'}
 					<a href="https://www.xunruicms.com/member.php?action=down&cid={$cmf_version.id}&is_update=v{$t.version}" target="_blank" class="btn green btn-xs"> <i class="fa fa-cloud-download"></i> {dr_lang('离线下载')}</a>
 					{/if}
@@ -75,7 +75,7 @@
                 }
             },
             error: function(HttpRequest, ajaxOptions, thrownError) {
-                $("#dr_row_{$dir}").html("<font color='red'>网络异常，请稍后再试</font>");
+                $("#dr_row_{$dir}").html("<font color='red'>网络异常, 请稍后再试</font>");
             }
         });
         {/if}

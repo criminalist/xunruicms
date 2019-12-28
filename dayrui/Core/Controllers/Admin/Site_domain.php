@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -66,7 +66,7 @@ class Site_domain extends \Phpcmf\Common
 
             \Phpcmf\Service::M('Site')->edit_domain($domain);
             \Phpcmf\Service::L('input')->system_log('变更网站主域名');
-            exit($this->_json(1, dr_lang('操作成功，请域名解析到本站IP')));
+            exit($this->_json(1, dr_lang('操作成功, 请域名解析到本站IP')));
         }
 
         \Phpcmf\Service::V()->assign([

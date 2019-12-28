@@ -4,7 +4,7 @@
 /**
  * 
  * 数据对象基础类, 该类中定义数据类最基本的行为, 包括:
- * 计算/设置/获取签名、输出xml格式的参数、从xml读取数据对象等
+ * 计算/设置/获取签名, 输出xml格式的参数, 从xml读取数据对象等
  * @author widyhu
  *
  */
@@ -50,7 +50,7 @@ class WxPayDataBase
 		if(!is_array($this->values) 
 			|| count($this->values) <= 0)
 		{
-    		return dr_return_data(0, "数组数据异常！");
+    		return dr_return_data(0, "数组数据异常!");
     	}
     	
     	$xml = "<xml>";
@@ -74,7 +74,7 @@ class WxPayDataBase
 	public function FromXml($xml)
 	{	
 		if(!$xml){
-			return dr_return_data(0, "xml数据异常！");
+			return dr_return_data(0, "xml数据异常!");
 		}
         //将XML转为array
         //禁止引用外部xml实体
@@ -143,14 +143,14 @@ class WxPayResults extends WxPayDataBase
 	{
 		//fix异常
 		if(!$this->IsSignSet()){
-			return dr_return_data(0, "签名错误！");
+			return dr_return_data(0, "签名错误!");
 		}
 		
 		$sign = $this->MakeSign();
 		if($this->GetSign() == $sign){
 			return true;
 		}
-		return dr_return_data(0, "签名错误！");
+		return dr_return_data(0, "签名错误!");
 	}
 	
 	/**
@@ -355,7 +355,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -363,7 +363,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -371,7 +371,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -458,7 +458,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
+	* 设置商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -466,7 +466,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号的值
+	* 获取商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -474,7 +474,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号是否存在
+	* 判断商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -536,7 +536,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP。
+	* 设置APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP.
 	* @param string $value 
 	**/
 	public function SetSpbill_create_ip($value)
@@ -544,7 +544,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['spbill_create_ip'] = $value;
 	}
 	/**
-	* 获取APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP。的值
+	* 获取APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP.的值
 	* @return 值
 	**/
 	public function GetSpbill_create_ip()
@@ -552,7 +552,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['spbill_create_ip'];
 	}
 	/**
-	* 判断APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP。是否存在
+	* 判断APP和网页支付提交用户端ip, Native支付填调用微信支付API的机器IP.是否存在
 	* @return true 或 false
 	**/
 	public function IsSpbill_create_ipSet()
@@ -562,7 +562,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
+	* 设置订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.其他详见时间规则
 	* @param string $value 
 	**/
 	public function SetTime_start($value)
@@ -570,7 +570,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['time_start'] = $value;
 	}
 	/**
-	* 获取订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则的值
+	* 获取订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.其他详见时间规则的值
 	* @return 值
 	**/
 	public function GetTime_start()
@@ -578,7 +578,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['time_start'];
 	}
 	/**
-	* 判断订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则是否存在
+	* 判断订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.其他详见时间规则是否存在
 	* @return true 或 false
 	**/
 	public function IsTime_startSet()
@@ -588,7 +588,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则
+	* 设置订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则
 	* @param string $value 
 	**/
 	public function SetTime_expire($value)
@@ -596,7 +596,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['time_expire'] = $value;
 	}
 	/**
-	* 获取订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则的值
+	* 获取订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则的值
 	* @return 值
 	**/
 	public function GetTime_expire()
@@ -604,7 +604,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['time_expire'];
 	}
 	/**
-	* 判断订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则是否存在
+	* 判断订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则是否存在
 	* @return true 或 false
 	**/
 	public function IsTime_expireSet()
@@ -692,7 +692,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置trade_type=NATIVE, 此参数必传。此id为二维码中包含的商品ID, 商户自行定义。
+	* 设置trade_type=NATIVE, 此参数必传.此id为二维码中包含的商品ID, 商户自行定义.
 	* @param string $value 
 	**/
 	public function SetProduct_id($value)
@@ -700,7 +700,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['product_id'] = $value;
 	}
 	/**
-	* 获取trade_type=NATIVE, 此参数必传。此id为二维码中包含的商品ID, 商户自行定义。的值
+	* 获取trade_type=NATIVE, 此参数必传.此id为二维码中包含的商品ID, 商户自行定义.的值
 	* @return 值
 	**/
 	public function GetProduct_id()
@@ -708,7 +708,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['product_id'];
 	}
 	/**
-	* 判断trade_type=NATIVE, 此参数必传。此id为二维码中包含的商品ID, 商户自行定义。是否存在
+	* 判断trade_type=NATIVE, 此参数必传.此id为二维码中包含的商品ID, 商户自行定义.是否存在
 	* @return true 或 false
 	**/
 	public function IsProduct_idSet()
@@ -718,7 +718,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 
 
 	/**
-	* 设置trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识。下单前需要调用【网页授权获取用户信息】接口获取到用户的Openid。
+	* 设置trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识.下单前需要调用[网页授权获取用户信息]接口获取到用户的Openid.
 	* @param string $value 
 	**/
 	public function SetOpenid($value)
@@ -726,7 +726,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		$this->values['openid'] = $value;
 	}
 	/**
-	* 获取trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识。下单前需要调用【网页授权获取用户信息】接口获取到用户的Openid。 的值
+	* 获取trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识.下单前需要调用[网页授权获取用户信息]接口获取到用户的Openid. 的值
 	* @return 值
 	**/
 	public function GetOpenid()
@@ -734,7 +734,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return $this->values['openid'];
 	}
 	/**
-	* 判断trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识。下单前需要调用【网页授权获取用户信息】接口获取到用户的Openid。 是否存在
+	* 判断trade_type=JSAPI, 此参数必传, 用户在商户appid下的唯一标识.下单前需要调用[网页授权获取用户信息]接口获取到用户的Openid. 是否存在
 	* @return true 或 false
 	**/
 	public function IsOpenidSet()
@@ -830,7 +830,7 @@ class WxPayOrderQuery extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号, 当没提供transaction_id时需要传这个。
+	* 设置商户系统内部的订单号, 当没提供transaction_id时需要传这个.
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -838,7 +838,7 @@ class WxPayOrderQuery extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号, 当没提供transaction_id时需要传这个。的值
+	* 获取商户系统内部的订单号, 当没提供transaction_id时需要传这个.的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -846,7 +846,7 @@ class WxPayOrderQuery extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号, 当没提供transaction_id时需要传这个。是否存在
+	* 判断商户系统内部的订单号, 当没提供transaction_id时需要传这个.是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -856,7 +856,7 @@ class WxPayOrderQuery extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -864,7 +864,7 @@ class WxPayOrderQuery extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -872,7 +872,7 @@ class WxPayOrderQuery extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -968,7 +968,7 @@ class WxPayCloseOrder extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
+	* 设置商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -976,7 +976,7 @@ class WxPayCloseOrder extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号的值
+	* 获取商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -984,7 +984,7 @@ class WxPayCloseOrder extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号是否存在
+	* 判断商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -1080,7 +1080,7 @@ class WxPayRefund extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -1088,7 +1088,7 @@ class WxPayRefund extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -1096,7 +1096,7 @@ class WxPayRefund extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -1131,7 +1131,7 @@ class WxPayRefund extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no
+	* 设置商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -1139,7 +1139,7 @@ class WxPayRefund extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no的值
+	* 获取商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -1147,7 +1147,7 @@ class WxPayRefund extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no是否存在
+	* 判断商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -1373,7 +1373,7 @@ class WxPayRefundQuery extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -1381,7 +1381,7 @@ class WxPayRefundQuery extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -1389,7 +1389,7 @@ class WxPayRefundQuery extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -1476,7 +1476,7 @@ class WxPayRefundQuery extends WxPayDataBase
 
 
 	/**
-	* 设置微信退款单号refund_id、out_refund_no、out_trade_no、transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no
+	* 设置微信退款单号refund_id, out_refund_no, out_trade_no, transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no
 	* @param string $value 
 	**/
 	public function SetRefund_id($value)
@@ -1484,7 +1484,7 @@ class WxPayRefundQuery extends WxPayDataBase
 		$this->values['refund_id'] = $value;
 	}
 	/**
-	* 获取微信退款单号refund_id、out_refund_no、out_trade_no、transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no的值
+	* 获取微信退款单号refund_id, out_refund_no, out_trade_no, transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no的值
 	* @return 值
 	**/
 	public function GetRefund_id()
@@ -1492,7 +1492,7 @@ class WxPayRefundQuery extends WxPayDataBase
 		return $this->values['refund_id'];
 	}
 	/**
-	* 判断微信退款单号refund_id、out_refund_no、out_trade_no、transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no是否存在
+	* 判断微信退款单号refund_id, out_refund_no, out_trade_no, transaction_id四个参数必填一个, 如果同时存在优先级为:refund_id>out_refund_no>transaction_id>out_trade_no是否存在
 	* @return true 或 false
 	**/
 	public function IsRefund_idSet()
@@ -1588,7 +1588,7 @@ class WxPayDownloadBill extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -1596,7 +1596,7 @@ class WxPayDownloadBill extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -1604,7 +1604,7 @@ class WxPayDownloadBill extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -1751,7 +1751,7 @@ class WxPayReport extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -1759,7 +1759,7 @@ class WxPayReport extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -1767,7 +1767,7 @@ class WxPayReport extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -1777,7 +1777,7 @@ class WxPayReport extends WxPayDataBase
 
 
 	/**
-	* 设置上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行。
+	* 设置上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行.
 	* @param string $value 
 	**/
 	public function SetInterface_url($value)
@@ -1785,7 +1785,7 @@ class WxPayReport extends WxPayDataBase
 		$this->values['interface_url'] = $value;
 	}
 	/**
-	* 获取上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行。的值
+	* 获取上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行.的值
 	* @return 值
 	**/
 	public function GetInterface_url()
@@ -1793,7 +1793,7 @@ class WxPayReport extends WxPayDataBase
 		return $this->values['interface_url'];
 	}
 	/**
-	* 判断上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行。是否存在
+	* 判断上报对应的接口的完整URL, 类似:https://api.mch.weixin.qq.com/pay/unifiedorder对于被扫支付, 为更好的和商户共同分析一次业务行为的整体耗时情况, 对于两种接入模式, 请都在门店侧对一次被扫行为进行一次单独的整体上报, 上报URL指定为:https://api.mch.weixin.qq.com/pay/micropay/total关于两种接入模式具体可参考本文档章节:被扫支付商户接入模式其它接口调用仍然按照调用一次, 上报一次来进行.是否存在
 	* @return true 或 false
 	**/
 	public function IsInterface_urlSet()
@@ -1959,7 +1959,7 @@ class WxPayReport extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量。 
+	* 设置商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量.
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -1967,7 +1967,7 @@ class WxPayReport extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量。 的值
+	* 获取商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量. 的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -1975,7 +1975,7 @@ class WxPayReport extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量。 是否存在
+	* 判断商户系统内部的订单号,商户可以在上报时提供相关商户订单号方便微信支付更好的提高服务质量. 是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -2011,7 +2011,7 @@ class WxPayReport extends WxPayDataBase
 
 
 	/**
-	* 设置系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则
+	* 设置系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则
 	* @param string $value 
 	**/
 	public function SetTime($value)
@@ -2019,7 +2019,7 @@ class WxPayReport extends WxPayDataBase
 		$this->values['time'] = $value;
 	}
 	/**
-	* 获取系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则的值
+	* 获取系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则的值
 	* @return 值
 	**/
 	public function GetTime()
@@ -2027,7 +2027,7 @@ class WxPayReport extends WxPayDataBase
 		return $this->values['time'];
 	}
 	/**
-	* 判断系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。其他详见时间规则是否存在
+	* 判断系统时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.其他详见时间规则是否存在
 	* @return true 或 false
 	**/
 	public function IsTimeSet()
@@ -2123,7 +2123,7 @@ class WxPayShortUrl extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -2131,7 +2131,7 @@ class WxPayShortUrl extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -2139,7 +2139,7 @@ class WxPayShortUrl extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -2235,7 +2235,7 @@ class WxPayMicroPay extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -2243,7 +2243,7 @@ class WxPayMicroPay extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -2251,7 +2251,7 @@ class WxPayMicroPay extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()
@@ -2338,7 +2338,7 @@ class WxPayMicroPay extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号
+	* 设置商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -2346,7 +2346,7 @@ class WxPayMicroPay extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号的值
+	* 获取商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -2354,7 +2354,7 @@ class WxPayMicroPay extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号,32个字符内、可包含字母, 其他说明见商户订单号是否存在
+	* 判断商户系统内部的订单号,32个字符内, 可包含字母, 其他说明见商户订单号是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -2442,7 +2442,7 @@ class WxPayMicroPay extends WxPayDataBase
 
 
 	/**
-	* 设置订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。详见时间规则
+	* 设置订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.详见时间规则
 	* @param string $value 
 	**/
 	public function SetTime_start($value)
@@ -2450,7 +2450,7 @@ class WxPayMicroPay extends WxPayDataBase
 		$this->values['time_start'] = $value;
 	}
 	/**
-	* 获取订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。详见时间规则的值
+	* 获取订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.详见时间规则的值
 	* @return 值
 	**/
 	public function GetTime_start()
@@ -2458,7 +2458,7 @@ class WxPayMicroPay extends WxPayDataBase
 		return $this->values['time_start'];
 	}
 	/**
-	* 判断订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010。详见时间规则是否存在
+	* 判断订单生成时间, 格式为yyyyMMddHHmmss, 如2009年12月25日9点10分10秒表示为20091225091010.详见时间规则是否存在
 	* @return true 或 false
 	**/
 	public function IsTime_startSet()
@@ -2468,7 +2468,7 @@ class WxPayMicroPay extends WxPayDataBase
 
 
 	/**
-	* 设置订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。详见时间规则
+	* 设置订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.详见时间规则
 	* @param string $value 
 	**/
 	public function SetTime_expire($value)
@@ -2476,7 +2476,7 @@ class WxPayMicroPay extends WxPayDataBase
 		$this->values['time_expire'] = $value;
 	}
 	/**
-	* 获取订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。详见时间规则的值
+	* 获取订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.详见时间规则的值
 	* @return 值
 	**/
 	public function GetTime_expire()
@@ -2484,7 +2484,7 @@ class WxPayMicroPay extends WxPayDataBase
 		return $this->values['time_expire'];
 	}
 	/**
-	* 判断订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010。详见时间规则是否存在
+	* 判断订单失效时间, 格式为yyyyMMddHHmmss, 如2009年12月27日9点10分10秒表示为20091227091010.详见时间规则是否存在
 	* @return true 或 false
 	**/
 	public function IsTime_expireSet()
@@ -2632,7 +2632,7 @@ class WxPayReverse extends WxPayDataBase
 
 
 	/**
-	* 设置商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no
+	* 设置商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no
 	* @param string $value 
 	**/
 	public function SetOut_trade_no($value)
@@ -2640,7 +2640,7 @@ class WxPayReverse extends WxPayDataBase
 		$this->values['out_trade_no'] = $value;
 	}
 	/**
-	* 获取商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no的值
+	* 获取商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no的值
 	* @return 值
 	**/
 	public function GetOut_trade_no()
@@ -2648,7 +2648,7 @@ class WxPayReverse extends WxPayDataBase
 		return $this->values['out_trade_no'];
 	}
 	/**
-	* 判断商户系统内部的订单号,transaction_id、out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no是否存在
+	* 判断商户系统内部的订单号,transaction_id, out_trade_no二选一, 如果同时存在优先级:transaction_id> out_trade_no是否存在
 	* @return true 或 false
 	**/
 	public function IsOut_trade_noSet()
@@ -2658,7 +2658,7 @@ class WxPayReverse extends WxPayDataBase
 
 
 	/**
-	* 设置随机字符串, 不长于32位。推荐随机数生成算法
+	* 设置随机字符串, 不长于32位.推荐随机数生成算法
 	* @param string $value 
 	**/
 	public function SetNonce_str($value)
@@ -2666,7 +2666,7 @@ class WxPayReverse extends WxPayDataBase
 		$this->values['nonce_str'] = $value;
 	}
 	/**
-	* 获取随机字符串, 不长于32位。推荐随机数生成算法的值
+	* 获取随机字符串, 不长于32位.推荐随机数生成算法的值
 	* @return 值
 	**/
 	public function GetNonce_str()
@@ -2674,7 +2674,7 @@ class WxPayReverse extends WxPayDataBase
 		return $this->values['nonce_str'];
 	}
 	/**
-	* 判断随机字符串, 不长于32位。推荐随机数生成算法是否存在
+	* 判断随机字符串, 不长于32位.推荐随机数生成算法是否存在
 	* @return true 或 false
 	**/
 	public function IsNonce_strSet()

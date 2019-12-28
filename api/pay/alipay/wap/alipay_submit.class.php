@@ -6,8 +6,8 @@
  * 版本:3.3
  * 日期:2012-07-23
  * 说明:
- * 以下代码只是为了方便商户测试而提供的样例代码, 商户可以根据自己网站的需要, 按照技术文档编写,并非一定要使用该代码。
- * 该代码仅供学习和研究支付宝接口使用, 只是提供一个参考。
+ * 以下代码只是为了方便商户测试而提供的样例代码, 商户可以根据自己网站的需要, 按照技术文档编写,并非一定要使用该代码.
+ * 该代码仅供学习和研究支付宝接口使用, 只是提供一个参考.
  */
 require_once("alipay_core.function.php");
 require_once("alipay_md5.function.php");
@@ -88,7 +88,7 @@ class AlipaySubmit {
     /**
      * 建立请求, 以表单HTML形式构造（默认）
      * @param $para_temp 请求参数数组
-     * @param $method 提交方式。两个值可选:post、get
+     * @param $method 提交方式.两个值可选:post, get
      * @param $button_name 确认按钮显示文字
      * @return 提交表单HTML文本
      */
@@ -113,7 +113,7 @@ class AlipaySubmit {
 	
 	/**
      * 用于防钓鱼, 调用接口query_timestamp来获取时间戳的处理函数
-	 * 注意:该功能PHP5环境及以上支持, 因此必须服务器、本地电脑中装有支持DOMDocument、SSL的PHP配置环境。建议本地调试时使用PHP开发软件
+	 * 注意:该功能PHP5环境及以上支持, 因此必须服务器, 本地电脑中装有支持DOMDocument, SSL的PHP配置环境.建议本地调试时使用PHP开发软件
      * return 时间戳字符串
 	 */
 	function query_timestamp() {

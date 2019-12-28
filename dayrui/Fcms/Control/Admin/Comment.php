@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 评论操作类 基于 Ftable
 class Comment extends \Phpcmf\Table
@@ -17,7 +14,7 @@ class Comment extends \Phpcmf\Table
         parent::__construct(...$params);
         // 初始化模块
         $this->_module_init(APP_DIR);
-        !$this->module['comment'] && $this->_admin_msg(0, dr_lang('模块【%s】没有启用评论', APP_DIR));
+        !$this->module['comment'] && $this->_admin_msg(0, dr_lang('模块[%s]没有启用评论', APP_DIR));
         // 支持附表存储
         $this->is_data = 0;
         // 模板前缀(避免混淆)
@@ -62,7 +59,9 @@ class Comment extends \Phpcmf\Table
         $this->is_verify = strpos(\Phpcmf\Service::L('Router')->class, '_verify') !== false;
         // 自定义条件
         $where = $this->is_verify ? 'status=0' : 'status=1';
-         $this->cid && $where.= ' and cid='. $this->cid;
+        $this->cid && $where.= ' and cid='. $this->cid;
+        $cwhere = $this->content_model->get_admin_list_where();
+        $cwhere && $where.= ' AND '. $cwhere;
         $sysfield = ['inputtime', 'inputip', 'author'];
         $this->is_verify && $sysfield[] = 'status';
         // 初始化数据表

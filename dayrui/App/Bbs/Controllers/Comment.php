@@ -1,7 +1,7 @@
 <?php namespace Phpcmf\Controllers;
 
 /**
- * 二次开发时可以修改本文件，不影响升级覆盖
+ * 二次开发时可以修改本文件, 不影响升级覆盖
  */
 
 class Comment extends \Phpcmf\Home\Comment
@@ -20,7 +20,7 @@ class Comment extends \Phpcmf\Home\Comment
         parent::_Op();
     }
 
-    // 格式化评论内容，方便二次开发和重写
+    // 格式化评论内容, 方便二次开发和重写
     public function _safe_replace($data) {
 
         $value = trim($_POST['data']['content']);

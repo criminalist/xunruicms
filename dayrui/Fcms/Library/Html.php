@@ -1,10 +1,7 @@
 <?php namespace Phpcmf\Library;
 
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -78,7 +75,7 @@ class Html
                                     'mid' => $t['mid'],
                                     'url' => $t['url'],
                                     'page' => $i,
-                                    'name' => $t['name'].'【第'.$i.'页】',
+                                    'name' => $t['name'].'[第'.$i.'页]',
                                     'html' => $t['setting']['html'],
                                 ];
                             }
@@ -102,14 +99,14 @@ class Html
             $cache = dr_array2array($cache, $arr);
         }
         foreach ($cache as $i => $t) {
-            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
         }
 
         $count = dr_count($cache);
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
 
-        \Phpcmf\Service::C()->_json(1, '共'.$ct.'个，分'.$count.'页');
+        \Phpcmf\Service::C()->_json(1, '共'.$ct.'个, 分'.$count.'页');
     }
 
     // 内容的数量统计
@@ -179,12 +176,12 @@ class Html
         $arr = array_chunk($data, $this->psize);
         $count = dr_count($arr);
         foreach ($arr as $i => $t) {
-            \Phpcmf\Service::L('cache')->init()->save($name.'-'.($i+1), $t, 36000);
+            \Phpcmf\Service::L('cache')->set_data($name.'-'.($i+1), $t, 36000);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $count, 36000);
+        \Phpcmf\Service::L('cache')->set_data($name, $count, 36000);
 
-        \Phpcmf\Service::C()->_json(1, '共'.dr_count($data).'条，分'.$count.'页');
+        \Phpcmf\Service::C()->_json(1, '共'.dr_count($data).'条, 分'.$count.'页');
     }
 
     // 网站文件生成地址

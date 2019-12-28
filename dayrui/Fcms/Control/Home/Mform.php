@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Home;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 内容模块表单操作类 基于 Ftable
 class Mform extends \Phpcmf\Table
@@ -20,7 +17,7 @@ class Mform extends \Phpcmf\Table
         // 判断表单是否操作
         $this->form = $this->module['form'][\Phpcmf\Service::L('Router')->class];
         if (!$this->form) {
-            exit($this->_msg(0, dr_lang('模块表单【%s】不存在',\Phpcmf\Service::L('Router')->class)));
+            exit($this->_msg(0, dr_lang('模块表单[%s]不存在',\Phpcmf\Service::L('Router')->class)));
         }
 
         // 支持附表存储
@@ -68,7 +65,7 @@ class Mform extends \Phpcmf\Table
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->_Module_Row($this->cid);
         if (!$this->index) {
-            exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+            exit($this->_msg(0, dr_lang('模块内容[id#%s]不存在',  $this->cid)));
         }
 
         // seo
@@ -116,7 +113,7 @@ class Mform extends \Phpcmf\Table
         $this->cid = intval(\Phpcmf\Service::L('input')->get('cid'));
         $this->index = $this->_Module_Row($this->cid);
         if (!$this->index) {
-            $this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid));
+            $this->_msg(0, dr_lang('模块内容[id#%s]不存在',  $this->cid));
         };
 
         list($tpl) = $this->_Post(0);
@@ -157,17 +154,17 @@ class Mform extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = 'module_'.MOD_DIR.'_from_'.$this->form['table'].'_show_id_'.$id;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
             if (!$data) {
-                $this->_msg(0, dr_lang('表单内容【id#%s】不存在', $id));
+                $this->_msg(0, dr_lang('表单内容[id#%s]不存在', $id));
             }
             // 获取父级内容
             $this->cid = intval($data['cid']);
             $this->index = $this->_Module_Row($this->cid);
             if (!$this->index) {
-                exit($this->_msg(0, dr_lang('模块内容【id#%s】不存在',  $this->cid)));
+                exit($this->_msg(0, dr_lang('模块内容[id#%s]不存在',  $this->cid)));
             }
             // 模块的处理
             $data = $this->_Call_Show($data);
@@ -183,7 +180,7 @@ class Mform extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $cache, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $cache, SYS_CACHE_SHOW * 3600);
                 }
             }
         } else {
@@ -226,7 +223,7 @@ class Mform extends \Phpcmf\Table
         }
 
         $name = 'module_mform_'.$this->form['table'].'_id_'.$id;
-        $data = \Phpcmf\Service::L('cache')->init()->get($name);
+        $data = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$data) {
             // 处理缓存机制
             $data = $this->content_model->get_form_row($id, $this->form['table']);
@@ -238,7 +235,7 @@ class Mform extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $data, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $data, SYS_CACHE_SHOW * 3600);
                 }
             }
         }
@@ -335,7 +332,7 @@ class Mform extends \Phpcmf\Table
     // 操作主内容
     protected function _Module_Row($id) {
 
-        $data = \Phpcmf\Service::L('cache')->init()->get('module_'.MOD_DIR.'_show_id_'.$id);
+        $data = \Phpcmf\Service::L('cache')->get_data('module_'.MOD_DIR.'_show_id_'.$id);
         if ($data) {
             return $data;
         }
@@ -363,7 +360,7 @@ class Mform extends \Phpcmf\Table
         if ($data[1]['status']) {
             $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
         } else {
-            $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+            $this->_json($data[1]['id'], dr_lang('操作成功, 等待管理员审核'), $data);
         }
 
     }

@@ -141,7 +141,7 @@
                 <td style="text-align:center"> <input type="text" onblur="dr_ajax_save(this.value, '{dr_url(APP_DIR.'/home/order_edit', ['id'=>$t.id])}')" value="{$t.displayorder}" class="displayorder form-control input-sm input-inline input-mini"> </td>
                 {/if}
                 {loop $list_field $i $tt}
-                <td>{dr_list_function($tt.func, $t[$i], $param, $t)}</td>
+                <td>{dr_list_function($tt.func, $t[$i], $param, $t, $field[$i])}</td>
                 {/list}
 
                 <td style="overflow:visible">
@@ -180,6 +180,9 @@
             </label>
             {if $ci->_is_admin_auth('del')}
             <label><button type="button" onclick="dr_module_delete()" class="btn red btn-sm"> <i class="fa fa-trash"></i> {dr_lang('删除')}</button></label>
+            {/if}
+            {if $is_flag && $ci->_is_admin_auth('del')}
+            <label><button type="button" onclick="dr_ajax_option('{dr_now_url()}', '{dr_lang('你确定要移除推荐位吗？')}', 1)" class="btn red btn-sm"> <i class="fa fa-close"></i> {dr_lang('移除')}</button></label>
             {/if}
             {if $ci->_is_admin_auth('edit')}
 

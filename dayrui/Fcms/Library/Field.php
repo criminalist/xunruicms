@@ -2,7 +2,7 @@
 
     /**
      * http://www.xunruicms.com
-     * 本文件是框架系统文件，二次开发时不可以修改本文件
+     * 本文件是框架系统文件, 二次开发时不可以修改本文件
      **/
 
 
@@ -43,8 +43,8 @@
                 return $this->format;
             }
 
-            if (is_file(WEBPATH.'config/field.php')) {
-                $field = require WEBPATH.'config/field.php';
+            if (is_file(ROOTPATH.'config/field.php')) {
+                $field = require ROOTPATH.'config/field.php';
                 if (IS_ADMIN && isset($field['admin']) && $field['admin']) {
                     $this->format = $field['admin'];
                 } elseif (IS_MEMBER && isset($field['member']) && $field['member']) {
@@ -606,7 +606,7 @@
     abstract class A_Field  {
 
         public $id; // 当前数据id 存在id表示修改数据
-        public $app; // 当前app目录，option可用
+        public $app; // 当前app目录, option可用
         public $close_xss; // 是否关闭xss
         public $remove_div; // 去掉div盒模块
 
@@ -785,7 +785,7 @@
             return $sql;
         }
 
-        // 测试字段是否被创建成功，默认成功为0，需要继承开发
+        // 测试字段是否被创建成功, 默认成功为0, 需要继承开发
         public function test_sql($tables, $field) {
 
             if (!$tables) {
@@ -898,7 +898,7 @@
 				<label><select class="form-control" name="data[setting][option][fieldtype]" onChange="setlength()" id="type">
 					'.$select.'
 				</select></label>
-				<span class="help-block">'.dr_lang('根据你的实际情况选择字段类型，如果你不懂MySQL数据库知识就不要填写此项').'</span>
+				<span class="help-block">'.dr_lang('根据你的实际情况选择字段类型, 如果你不懂MySQL数据库知识就不要填写此项').'</span>
 			</div>
 		</div>
 		<div class="form-group">
@@ -958,13 +958,13 @@
 			<label class="col-md-2 control-label">'.dr_lang('附件存储策略').' </label>
 			<div class="col-md-9">
 				'.$html.'
-                <span class="help-block">远程附件存储建议设置小文件存储，推荐10MB内，大文件会导致数据传输失败</span>
+                <span class="help-block">远程附件存储建议设置小文件存储, 推荐10MB内, 大文件会导致数据传输失败</span>
 			</div>
 		</div><div class="form-group">
 			<label class="col-md-2 control-label">'.dr_lang('图片压缩大小').' </label>
 			<div class="col-md-9">
                 <label><input type="text" class="form-control" value="'.$option['image_reduce'].'" name="data[setting][option][image_reduce]"></label>
-                <span class="help-block">填写图片宽度，例如1000，表示图片大于1000px时进行压缩图片</span>
+                <span class="help-block">填写图片宽度, 例如1000, 表示图片大于1000px时进行压缩图片</span>
 			</div>
 		</div>';
         }

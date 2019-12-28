@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -117,7 +117,7 @@ class Module_category extends \Phpcmf\Common
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    '模块【'.$module['name'].'】栏目模型字段' => ['url:'.\Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir'=>$dir]), 'fa fa-code', 'module_category/field_index'],
+                    '模块['.$module['name'].']栏目模型字段' => ['url:'.\Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir'=>$dir]), 'fa fa-code', 'module_category/field_index'],
                     '自定义字段' => ['url:'.\Phpcmf\Service::L('Router')->url('field/index', ['rname'=>$dir.'-'.SITE_ID, 'rid'=>0]), 'fa fa-code', 'field/add'],
                     'help' => [798],
                 ]

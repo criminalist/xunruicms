@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -68,10 +68,12 @@ class Module extends \Phpcmf\Common
 
         // 获取统计数据
         $total = \Phpcmf\Service::M()->db->table($this->tablename.'_hits')->where('id', $id)->get()->getRowArray();
-        !$total && $total['day_hits'] = $total['week_hits'] = $total['month_hits'] = $total['year_hits'] = $plus;
+        if (!$total) {
+            $total['day_hits'] = $total['week_hits'] = $total['month_hits'] = $total['year_hits'] = $plus;
+        }
 
         // 更新到统计表
-        \Phpcmf\Service::M()->db->table($this->tablename.'_hits')->where('id', $id)->update([
+        \Phpcmf\Service::M()->table($this->tablename.'_hits')->replace([
             'id' => $id,
             'hits' => $hits,
             'day_hits' => (date('Ymd', $data['updatetime']) == date('Ymd', SYS_TIME)) ? $hits : $plus,

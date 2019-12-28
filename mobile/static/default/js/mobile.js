@@ -4,7 +4,7 @@ var hui = (function(selector){
 	/* 语言包 */
 	var _lang = {
 		domEmpty    : '没有选中的dom元素',
-		xhrError    : '无法加载XMLHttpRequest模块！',
+		xhrError    : '无法加载XMLHttpRequest模块!',
 		ajaxTimeout : '请求超时',
 		quit        : '再按一次退出程序'
 	};
@@ -38,7 +38,7 @@ var hui = (function(selector){
 	/* dom 操作扩展 */
 	var hcExtends = {
 		size : function(){return this.length},
-		/* 值、属性、HTML、操作 */
+		/* 值, 属性, HTML, 操作 */
 		val : function(vars){
 			if(typeof(vars) != 'undefined'){for(var i = 0; i < this.length; i++){this.dom[i].value = vars;} return this;}
 			try{return this.dom[0].value;}catch(e){console.log(_lang.domEmpty); return null;}
@@ -272,7 +272,7 @@ var hui = (function(selector){
 		remove : function(){
 			for(var i = 0; i < this.length; i++){this.dom[i].parentNode.removeChild(this.dom[i]);}
 		},
-		/* 宽、高获取 */
+		/* 宽, 高获取 */
 		height : function(isOffset){
 			if(this.length != 1){return 0;}
 			if(isOffset){return this.dom[0].offsetHeight;}

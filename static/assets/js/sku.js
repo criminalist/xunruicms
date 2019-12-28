@@ -89,7 +89,7 @@ var step = {
 		var arrayName = new Array();　//名称组数
 		var arrayTile = new Array();　//标题组数
 		var arrayInfor = new Array();　//盛放每组选中的CheckBox值的对象 
-		var arrayColumn = new Array(); //指定列，用来合并哪些列
+		var arrayColumn = new Array(); //指定列, 用来合并哪些列
 		var bCheck = true;//是否全选
 		var columnIndex = 0;
 		$.each(SKUObj, function (i, item) {

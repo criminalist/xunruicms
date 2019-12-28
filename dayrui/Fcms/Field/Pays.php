@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Pays extends \Phpcmf\Library\A_Field  {
@@ -72,7 +69,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-				<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+				<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 			</div>
 		</div>
 		';
@@ -103,7 +100,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
         return $sql;
     }
 
-    // 测试字段是否被创建成功，默认成功为0，需要继承开发
+    // 测试字段是否被创建成功, 默认成功为0, 需要继承开发
     public function test_sql($tables, $field) {
 
         if (!$tables) {
@@ -387,7 +384,7 @@ class Pays extends \Phpcmf\Library\A_Field  {
             // 付款界面模板
             $htmlfile = $field['setting']['option']['payfile'] && is_file(WEBPATH.'config/pay/'.$field['setting']['option']['payfile']) ? WEBPATH.'config/pay/'.$field['setting']['option']['payfile'] :  ROOTPATH.'config/pay/buy.html';
             if (!is_file($htmlfile)) {
-                return '支付表单模板文件不存在：'.$htmlfile;
+                return '支付表单模板文件不存在:'.$htmlfile;
             }
 
             $member = \Phpcmf\Service::C()->member;

@@ -5,7 +5,7 @@
         <div class="page-head">
             <div class="container">
                 <div class="page-title">
-                   {$title}
+                   这里是{MODULE_NAME}模块栏目内容页
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
 
                 <ul class="page-breadcrumb breadcrumb">
                     <li>
-                        <a href="{SITE_URL}"> Главная </a>
+                        <a href="{SITE_URL}">网站首页</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     {if !IS_SHARE}
@@ -53,19 +53,19 @@
 
                                         <div class="col-md-8">
                                             <ul class="list-unstyled fc-list-row">
-                                                <li><strong> Category:</strong> {$cat.name}</li>
-                                                <li><strong> Views:</strong> <span id="dr_hits_show_{$id}">{$hits}</span> {php $todo_jscript = dr_show_hits($id, 'dr_hits_show_'.$id);}</li>
-                                                <li><strong> Update:</strong> {$updatetime}</li>
-                                                <li><strong> Software version:</strong> {$version}</li>
-                                                <li><strong> Language:</strong> {$language}</li>
-                                                <li><strong> License:</strong> {$license}</li>
-                                                <li><strong> OS support:</strong> {implode('/', $os)}</li>
+                                                <li><strong> 源码类型:</strong> {$cat.name}</li>
+                                                <li><strong> 访问人数:</strong> <span id="dr_hits_show_{$id}">{$hits}</span> {php $todo_jscript = dr_show_hits($id, 'dr_hits_show_'.$id);}</li>
+                                                <li><strong> 更新时间:</strong> {$updatetime}</li>
+                                                <li><strong> 软件版本:</strong> {$version}</li>
+                                                <li><strong> 软件语言:</strong> {$language}</li>
+                                                <li><strong> 软件授权:</strong> {$license}</li>
+                                                <li><strong> 适应环境:</strong> {implode('/', $os)}</li>
                                                 <li><strong> Tag:</strong> {loop $tags $name $url}<a href="{$url}" target="_blank">{$name}</a> {/loop}</li>
                                             </ul>
                                             <p style="margin-top: 20px;padding-left:5px;">
-                                                <a class="btn green" href="{dr_down_file($file)}"><i class="fa fa-download"></i>Скачать</a>
+                                                <a class="btn green" href="{dr_down_file($file)}"><i class="fa fa-download"></i> 直接下载</a>
                                                 {if $demo}
-                                                <a class="btn yellow" href="{$demo}" target="_blank"><i class="fa fa-desktop"></i> Демо</a>
+                                                <a class="btn yellow" href="{$demo}" target="_blank"><i class="fa fa-desktop"></i> 演示地址</a>
                                                 {/if}
                                             </p>
                                         </div>
@@ -82,7 +82,7 @@
                             <div class="portlet light">
                                 <div class="portlet-title">
                                     <div class="caption">
-                                        <span class="caption-subject font-dark">Описание</span>
+                                        <span class="caption-subject font-dark">源码介绍</span>
                                     </div>
                                     <div class="actions">
                                         <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="全屏查看"> </a>
@@ -98,7 +98,7 @@
                                         <div class="col-md-12 text-center">
                                             <a href="javascript:dr_module_favorite('{MOD_DIR}', '{$id}');" class="icon-btn">
                                                 <i class="fa fa-star"></i>
-                                                <div> Favorites </div>
+                                                <div> 收藏 </div>
                                                 <span class="badge badge-danger" id="module_favorite_{$id}"> {intval($favorites)} </span>
                                             </a>
                                             <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
@@ -128,7 +128,7 @@
                             <div class="portlet light ">
                                 <div class="portlet-title">
                                     <div class="caption">
-                                        <span class="caption-subject font-dark bold uppercase">Скриншоты</span>
+                                        <span class="caption-subject font-dark bold uppercase">源码截图</span>
                                     </div>
 
                                 </div>
@@ -152,7 +152,7 @@
                             <div class="portlet light ">
                                 <div class="portlet-title">
                                     <div class="caption">
-                                        <span class="caption-subject font-dark bold uppercase">Comments</span>
+                                        <span class="caption-subject font-dark bold uppercase">网友评论</span>
                                     </div>
 
                                 </div>

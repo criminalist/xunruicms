@@ -9,9 +9,9 @@ function dr_baidumap(mapObj, name, city, level) {
         }
     );
     mapObj.addControl(ctrl_nav);
-    mapObj.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+    mapObj.enableDragging();//启用地图拖拽事件, 默认启用(可不写)
     mapObj.enableScrollWheelZoom();//启用地图滚轮放大缩小
-    mapObj.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+    mapObj.enableDoubleClickZoom();//启用鼠标双击放大, 默认启用(可不写)
     mapObj.enableKeyboard();//启用键盘上下左右键移动地图
 
     if($('#dr_'+name).val()) {

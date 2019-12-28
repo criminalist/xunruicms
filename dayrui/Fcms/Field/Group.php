@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Group extends \Phpcmf\Library\A_Field {
 	
@@ -59,7 +56,7 @@ class Group extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('分组规则').'</label>
                     <div class="col-md-9">
                     <textarea name="data[setting][option][value]" id="fvalue" style="height:120px;" class="form-control">'.$option['value'].'</textarea>
-					<span class="help-block">'.dr_lang('分组规则支持html标签，注意每个字段只能存在于一个分组中，否则会出错；此字段只能用于模块中').'</span>
+					<span class="help-block">'.dr_lang('分组规则支持html标签, 注意每个字段只能存在于一个分组中, 否则会出错;此字段只能用于模块中').'</span>
                     </div>
                 </div>
 				<script type="text/javascript">

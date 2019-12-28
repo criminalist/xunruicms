@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -44,7 +44,7 @@ class Api extends \Phpcmf\Common
         } elseif ($this->member_cache['register']['verify'] == 'admin') {
             $this->_msg(0, dr_lang('请等待管理员的审核'));
         } elseif (!$this->member['email'] && !$this->member['phone']) {
-            // 手机邮箱都为空，表示从第三方登录注册的
+            // 手机邮箱都为空, 表示从第三方登录注册的
             $this->change();exit;
         }
 
@@ -66,13 +66,17 @@ class Api extends \Phpcmf\Common
         if (!$this->member) {
             $this->_msg(0, dr_lang('账号未登录'));
         } elseif ($this->member['is_verify']) {
-            IS_API_HTTP && $this->_json(0, dr_lang('此用户已经通过审核了'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('此用户已经通过审核了'));
+            }
             dr_redirect(MEMBER_URL);
             exit;
         } elseif (!$this->member['is_verify'] && !$this->member_cache['register']['verify']) {
             // 如果系统已经关闭了审核机制就自动通过
             \Phpcmf\Service::M('member')->verify_member($this->member['uid']);
-            IS_API_HTTP && $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            if (IS_API_HTTP) {
+                $this->_json(0, dr_lang('系统已经关闭了审核机制'));
+            }
             dr_redirect(MEMBER_URL);
             exit;
         } elseif ($this->member_cache['register']['verify'] == 'admin') {
@@ -93,20 +97,6 @@ class Api extends \Phpcmf\Common
                 $this->_json(0, dr_lang('邮箱%s已经注册',$value), ['field' => 'value']);
             } elseif ($this->member_cache['register']['verify'] == 'phone' && \Phpcmf\Service::M()->db->table('member')->where('phone', $value)->countAllResults()) {
                 $this->_json(0, dr_lang('手机号码%s已经注册', $value), ['field' => 'value']);
-            }
-
-            if (defined('UCSSO_API')) {
-                if ($this->member_cache['register']['verify'] == 'phone') {
-                    $rt = ucsso_edit_phone($this->uid, $value);
-                    if (!$rt['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
-                } else {
-                    $rt = ucsso_edit_email($this->uid, $value);
-                    if (!$rt['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
-                }
             }
 
             $this->member['randcode'] = rand(100000, 999999);
@@ -153,7 +143,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-email-'.$this->uid;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
             $this->_json(0, dr_lang('已经发送稍后再试'));
         }
 
@@ -164,7 +154,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('邮件发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -184,7 +174,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-verify-phone-'.$this->uid;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} 
 
@@ -195,7 +185,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('发送失败'));
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -250,7 +240,7 @@ class Api extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-find-password-'.$value;
-        if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+        if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} 
 
@@ -282,7 +272,7 @@ class Api extends \Phpcmf\Common
             $this->_json(0, dr_lang('账号凭证格式不正确'), ['field' => 'value']);
         }
 
-        \Phpcmf\Service::L('cache')->init()->save($name, $this->member['randcode'], 60);
+        \Phpcmf\Service::L('cache')->set_data($name, $this->member['randcode'], defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }

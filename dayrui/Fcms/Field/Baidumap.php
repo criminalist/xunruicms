@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Baidumap extends \Phpcmf\Library\A_Field {
@@ -38,7 +35,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-					<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+					<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -73,7 +70,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         return 'ALTER TABLE `{tablename}` DROP `'.$name.'_lng`, DROP `'.$name.'_lat`';
     }
 
-    // 测试字段是否被创建成功，默认成功为0，需要继承开发
+    // 测试字段是否被创建成功, 默认成功为0, 需要继承开发
     public function test_sql($tables, $field) {
 
         if (!$tables) {
@@ -167,7 +164,7 @@ class Baidumap extends \Phpcmf\Library\A_Field {
         // 字段提示信息
         $tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
-        // 当字段必填时，加入html5验证标签
+        // 当字段必填时, 加入html5验证标签
         $required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
         // 地图默认值
@@ -192,9 +189,9 @@ class Baidumap extends \Phpcmf\Library\A_Field {
 			<div class="">
 				<div class="pull-left" style="width:85%;padding-right:10px">
 					<div class="input-group">
-                        <input type="text" class="form-control" id="baidu_address_'.$name.'" placeholder="'.dr_lang('输入地址，需要精确到街道号').'...">
+                        <input type="text" class="form-control" id="baidu_address_'.$name.'" placeholder="'.dr_lang('输入地址, 需要精确到街道号').'...">
                         <span class="input-group-btn">
-                            <a title="'.dr_lang('输入地址，需要精确到街道号').'" class="btn blue" href="javascript:baiduSearchAddress(mapObj_'.$name.', \''.$name.'\');">
+                            <a title="'.dr_lang('输入地址, 需要精确到街道号').'" class="btn blue" href="javascript:baiduSearchAddress(mapObj_'.$name.', \''.$name.'\');">
                                 <i class="fa fa-search"></i>
                             </a>
                         </span>

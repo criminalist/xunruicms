@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -24,7 +21,7 @@ class Mform extends \Phpcmf\Table
         // 判断表单是否操作
         $this->form = $this->module['form'][str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)];
         if (!$this->form) {
-            $this->_admin_msg(0, dr_lang('模块表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+            $this->_admin_msg(0, dr_lang('模块表单[%s]不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
         }
         // 支持附表存储
         $this->is_data = 1;
@@ -40,6 +37,8 @@ class Mform extends \Phpcmf\Table
         // 自定义条件
         $where = $this->is_verify ? 'status=0' : 'status=1';
         $this->cid && $where.= ' and cid='. $this->cid;
+		$cwhere = $this->content_model->get_admin_list_where();
+        $cwhere && $where.= ' AND '. $cwhere;
         $sysfield = ['inputtime', 'inputip', 'displayorder', 'author'];
         $this->is_verify && $sysfield[] = 'status';
         // 初始化数据表
@@ -85,7 +84,7 @@ class Mform extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'p' => ['cid' =>  $this->cid],
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台添加内容

@@ -7,7 +7,7 @@
 
 
 /*
- * @brief url封装类，将常用的url请求操作封装在一起
+ * @brief url封装类, 将常用的url请求操作封装在一起
  * */
 class URL{
     private $error;

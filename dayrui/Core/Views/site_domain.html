@@ -40,7 +40,7 @@
                                         {/if}
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('本站的域名，通常www.xxx.com')}</span>
+                                <span class="help-block">{dr_lang('本站的域名, 通常www.xxx.com')}</span>
                             </div>
 
 
@@ -49,14 +49,14 @@
                             <label class="col-md-2 control-label">{dr_lang('本站手机域名')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control input-large" type="text" name="data[mobile_domain]" value="{$data['mobile_domain']}"></label>
-                                <span class="help-block">{dr_lang('手机访问时的域名，通常m.xxx.com')}</span>
+                                <span class="help-block">{dr_lang('手机访问时的域名, 通常m.xxx.com')}</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('本站其他域名')}</label>
                             <div class="col-md-9">
                                 <label><textarea class="form-control input-large" style="height:150px" name="data[site_domains]">{str_replace(',',PHP_EOL, $data['site_domains'])}</textarea></label>
-                                <span class="help-block">{dr_lang('当前站点支持绑定多个域名，它们将会301到主域名，域名一行一个')}</span>
+                                <span class="help-block">{dr_lang('当前站点支持绑定多个域名, 它们将会301到主域名, 域名一行一个')}</span>
                             </div>
                         </div>
                         {if SITE_ID > 1}
@@ -69,7 +69,7 @@
                                         <button class="btn blue" onclick="dr_test_html_dir('dr_html_dir')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('本站的网站目录，必须填写一个有效的目录，并设置可写权限')}</span>
+                                <span class="help-block">{dr_lang('本站的网站目录, 必须填写一个有效的目录, 并设置可写权限')}</span>
                             </div>
                         </div>
                         {/if}
@@ -109,7 +109,7 @@
                                         <a class="btn red" href="javascript:dr_help(750);"><i class="fa fa-book"></i> {dr_lang('说明')}</a>
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('如果本站绑定了手机域名，这里必须要绑定域名')}</span>
+                                <span class="help-block">{dr_lang('如果本站绑定了手机域名, 这里必须要绑定域名')}</span>
                                 {/if}
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                                         <button class="btn blue" onclick="dr_test_html_dir('dr_html_dir_{$dir}')" type="button"><i class="fa fa-code"></i> {dr_lang('测试')}</button>
                                     </span>
                                 </div>
-                                <span class="help-block">{dr_lang('本模块的Web目录，必须填写一个有效的目录，并设置可写权限')}</span>
+                                <span class="help-block">{dr_lang('本模块的Web目录, 必须填写一个有效的目录, 并设置可写权限')}</span>
                                 {/if}
                             </div>
                         </div>
@@ -169,7 +169,7 @@
         <div class="portlet-title">
             <div class="caption">
                 <span class="caption-subject">{dr_lang('服务器绑定域名说明')}</span>
-                <span class="caption-helper">{dr_lang('以下域名需要在服务器上进行绑定，也可以找空间商帮你操作')}</span>
+                <span class="caption-helper">{dr_lang('以下域名需要在服务器上进行绑定, 也可以找空间商帮你操作')}</span>
             </div>
         </div>
         <div class="portlet-body">
@@ -181,7 +181,7 @@
                     <label class="col-md-2 control-label">{dr_lang('电脑域名')}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{$data['site_domain']}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
+                        <span class="help-block">{dr_lang('绑定目录:')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
                     </div>
                 </div>
                 {/if}
@@ -190,7 +190,7 @@
                     <label class="col-md-2 control-label">{dr_lang('手机域名')}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{$data['mobile_domain']}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/');}</span>
+                        <span class="help-block">{dr_lang('绑定目录:')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/');}</span>
                     </div>
                 </div>
                 {/if}
@@ -199,7 +199,7 @@
                     <label class="col-md-2 control-label">{dr_lang('其他域名')}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{str_replace(',', '&nbsp;&nbsp; ', $data['site_domains'])}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
+                        <span class="help-block">{dr_lang('绑定目录:')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', '');}</span>
                     </div>
                 </div>
                 {/if}
@@ -211,7 +211,7 @@
                     <label class="col-md-2 control-label">{dr_lang('%s电脑域名', $t.name)}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{$data['module_'.$dir]}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, '');}</span>
+                        <span class="help-block">{dr_lang('绑定目录:')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, '');}</span>
                     </div>
                 </div>
                 {/if}
@@ -220,7 +220,7 @@
                     <label class="col-md-2 control-label">{dr_lang('%s手机域名', $t.name)}</label>
                     <div class="col-md-9">
                         <span class="form-control-static">{$data['module_mobile_'.$dir]}</span>
-                        <span class="help-block">{dr_lang('绑定目录：')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, 'mobile/');}</span>
+                        <span class="help-block">{dr_lang('绑定目录:')}{php echo \Phpcmf\Service::L('html')->get_webpath(SITE_ID, $dir, 'mobile/');}</span>
                     </div>
                 </div>
                 {/if}

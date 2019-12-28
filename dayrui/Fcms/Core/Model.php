@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 // 模型类
@@ -55,6 +55,11 @@ class Model {
     // 设置列表搜索条件
     public function set_where_list($where) {
         $this->param['where_list'] = $where;
+    }
+
+    // 追加列表搜索条件
+    public function add_where_list($where) {
+        $this->param['where'][] = $where;
     }
     
     // 设置操作主键
@@ -146,7 +151,7 @@ class Model {
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
             }
         }
         
@@ -173,7 +178,7 @@ class Model {
         // in条件
         if ($this->param['where_in']) {
             foreach ($this->param['where_in'] as $v) {
-                dr_count($v) == 2 ? $db->whereIn($v[0], $v[1]) : $db->whereIn($v);
+                dr_count($v) == 2 ? $builder->whereIn($v[0], $v[1]) : $builder->whereIn($v);
             }
         }
         
@@ -701,7 +706,7 @@ class Model {
             $param = $this->_limit_page_where($select, $param);
             $query = $select->get();
             if (!$query) {
-                log_message('error', '数据查询失败：'.$this->table);
+                log_message('error', '数据查询失败:'.$this->table);
                 $this->_clear();
                 return [[], $total, $param];
             }
@@ -722,7 +727,7 @@ class Model {
         $size > 0 && $select->limit($size, $size * ($page - 1));
         $query = $select->orderBy($order)->get();
         if (!$query) {
-            log_message('error', '数据查询失败：'.$this->table);
+            log_message('error', '数据查询失败:'.$this->table);
             $this->_clear();
             return [[], $total, $param];
         }

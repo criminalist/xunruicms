@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -16,6 +16,9 @@ class Login extends \Phpcmf\Common
 
 		if (IS_AJAX_POST) {
             $sn = 0;
+            // 回调钩子
+            $data = \Phpcmf\Service::L('input')->post('data');
+            \Phpcmf\Hooks::trigger('admin_login_before', $data);
             if (defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS) {
                 $sn = (int)$this->session()->get('fclogin_error_sn');
                 $time = (int)$this->session()->get('fclogin_error_time');
@@ -25,11 +28,10 @@ class Login extends \Phpcmf\Common
                     \Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
                 }
             }
-            $data = \Phpcmf\Service::L('input')->post('data');
 			if (SYS_ADMIN_CODE && !\Phpcmf\Service::L('form')->check_captcha('code')) {
 				$this->_json(0, dr_lang('验证码不正确'));
 			} elseif (!IS_DEV && defined('SYS_ADMIN_LOGINS') && SYS_ADMIN_LOGINS && $sn && $sn > SYS_ADMIN_LOGINS) {
-                $this->_json(0, dr_lang('失败次数已达到%s次，已被禁止登录', SYS_ADMIN_LOGINS));
+                $this->_json(0, dr_lang('失败次数已达到%s次, 已被禁止登录', SYS_ADMIN_LOGINS));
 			} elseif (empty($data['username']) || empty($data['password'])) {
 				$this->_json(0, dr_lang('账号或密码必须填写'));
 			} else {
@@ -41,6 +43,11 @@ class Login extends \Phpcmf\Common
                     $sync = [];
                     // 写入日志
                     \Phpcmf\Service::L('input')->system_log('登录后台成功', 1);
+					if ($sn) {
+						// 解除禁止登陆
+						\Phpcmf\Service::C()->session()->set('fclogin_error_sn', 0);
+						\Phpcmf\Service::C()->session()->set('fclogin_error_time', 0);
+					}
                     $this->_json(1, 'ok', ['sync' => $sync, 'url' => \Phpcmf\Service::L('input')->xss_clean($url)]);
                 } else {
                     // 登录失败
@@ -66,6 +73,9 @@ class Login extends \Phpcmf\Common
         foreach ($name as $key => $value) {
             if (!isset($this->member_cache['oauth'][$value]['id'])
                 || !$this->member_cache['oauth'][$value]['id']) {
+                continue;
+            }
+			if ($value == 'wechat' && !dr_is_app('weixin')) {
                 continue;
             }
             if (in_array($value, ['weixin', 'wechat'])) {

@@ -7,7 +7,7 @@
 require_once("Oauth.class.php");
 
 /*
- * @brief QC类，api外部对象，调用接口全部依赖于此对象
+ * @brief QC类, api外部对象, 调用接口全部依赖于此对象
  * */
 class QC extends Oauth{
     private $kesArr, $APIMap;
@@ -33,7 +33,7 @@ class QC extends Oauth{
 
         //初始化APIMap
         /*
-         * 加#表示非必须，无则不传入url(url中不会出现该参数)， "key" => "val" 表示key如果没有定义则使用默认值val
+         * 加#表示非必须, 无则不传入url(url中不会出现该参数),  "key" => "val" 表示key如果没有定义则使用默认值val
          * 规则 array( baseUrl, argListArr, method)
          */
         $this->APIMap = array(
@@ -131,7 +131,7 @@ class QC extends Oauth{
 
     /**
      * _call
-     * 魔术方法，做api调用转发
+     * 魔术方法, 做api调用转发
      * @param string $name    调用的方法名称
      * @param array $arg      参数列表数组
      * @since 5.0

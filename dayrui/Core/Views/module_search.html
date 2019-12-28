@@ -37,14 +37,14 @@
                             <label class="col-md-2 control-label">{dr_lang('集成栏目页')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[{$i}][catsync]" value="1" {if $m['setting']['search']['catsync']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('访问栏目页会定向到搜索页面，使栏目模板无效')}</span>
+                                <span class="help-block">{dr_lang('访问栏目页会定向到搜索页面, 使栏目模板无效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('集成模块首页')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[{$i}][indexsync]" value="1" {if $m['setting']['search']['indexsync']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('访问模块首页会定向到搜索页面，使模块首页模板无效')}</span>
+                                <span class="help-block">{dr_lang('访问模块首页会定向到搜索页面, 使模块首页模板无效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">
@@ -55,7 +55,7 @@
                                     <label class="mt-checkbox mt-checkbox-outline"><input type="checkbox" name="search_field[{$i}][]" value="{$f.fieldname}" {if @in_array($f.fieldname, (array)explode(',', $m['setting']['search']['field']))} checked{/if} /> {$f.name} <span></span></label>
                                     {/loop}
                                 </div>
-                                <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段，勾选字段越多查询速度就越慢')}</span>
+                                <span class="help-block">{dr_lang('搜索关键词匹配字段只能设置主表字段, 勾选字段越多查询速度就越慢')}</span>
                             </div>
                         </div>
 
@@ -63,21 +63,21 @@
                             <label class="col-md-2 control-label">{dr_lang('最大搜索量')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[{$i}][total]" value="{if isset($m['setting']['search']['total'])}{$m['setting']['search']['total']}{else}500{/if}" ></label>
-                                <span class="help-block">{dr_lang('指搜索时最大显示的数据量，填写0表示全部显示（不建议填写0，一般用户只会看前几页）')}</span>
+                                <span class="help-block">{dr_lang('指搜索时最大显示的数据量, 填写0表示全部显示（不建议填写0, 一般用户只会看前几页）')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('最小关键字长度')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[{$i}][length]" value="{if $m['setting']['search']['length']}{$m['setting']['search']['length']}{else}4{/if}" ></label>
-                                <span class="help-block">{dr_lang('搜索关键字最小字符长度，一个汉字占两位')}</span>
+                                <span class="help-block">{dr_lang('搜索关键字最小字符长度, 一个汉字占两位')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">
                             <label class="col-md-2 control-label">{dr_lang('搜索参数连接符号')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[{$i}][param_join]" value="{if $m['setting']['search']['param_join']}{$m['setting']['search']['param_join']}{else}-{/if}" ></label>
-                                <span class="help-block">{dr_lang('用于伪静态时搜索参数的连接，默认-，例如: 字段1-值-字段2-值')}</span>
+                                <span class="help-block">{dr_lang('用于伪静态时搜索参数的连接, 默认-, 例如: 字段1-值-字段2-值')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search">
@@ -93,7 +93,7 @@
                             <label class="col-md-2 control-label">{dr_lang('自由组合字段映射关系')}</label>
                             <div class="col-md-9">
                                 <textarea class="form-control" rows="7" name="data[{$i}][param_field]">{$m['setting']['search']['param_field']}</textarea>
-                                <span class="help-block">{dr_lang('字段映射是指伪静态时将搜索字段重新命名，例如keyword|k: 意思是把k作为keyword，多个字段映射回车符号分隔')}</span>
+                                 <span class="help-block">{dr_lang('字段映射是指伪静态时将搜索字段重新命名, 字段全称|缩写字母, 例如keyword|k: 意思是把k作为keyword, 多个字段映射回车符号分隔')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search param_rule_{$i}_1" style="display: none;">
@@ -109,14 +109,14 @@
                                 </select></label>
                                 {php $c++;}
                                 {/loop}
-                                <span class="help-block">{dr_lang('由一组固定的字符串参数作为搜索变量，例如：栏目id-城市-分类-关键词-排序-分页.html')}</span>
+                                <span class="help-block">{dr_lang('由一组固定的字符串参数作为搜索变量, 例如:栏目id-城市-分类-关键词-排序-分页.html')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_search param_rule_{$i}_1" style="display: none;">
                             <label class="col-md-2 control-label">{dr_lang('匹配字段默认填充值')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[{$i}][param_join_default_value]" value="{if $m['setting']['search']['param_join_default_value']}{$m['setting']['search']['param_join_default_value']}{else}0{/if}" ></label>
-                                <span class="help-block">{dr_lang('搜索变量为空时的填充值，例如：0-0-0-关键词-排序-分页.html')}</span>
+                                <span class="help-block">{dr_lang('搜索变量为空时的填充值, 例如:0-0-0-关键词-排序-分页.html')}</span>
                             </div>
                         </div>
                         <script>

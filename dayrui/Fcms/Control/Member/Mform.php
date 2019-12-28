@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Member;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 内容模块表单操作类 基于 Ftable
 class Mform extends \Phpcmf\Table
@@ -20,9 +17,9 @@ class Mform extends \Phpcmf\Table
         // 判断表单是否操作
         $this->form = $this->module['form'][\Phpcmf\Service::L('Router')->class];
         if (!$this->form) {
-            $this->_msg(0, dr_lang('模块表单【%s】不存在', \Phpcmf\Service::L('Router')->class));
+            $this->_msg(0, dr_lang('模块表单[%s]不存在', \Phpcmf\Service::L('Router')->class));
         } elseif (!$this->form['setting']['is_member']) {
-            $this->_msg(0, dr_lang('模块表单【%s】没有管理内容的权限', \Phpcmf\Service::L('Router')->class));
+            $this->_msg(0, dr_lang('模块表单[%s]没有管理内容的权限', \Phpcmf\Service::L('Router')->class));
         }
         // 支持附表存储
         $this->is_data = 1;
@@ -38,13 +35,13 @@ class Mform extends \Phpcmf\Table
             $this->index = $this->content_model->get_data( $this->cid);
             if ($this->index) {
                 if ($this->index['uid'] != $this->uid) {
-                    $this->_msg(0, dr_lang('模块表单【%s】父内容[%s]不是你创建', $this->form['name'], $this->cid));
+                    $this->_msg(0, dr_lang('模块表单[%s]父内容[%s]不是你创建', $this->form['name'], $this->cid));
                 }
             } else {
-                $this->_msg(0, dr_lang('模块表单【%s】父内容[%s]不存在', $this->form['name'], $this->cid));
+                $this->_msg(0, dr_lang('模块表单[%s]父内容[%s]不存在', $this->form['name'], $this->cid));
             }
         } else {
-            $this->_msg(0, dr_lang('模块表单【%s】没有cid参数', $this->form['name']));
+            $this->_msg(0, dr_lang('模块表单[%s]没有cid参数', $this->form['name']));
         }
 
         // 初始化数据表
@@ -55,7 +52,7 @@ class Mform extends \Phpcmf\Table
             'show_field' => 'title',
             'list_field' => $this->form['setting']['list_field'],
             'order_by' => 'displayorder DESC,inputtime DESC',
-            'where_list' => 'cid='. $this->cid, // 自定义条件，显示本内容的表单
+            'where_list' => 'cid='. $this->cid, // 自定义条件, 显示本内容的表单
         ]);
         $this->edit_where = $this->delete_where = 'cid='. $this->cid;
         // 是否有验证码
@@ -96,7 +93,7 @@ class Mform extends \Phpcmf\Table
             'p' => ['cid' => $this->cid],
             'is_delete' => $del,
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 添加内容
@@ -109,7 +106,7 @@ class Mform extends \Phpcmf\Table
                 $this->_msg(0, dr_lang('当前栏目(%s)没有发布权限', (int)$this->index['catid']));
             }
         } else {
-            // 不走栏目权限，走自定义权限
+            // 不走栏目权限, 走自定义权限
             $this->content_model->_hcategory_member_add_auth();
         }
 
@@ -131,7 +128,7 @@ class Mform extends \Phpcmf\Table
                 $this->_msg(0, dr_lang('当前栏目(%s)没有修改权限', (int)$this->index['catid']));
             }
         } else {
-            // 不走栏目权限，走自定义权限
+            // 不走栏目权限, 走自定义权限
             $this->content_model->_hcategory_member_edit_auth();
         }
 

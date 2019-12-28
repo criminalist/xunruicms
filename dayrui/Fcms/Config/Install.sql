@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL COMMENT '管理员uid',
   `setting` Text DEFAULT NULL COMMENT '相关配置',
-  `usermenu` text COMMENT '自定义面板菜单，序列化数组格式',
+  `usermenu` text COMMENT '自定义面板菜单, 序列化数组格式',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='管理员表';
@@ -40,12 +40,12 @@ DROP TABLE IF EXISTS `{dbprefix}admin_notice`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}admin_notice` (
   `id` int(10) NOT NULL COMMENT 'id' AUTO_INCREMENT,
   `site` int(5) NOT NULL COMMENT '站点id',
-  `type` varchar(20) NOT NULL COMMENT '提醒类型：系统、内容、会员、应用',
+  `type` varchar(20) NOT NULL COMMENT '提醒类型:系统, 内容, 会员, 应用',
   `msg` text NOT NULL COMMENT '提醒内容说明',
   `uri` varchar(100) NOT NULL COMMENT '对应的URI',
   `to_rid` smallint(5) NOT NULL COMMENT '指定角色组',
   `to_uid` int(10) NOT NULL COMMENT '指定管理员',
-  `status` tinyint(1) NOT NULL COMMENT '未处理0，1已查看，2处理中，3处理完成',
+  `status` tinyint(1) NOT NULL COMMENT '未处理0, 1已查看, 2处理中, 3处理完成',
   `uid` int(10) NOT NULL COMMENT '申请人',
   `username` varchar(100) NOT NULL COMMENT '申请人',
   `op_uid` int(10) NOT NULL COMMENT '处理人',
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}admin_menu` (
 DROP TABLE IF EXISTS `{dbprefix}admin_role`;
 CREATE TABLE IF NOT EXISTS `{dbprefix}admin_role` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `site` text NOT NULL COMMENT '允许管理的站点，序列化数组格式',
+  `site` text NOT NULL COMMENT '允许管理的站点, 序列化数组格式',
   `name` text NOT NULL COMMENT '角色组语言名称',
   `system` text NOT NULL COMMENT '系统权限',
   `module` text NOT NULL COMMENT '模块权限',
@@ -355,7 +355,7 @@ CREATE TABLE IF NOT EXISTS `{dbprefix}member_group` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL COMMENT '用户组名称',
   `price` decimal(10,2) NOT NULL COMMENT '售价',
-  `unit` tinyint(1) unsigned NOT NULL COMMENT '价格单位:1虚拟币，0金钱',
+  `unit` tinyint(1) unsigned NOT NULL COMMENT '价格单位:1虚拟币, 0金钱',
   `days` int(10) unsigned NOT NULL COMMENT '生效天数',
   `apply` tinyint(1) unsigned NOT NULL COMMENT '是否申请',
   `register` tinyint(1) unsigned NOT NULL COMMENT '是否允许注册',

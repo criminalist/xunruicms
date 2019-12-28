@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -62,7 +59,7 @@ class Files extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('扩展名').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="'.$option['ext'].'"></label>
-					<span class="help-block">'.dr_lang('格式：jpg,gif,png,exe,html,php,rar,zip').'</span>
+					<span class="help-block">'.dr_lang('格式:jpg,gif,png,exe,html,php,rar,zip').'</span>
 				</div>
 			</div>'.$this->attachment($option).'',
 
@@ -174,7 +171,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
         // 剩下的情况就是删除旧文件增加新文件
 
-        // 新旧附件的交集，表示固定的
+        // 新旧附件的交集, 表示固定的
         $intersect = @array_intersect($data['file'], $_data['file']);
 
         return [
@@ -208,7 +205,7 @@ class Files extends \Phpcmf\Library\A_Field {
 
         $area = \Phpcmf\Service::C()->_is_mobile() ? '["95%", "90%"]' : '["70%", "70%"]';
         $count = intval($field['setting']['option']['count']);
-        $ts = dr_lang('上传格式要求：%s（%s），最多上传%s个文件', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
+        $ts = dr_lang('上传格式要求:%s（%s）, 最多上传%s个文件', str_replace(',', ', ', $field['setting']['option']['ext']), intval($field['setting']['option']['size']) . 'MB', $count);
         $size = intval($field['setting']['option']['size']) * 1024 * 1024;
 
         $p = dr_authcode([
@@ -256,7 +253,7 @@ class Files extends \Phpcmf\Library\A_Field {
             foreach ($value as $i => $t) {
                 $id = $t['id'] ? $t['id'] : $t['file'];
                 $file = \Phpcmf\Service::C()->get_attachment($id);
-                $description = $t['description'] ? $t['description'] : '';
+                $description = $t['description'] ? htmlspecialchars($t['description']) : '';
                 if ($file) {
                     $disabled = 'readonly';
                     $preview = dr_file_preview_html($file['url']);
@@ -264,14 +261,14 @@ class Files extends \Phpcmf\Library\A_Field {
                     $upload = '<input type="file" name="file_data">';
                 } else {
                     $disabled = '';
-                    $filepath = $id;
+                    $filepath = htmlspecialchars($id);
                     $preview = dr_file_preview_html($id);
                     $upload = '';
                     $id = '';
                 }
                 $val.= str_replace(
                     ['{title}', '{description}', '{id}', '{filepath}', '{disabled}', '{preview}', '{upload}'],
-                    [$t['title'], $description, $id, $filepath, $disabled, $preview, $upload],
+                    [htmlspecialchars($t['title']), $description, $id, $filepath, $disabled, $preview, $upload],
                     $tpl
                 );
             }
@@ -524,7 +521,7 @@ $(function() {
         },
 		fail: function (e, data) {
 			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
+			dr_tips(0, "系统故障:"+data.errorThrown);
 			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},
@@ -565,7 +562,7 @@ function fileupload_'.$name.'_edit() {
         },
 		fail: function (e, data) {
 			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
+			dr_tips(0, "系统故障:"+data.errorThrown);
 			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},

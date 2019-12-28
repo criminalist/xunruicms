@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -53,12 +50,12 @@ class Property extends \Phpcmf\Library\A_Field {
 				$str.= '<div class="form-group dr_option" id="dr_option_'.$i.'" >';
 				$str.= '<label class="col-md-2 control-label"><a href="javascript:;" onclick="dr_add_option()" style="color:blue">[+]</a>&nbsp;'.dr_lang('属性名称').'</label>';
 				$str.= '<div class="col-md-9"><label><input type="text" name="data[setting][option][default_value]['.$i.'][name]" value="'.$t['name'].'" class="form-control" /></label>';
-				$str.= '<label>&nbsp;&nbsp;'.dr_lang('类型').'：</label><label><select class="form-control" name="data[setting][option][default_value]['.$i.'][type]">';
+				$str.= '<label>&nbsp;&nbsp;'.dr_lang('类型').':</label><label><select class="form-control" name="data[setting][option][default_value]['.$i.'][type]">';
 				$str.= '<option value="1" '.($t['type'] == 1 ? "selected" : "").'> - '.dr_lang('文本框').' - </option>';
 				$str.= '<option value="2" '.($t['type'] == 2 ? "selected" : "").'> - '.dr_lang('选择框').' - </option>';
 				$str.= '<option value="3" '.($t['type'] == 3 ? "selected" : "").'> - '.dr_lang('复选框').' - </option>';
 				$str.= '</select></label>';
-				$str.= '<label>&nbsp;&nbsp;'.dr_lang('默认值/选项值').'：</label><label><input type="text" name="data[setting][option][default_value]['.$i.'][value]" value="'.$t['value'].'" class="form-control input-xlarge"></label> <label><a onclick="$(\'#dr_option_'.$i.'\').remove()" href="javascript:;">'.dr_lang('删除').'</a></label>';
+				$str.= '<label>&nbsp;&nbsp;'.dr_lang('默认值/选项值').':</label><label><input type="text" name="data[setting][option][default_value]['.$i.'][value]" value="'.$t['value'].'" class="form-control input-xlarge"></label> <label><a onclick="$(\'#dr_option_'.$i.'\').remove()" href="javascript:;">'.dr_lang('删除').'</a></label>';
 				$str.= '</div></div>';
 			}
 		}
@@ -72,12 +69,12 @@ class Property extends \Phpcmf\Library\A_Field {
 			html+= "<label class=\"col-md-2 control-label\"><a href=\"javascript:;\" onclick=\"dr_add_option()\" style=\"color:blue\">[+]</a>&nbsp;'.dr_lang('属性名称').'</label>";
 			html+= "<div class=\"col-md-9\">";
 			html+= "<label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][name]\" value=\"\" class=\"form-control\" /></label>";
-			html+= "<label>&nbsp;&nbsp;'.dr_lang('类型').'：</label><label><select class=\"form-control\" name=\"data[setting][option][default_value]["+id+"][type]\">";
+			html+= "<label>&nbsp;&nbsp;'.dr_lang('类型').':</label><label><select class=\"form-control\" name=\"data[setting][option][default_value]["+id+"][type]\">";
 			html+= "<option value=\"1\"> - '.dr_lang('文本框').' - </option>";
 			html+= "<option value=\"2\"> - '.dr_lang('选择框').' - </option>";
 			html+= "<option value=\"3\"> - '.dr_lang('复选框').' - </option>";
 			html+= "</select></label>";
-			html+= "<label>&nbsp;&nbsp;'.dr_lang('默认值/选项值').'：</label><label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][value]\" class=\"form-control input-xlarge\"></label>&nbsp;<label><a onclick=\"$(\'#dr_option_"+id+"\').remove()\" href=\"javascript:;\">'.dr_lang('删除').'</a></label>";
+			html+= "<label>&nbsp;&nbsp;'.dr_lang('默认值/选项值').':</label><label><input type=\"text\" name=\"data[setting][option][default_value]["+id+"][value]\" class=\"form-control input-xlarge\"></label>&nbsp;<label><a onclick=\"$(\'#dr_option_"+id+"\').remove()\" href=\"javascript:;\">'.dr_lang('删除').'</a></label>";
 			html+= "</div>";
 			html+= "</div>";
 			$("#dr_option").append(html);

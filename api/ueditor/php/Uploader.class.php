@@ -22,8 +22,8 @@ class Uploader
     private $fileSize; //文件大小
     private $fileType; //文件类型
     private $stateInfo; //上传状态信息,
-    private $stateMap = array( //上传状态映射表，国际化用户需考虑此处数据的国际化
-        "SUCCESS", //上传成功标记，在UEditor中内不可改变，否则flash判断会出错
+    private $stateMap = array( //上传状态映射表, 国际化用户需考虑此处数据的国际化
+        "SUCCESS", //上传成功标记, 在UEditor中内不可改变, 否则flash判断会出错
         "文件大小超出 upload_max_filesize 限制",
         "文件大小超出 MAX_FILE_SIZE 限制",
         "文件未被完整上传",
@@ -50,7 +50,7 @@ class Uploader
      * 构造函数
      * @param string $fileField 表单名称
      * @param array $config 配置项
-     * @param bool $base64 是否解析base64编码，可省略。若开启，则$fileField代表的是base64编码的字符串表单名
+     * @param bool $base64 是否解析base64编码, 可省略.若开启, 则$fileField代表的是base64编码的字符串表单名
      */
     public function __construct($fileField, $config, $type = "upload")
     {
@@ -205,7 +205,7 @@ class Uploader
         preg_match('/^https*:\/\/(.+)/', $host_with_protocol, $matches);
         $host_without_protocol = count($matches) > 1 ? $matches[1] : '';
 
-        // 此时提取出来的可能是 ip 也有可能是域名，先获取 ip
+        // 此时提取出来的可能是 ip 也有可能是域名, 先获取 ip
         $ip = gethostbyname($host_without_protocol);
         // 判断是否是私有 ip
         if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) {

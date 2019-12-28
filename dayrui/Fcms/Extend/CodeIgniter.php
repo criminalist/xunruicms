@@ -2,11 +2,11 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
- * 继承主类，用于init.php
+ * 继承主类, 用于init.php
  */
 
 class CodeIgniter extends \CodeIgniter\CodeIgniter
@@ -18,9 +18,9 @@ class CodeIgniter extends \CodeIgniter\CodeIgniter
     {
         parent::__construct(...$params);
         // 自定义函数库
-        if (is_file(WEBPATH.'config/custom.php'))
+        if (is_file(ROOTPATH.'config/custom.php'))
         {
-            require WEBPATH.'config/custom.php';
+            require ROOTPATH.'config/custom.php';
         }
         if (is_file(MYPATH.'Helper.php'))
         {

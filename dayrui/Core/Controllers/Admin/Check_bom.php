@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
 
 class Check_bom extends \Phpcmf\Common
 {
@@ -31,7 +29,7 @@ class Check_bom extends \Phpcmf\Common
 
         // 读取文件到缓存
         $this->_file_map(WEBPATH, 1);
-        $this->_file_map(WEBPATH.'config/');
+        $this->_file_map(ROOTPATH.'config/');
         if (is_file(MYPATH.'Dev.php')) {
             $this->_file_map(WEBPATH.'cloud/');
         }
@@ -54,7 +52,7 @@ class Check_bom extends \Phpcmf\Common
         }
 
         // 存储文件
-        \Phpcmf\Service::L('cache')->init()->save('check-index', $cache, 3600);
+        \Phpcmf\Service::L('cache')->set_data('check-index', $cache, 3600);
 
         $this->_json($cache ? count($cache) : 0, 'ok');
 	}
@@ -62,7 +60,7 @@ class Check_bom extends \Phpcmf\Common
 	public function php_check_index() {
 
         $page = max(1, intval($_GET['page']));
-        $cache = \Phpcmf\Service::L('cache')->init()->get('check-index');
+        $cache = \Phpcmf\Service::L('cache')->get_data('check-index');
         if (!$cache) {
             $this->_json(0, '数据缓存不存在');
         }

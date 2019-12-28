@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Member extends \Phpcmf\Model
@@ -96,9 +93,17 @@ class Member extends \Phpcmf\Model
             $del && $this->db->table('member_login')->where('uid', $data['id'])->whereIn('id', $del)->delete();
         }
 
-        // 验证登录情况
-        if (dr_is_app('login')) {
-            \Phpcmf\Service::M('login', 'login')->check($data, $row, $log);
+        $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
+        if (date('Ymd') != date('Ymd', $time)) {
+            // 登录后的通知
+            \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
+            // 登录后的钩子
+            $data['log'] = [
+                'now' => $log,
+                'before' => $row,
+            ];
+            \Phpcmf\Hooks::trigger('member_login_after', $data);
+            \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
         }
 
         // 同一天Ip一致时只更新一次更新时间
@@ -112,15 +117,6 @@ class Member extends \Phpcmf\Model
                         $this->db->table('member_login')->where('id', $row['id'])->update($log);
         } else {
             $this->db->table('member_login')->insert($log);
-        }
-
-        $time = \Phpcmf\Service::L('input')->get_cookie('member_login');
-        if (date('Ymd') != date('Ymd', $time)) {
-            // 登录后的通知
-            \Phpcmf\Service::L('Notice')->send_notice('member_login', $data);
-            // 登录后的钩子
-            \Phpcmf\Hooks::trigger('member_login_after', $data);
-            \Phpcmf\Service::L('input')->set_cookie('member_login', SYS_TIME, 3600*12);
         }
 
     }
@@ -181,17 +177,6 @@ class Member extends \Phpcmf\Model
         } elseif (!$cookie) {
             return 0;
         } elseif (substr(md5(SYS_KEY.$member['password']), 5, 20) !== $cookie) {
-            if (defined('UCSSO_API')) {
-                $rt = ucsso_get_password($member['id']);
-                if ($rt['code']) {
-                    // 变更本地库
-                    $this->db->table('member')->where('id', $member['id'])->update(array(
-                        'salt' => $rt['data']['salt'],
-                        'password' => $rt['data']['password'],
-                    ));
-                    return 1;
-                }
-            }
             return 0;
         }
 
@@ -222,6 +207,9 @@ class Member extends \Phpcmf\Model
     public function get_member($uid = 0, $name = '') {
 
         $uid = intval($uid);
+        if ($uid && $uid == $this->member['id']) {
+            return $this->member;
+        }
 
         if ($uid) {
             $data = $this->db->table('member')->where('id', $uid)->get()->getRowArray();
@@ -229,6 +217,7 @@ class Member extends \Phpcmf\Model
             $data = $this->db->table('member')->where('username', $name)->get()->getRowArray();
             $uid = (int)$data['id'];
         }
+
         if (!$data) {
             return null;
         }
@@ -327,7 +316,7 @@ class Member extends \Phpcmf\Model
                             if ($member[$name] - $price < 0) {
                                 // 余额不足 删除
                                 // 提醒通知
-                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], dr_lang('余额')));
+                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期, 自动续费失败, 账户%s不足', $group_info['name'], dr_lang('余额')));
                                 $this->delete_group($uid, $group['gid'], 0);
                                 continue;
                             }
@@ -356,7 +345,7 @@ class Member extends \Phpcmf\Model
                             $this->notice(
                                 $uid,
                                 2,
-                                dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name']),
+                                dr_lang('您的用户组（%s）已过期, 自动续费成功', $group_info['name']),
                                 \Phpcmf\Service::L('router')->member_url('paylog/show', ['id'=>$rt['code']])
                             );
                         } else {
@@ -365,7 +354,7 @@ class Member extends \Phpcmf\Model
                             $this->notice(
                                 $uid,
                                 2,
-                                dr_lang('您的用户组（%s）已过期，自动免费续期成功', $group_info['name'])
+                                dr_lang('您的用户组（%s）已过期, 自动免费续期成功', $group_info['name'])
                             );
                         }
                         // 更新时间
@@ -378,7 +367,7 @@ class Member extends \Phpcmf\Model
                             if ($member[$name] - $price < 0) {
                                 // 金币不足 删除
                                 // 提醒通知
-                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，自动续费失败，账户%s不足', $group_info['name'], SITE_SCORE));
+                                $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期, 自动续费失败, 账户%s不足', $group_info['name'], SITE_SCORE));
                                 $this->delete_group($uid, $group['gid'], 0);
                                 continue;
                             }
@@ -393,7 +382,7 @@ class Member extends \Phpcmf\Model
                             $this->notice(
                                 $uid,
                                 2,
-                                dr_lang('您的用户组（%s）已过期，自动续费成功', $group_info['name'])
+                                dr_lang('您的用户组（%s）已过期, 自动续费成功', $group_info['name'])
                             );
                         } else {
                             // 免费组自己续费
@@ -401,7 +390,7 @@ class Member extends \Phpcmf\Model
                             $this->notice(
                                 $uid,
                                 2,
-                                dr_lang('您的用户组（%s）已过期，自动免费续期成功', $group_info['name'])
+                                dr_lang('您的用户组（%s）已过期, 自动免费续期成功', $group_info['name'])
                             );
                         }
                         // 更新时间
@@ -410,7 +399,7 @@ class Member extends \Phpcmf\Model
                 } else {
                     // 未开通自动续费直接删除
                     // 提醒通知
-                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期，系统权限已关闭', $group_info['name']));
+                    $this->notice($uid, 2, dr_lang('您的用户组（%s）已过期, 系统权限已关闭', $group_info['name']));
                     $this->delete_group($uid, $group['gid'], 0);
                 }
 
@@ -439,7 +428,7 @@ class Member extends \Phpcmf\Model
         return $g;
     }
 
-    // 删除用户组 is_admin 是否是管理员删除，否则就是过期删除
+    // 删除用户组 is_admin 是否是管理员删除, 否则就是过期删除
     public function delete_group($uid, $gid, $is_admin = 1) {
 
         // 回调信息
@@ -498,7 +487,7 @@ class Member extends \Phpcmf\Model
         }
 
         if (!\Phpcmf\Service::C()->member_cache['config']['groups']) {
-            // 没开启多个组时，关闭之前的用户组
+            // 没开启多个组时, 关闭之前的用户组
             $data2 =  $this->db->table('member_group_index')->where('uid', $uid)->where('gid<>' . $gid)->get()->getResultArray();
             if ($data2) {
                 foreach ($data2 as $t) {
@@ -602,6 +591,9 @@ class Member extends \Phpcmf\Model
         $this->db->table('member_data')->where('id', $uid)->update(['is_verify' => 1]);
         // 后台提醒
         $this->todo_admin_notice('member_verify/index:field/id/keyword/'.$uid, 0);
+        // 审核提醒
+        // 注册审核后的通知
+        \Phpcmf\Service::L('Notice')->send_notice('member_register_verify', $this->get_member($uid));
     }
 
     /**
@@ -643,13 +635,6 @@ class Member extends \Phpcmf\Model
     public function sso($data, $remember = 0) {
 
         $sso = [];
-        // 同步登录地址
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_synlogin($data['id']);
-            if ($rt && preg_match_all('/<script type=\"text\/javascript\" src=\"(.+)\"/iU', $rt, $mt)) {
-                $sso = $mt[1];
-            }
-        }
         $url = $this->get_sso_url();
         foreach ($url as $u) {
             $code = dr_authcode($data['id'].'-'.$data['salt'], 'ENCODE');
@@ -669,13 +654,6 @@ class Member extends \Phpcmf\Model
         \Phpcmf\Service::L('input')->set_cookie('admin_login_member', '', -100000000);
 
         $sso = [];
-        // 同步退出地址
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_synlogout();
-            if ($rt && preg_match_all('/<script type=\"text\/javascript\" src=\"(.+)\"/iU', $rt, $mt)) {
-                $sso = $mt[1];
-            }
-        }
         $url = $this->get_sso_url();
         foreach ($url as $u) {
             $sso[]= $u.'index.php?s=api&c=sso&action=logout';
@@ -731,87 +709,26 @@ class Member extends \Phpcmf\Model
      */
     public function login($username, $password, $remember = 0) {
 
-        // 同步登录
-        if (defined('UCSSO_API')) {
-            /*
-                    1:表示用户登录成功
-                   -1:用户名不合法
-                   -2:密码不合法
-                   -3:用户名不存在
-                   -4:密码不正确
-               */
-            $rt = ucsso_login($username, $password);
-            if ($rt['code'] <= 0) {
-                if ($rt['code'] == -3) {
-                    // 当ucsso用户不存在时，在验证本地库
-                    $data = $this->_find_member_info($username);
-                    if ($data) {
-                        //如果本地库有，我们就同步到服务器去
-                        $rt = ucsso_register($username, $password, $data['email'], $data['phone']);
-                        /*
-                            大于 0:返回用户 ID，表示用户注册成功
-                             0:失败
-                            -1:用户名不合法
-                            -2:用户名已经存在
-                            -3:Email 格式有误
-                            -4:该 Email 已经被注册
-                            -5:该 手机号码格式有误
-                            -6:该 手机号码已经被注册
-                        */
-                        if ($rt['code'] > 0) {
-                            // 注册成功了
-                            $rt2 = ucsso_syncuid($rt['code'], $data['uid']); // 上报uid
-                            if (!$rt2['code']) {
-                                return dr_return_data(0, dr_lang('通信失败：%s', $rt2['msg']));
-                            }
-                        } else {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                } else {
-                    return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                }
-            } else {
-                // 登录成功
-                if (!$rt['data']['uid']) {
-                    // 表示ucsso存在这个账号，但没有注册uid
-                    $data = $this->_find_member_info($username);
-                    $ucsso_id = $rt['data']['ucsso_id'];
-                    if (!$data) {
-                        // 本地有会员不存在时就重新注册
-                        $rt = $this->register(0, array(
-                            'username' => $username,
-                            'password' => $password,
-                            'email' => $rt['data']['email'],
-                            'phone' => $rt['data']['phone'],
-                        ), [], 0);
-                        if (!$rt['code']) {
-                            return dr_return_data(0, $rt['msg']);
-                        }
-                        $data = $rt['data'];
-                    }
-                    // 上报uid
-                    $rt2 = ucsso_syncuid($ucsso_id, $data['id']);
-                    if (!$rt2['code']) {
-                        return dr_return_data(0, dr_lang('通信失败：%s', $rt2['msg']));
-                    }
-                }
-            }
-            // 同步操作之后再查找用户
-            !$data && $data = $this->_find_member_info($username);
-            if (!$data) {
-                return dr_return_data(0, dr_lang('用户不存在'));
-            }
-        } else {
-            $data = $this->_find_member_info($username);
-            if (!$data) {
-                return dr_return_data(0, dr_lang('用户不存在'));
-            }
-            // 密码验证
-            $password = dr_safe_password($password);
-            if (md5(md5($password).$data['salt'].md5($password)) != $data['password']) {
-                return dr_return_data(0, dr_lang('密码不正确'));
-            }
+        if (!$username) {
+            return dr_return_data(0, dr_lang('账号不能为空'));
+        } elseif (!$password) {
+            return dr_return_data(0, dr_lang('密码不能为空'));
+        }
+        // 登录
+        $data = $this->_find_member_info($username);
+        if (!$data) {
+            return dr_return_data(0, dr_lang('用户不存在'));
+        }
+        // 密码验证
+        $password2 = dr_safe_password($password);
+        if (md5(md5($password2).$data['salt'].md5($password2)) != $data['password']) {
+            \Phpcmf\Hooks::trigger('member_login_password_error', [
+                'member' => $data,
+                'password' => $password,
+                'ip' => (string)\Phpcmf\Service::L('input')->ip_address(),
+                'time' => SYS_TIME,
+            ]);
+            return dr_return_data(0, dr_lang('密码不正确'));
         }
 
         // 验证管理员登录
@@ -873,7 +790,7 @@ class Member extends \Phpcmf\Model
     public function register_oauth_bang($oauth, $groupid, $data) {
 
         if (!$oauth) {
-            return dr_return_data(0, dr_lang('OAuth数据不存在，请重试'));
+            return dr_return_data(0, dr_lang('OAuth数据不存在, 请重试'));
         }
 
         $rt = $this->register($groupid, $data);
@@ -994,11 +911,11 @@ class Member extends \Phpcmf\Model
 
         // 验证唯一性
         if ($member['username'] && $this->db->table('member')->where('username', $member['username'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('账号%s已经注册', $member['username']), ['field' => 'username']);
+            return dr_return_data(0, dr_lang('账号[%s]已经注册', $member['username']), ['field' => 'username']);
         } elseif ($member['email'] && $this->db->table('member')->where('email', $member['email'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('邮箱%s已经注册', $member['email']), ['field' => 'email']);
+            return dr_return_data(0, dr_lang('邮箱[%s]已经注册', $member['email']), ['field' => 'email']);
         } elseif ($member['phone'] && $this->db->table('member')->where('phone', $member['phone'])->countAllResults()) {
-            return dr_return_data(0, dr_lang('手机号码%s已经注册', $member['phone']), ['field' => 'phone']);
+            return dr_return_data(0, dr_lang('手机号码[%s]已经注册', $member['phone']), ['field' => 'phone']);
         }
 
         if ($member['username'] == 'guest') {
@@ -1006,29 +923,8 @@ class Member extends \Phpcmf\Model
         } elseif (!IS_ADMIN && \Phpcmf\Service::C()->member_cache['register']['notallow']) {
             foreach (\Phpcmf\Service::C()->member_cache['register']['notallow'] as $mt) {
                 if ($mt && stripos($member['username'], $mt) !== false) {
-                    return dr_return_data(0, dr_lang('账号%s禁止包含关键字[%s]', $member['username'], $mt), ['field' => 'username']);
+                    return dr_return_data(0, dr_lang('账号[%s]禁止包含关键字[%s]', $member['username'], $mt), ['field' => 'username']);
                 }
-            }
-        }
-
-        $ucsso_id = 0;
-        if ($sync && defined('UCSSO_API')) {
-            /*
-                大于 0:返回用户 ID，表示用户注册成功
-                 0:失败
-                -1:用户名不合法
-                -2:用户名已经存在
-                -3:Email 格式有误
-                -4:该 Email 已经被注册
-                -5:该 手机号码 格式有误
-                -6:该 手机号码 已经被注册
-            */
-            $rt = ucsso_register($member['username'], $member['password'], $member['email'], $member['phone']);
-            if ($rt['code'] > 0) {
-                // 注册成功
-                $ucsso_id = (int)$rt['code'];
-            } else {
-                return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
             }
         }
 
@@ -1044,7 +940,7 @@ class Member extends \Phpcmf\Model
         $member['regtime'] = SYS_TIME;
         $member['randcode'] = rand(100000, 999999);
 
-        // 没有账号，随机一个默认登录账号
+        // 没有账号, 随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = $this->_rand_username(\Phpcmf\Service::C()->member_cache['register']['unprefix'], $member);
         } else {
@@ -1056,7 +952,7 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, $rt['msg']);
         }
 		
-		// 再次判断没有账号，随机一个默认登录账号
+		// 再次判断没有账号, 随机一个默认登录账号
         if (!$member['username']) {
             $member['username'] = strtolower(trim(\Phpcmf\Service::C()->member_cache['register']['unprefix']
 			.intval($rt['code']+date('Ymd'))));
@@ -1082,15 +978,6 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, $rt['msg']);
         }
 
-        // uid 同步
-        if ($ucsso_id && defined('UCSSO_API')) {
-            $rt = ucsso_syncuid($ucsso_id, $uid);
-            if (!$rt['code']) {
-                // 同步失败
-                log_message('error', 'UCSSO同步uid失败：'.$rt['msg']);
-            }
-        }
-
         // 归属用户组
         $this->insert_group($uid, $groupid, 0);
 
@@ -1109,7 +996,7 @@ class Member extends \Phpcmf\Model
                     break;
             }
             // 发送审核提醒
-            $this->admin_notice(0, 'member', $member, dr_lang('新会员【%s】注册审核', $member['username']), 'member_verify/index:field/id/keyword/'.$uid);
+            $this->admin_notice(0, 'member', $member, dr_lang('新会员[%s]注册审核', $member['username']), 'member_verify/index:field/id/keyword/'.$uid);
         }
 
         // 注册后的通知
@@ -1169,7 +1056,7 @@ class Member extends \Phpcmf\Model
         }
 
         // 存储
-		\Phpcmf\Service::L('cache')->init()->save('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
+		\Phpcmf\Service::L('cache')->set_data('member_auth_'.$type.'_'.$data['oauth'].'_'.$id, $id, 60);
 
         return dr_return_data($id, $type == 'login' ? \Phpcmf\Service::L('router')->member_url('login/oauth', ['id' => $id, 'name' => $data['oauth'], 'state' => $state, 'back' => $back]) : \Phpcmf\Service::L('router')->member_url('account/oauth', ['id' => $id, 'name' => $data['oauth']]));
 	}
@@ -1181,14 +1068,6 @@ class Member extends \Phpcmf\Model
         $password = dr_safe_password($password);
         if (!$id || !$password) {
             return false;
-        }
-
-        if (defined('UCSSO_API')) {
-            $rt = ucsso_edit_password($id, $password);
-            // 修改失败
-            if (!$rt['code']) {
-                return false;
-            }
         }
 
         $update['salt'] = substr(md5(rand(0, 999)), 0, 10); // 随机10位密码加密码
@@ -1225,13 +1104,13 @@ class Member extends \Phpcmf\Model
         }
 
         $content = $msg;
-        if (trim(strtolower(strrchr($msg, '.')), '.') == 'html') {
+        if (strlen($msg) <= 30 && trim(strtolower(strrchr($msg, '.')), '.') == 'html') {
             $my = WEBPATH.'config/notice/email/'.$msg;
             $default = ROOTPATH.'config/notice/email/'.$msg;
             $content = is_file($my) ? file_get_contents($my) : file_get_contents($default);
             if (!$content) {
-                log_message('error', '邮件模板不存在：'.$msg);
-                return dr_return_data(0, dr_lang('邮件模板#%s不存在', $msg));
+                log_message('error', '邮件模板不存在:'.$msg);
+                return dr_return_data(0, dr_lang('邮件模板[#%s]不存在', $msg));
             }
             ob_start();
             extract($data, EXTR_PREFIX_SAME, 'data');
@@ -1254,7 +1133,7 @@ class Member extends \Phpcmf\Model
             }
         }
 
-        return dr_return_data(0, 'Error：'.$dmail->error);
+        return dr_return_data(0, 'Error:'.$dmail->error);
     }
 
     /**
@@ -1282,8 +1161,8 @@ class Member extends \Phpcmf\Model
 
         $config = require_once $file;
         if ($config['third']) {
-            if (is_file(WEBPATH.'config/mysms.php')) {
-                require_once WEBPATH.'config/mysms.php';
+            if (is_file(ROOTPATH.'config/mysms.php')) {
+                require_once ROOTPATH.'config/mysms.php';
             }
             $method = 'my_sendsms_'.$type;
             if (function_exists($method)) {
@@ -1299,7 +1178,7 @@ class Member extends \Phpcmf\Model
             }
         } else {
             $content = $type == 'code' ? dr_lang('您的本次验证码是: %s', $content) : $content;
-            $url = 'https://www.xunruicms.com/index.php?s=vip&c=home&uid='.$config['uid'].'&key='.$config['key'].'&mobile='.$mobile.'&content='.$content.'【'.$config['note'].'】&domain='.trim(str_replace('http://', '', SITE_URL), '/').'&sitename='.SITE_NAME;
+            $url = 'https://www.xunruicms.com/index.php?s=vip&c=home&uid='.$config['uid'].'&key='.$config['key'].'&mobile='.$mobile.'&content='.$content.'['.$config['note'].']&domain='.trim(str_replace('http://', '', SITE_URL), '/').'&sitename='.SITE_NAME;
             $result = dr_catcher_data($url);
             if (!$result) {
                 log_message('error', '访问官方云短信服务器失败');
@@ -1325,11 +1204,11 @@ class Member extends \Phpcmf\Model
             $weixin = \Phpcmf\Service::C()->get_cache('weixin');
             $result = wx_get_https_json_data('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$weixin['account']['appid'].'&secret='.$weixin['account']['appsecret']);
             if (!$result['code']) {
-                return dr_return_data(0, 'AccessToken：'.$result['msg']);
+                return dr_return_data(0, 'AccessToken:'.$result['msg']);
             }
             $rt = \Phpcmf\Service::L('cache')->init('file')->save('access_token', $result['data'], 3600);
             if (!$rt) {
-                return dr_return_data(0, 'AccessToken：/cache/temp/目录不可写，文件写入失败');
+                return dr_return_data(0, 'AccessToken:/cache/temp/目录不可写, 文件写入失败');
             }
             $access_token = $result['data']['access_token'];
         }
@@ -1438,10 +1317,15 @@ class Member extends \Phpcmf\Model
 
         // 判断次数
         if ($mark && $count && $this->db->table('member_scorelog')->where('uid', $uid)->where('mark', $mark)->countAllResults() >= $count) {
-            return dr_return_data(0, dr_lang('本次不能累计增减金币'));
+            return dr_return_data(0, dr_lang('本次不能累计增减%s', SITE_SCORE));
         }
 
-        $value = max(0, (int)$user['score'] + $val); // 不允许小于0
+        $value = (int)$user['score'] + $val; // 不允许小于0
+        if ($value < 0) {
+            return dr_return_data(0, dr_lang('账户可用[%s]不足', SITE_SCORE));
+        }
+
+
         $this->db->table('member')->where('id', (int)$uid)->update(['score' => $value]);
 
         // 交易记录
@@ -1469,8 +1353,13 @@ class Member extends \Phpcmf\Model
             return dr_return_data(0, dr_lang('用户不存在'));
         }
 
+        $money = $member['money'] + $value;
+        if ($money < 0) {
+            return dr_return_data(0, dr_lang('账户可用余额不足'));
+        }
+
         $update = [
-            'money' => max(0, $member['money'] + $value),
+            'money' => $money,
         ];
         $value < 0 && $update['spend'] = max(0, $member['spend'] + abs($value));
 
@@ -1611,6 +1500,11 @@ class Member extends \Phpcmf\Model
             $name = rand(10000, 99999999);
         }
 
+        // 两个字母加点随机数
+        if (strlen($name) < 3) {
+            $name.= rand(1000, 9999);
+        }
+
         $name = trim(strtolower($prefix.str_replace(' ', '', $name))).($rand ? rand(10000, 99999999) : '');
 
         if ($this->table('member')->where('username', $name)->counts()) {
@@ -1623,7 +1517,6 @@ class Member extends \Phpcmf\Model
     // 修改账号
     public function edit_username($uid, $username) {
 
-        $username = dr_safe_filename($username);
         $this->table('member')->update($uid, [
             'username' => $username,
         ]);

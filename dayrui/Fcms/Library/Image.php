@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 /**
@@ -912,13 +909,13 @@ class Image
             // 文字水印
             $config['wm_text'] = $data['wm_text'];
             $config['wm_type'] = 'text';
-            $config['wm_font_path'] = WEBPATH.'config/font/'.$data['wm_font_path'];
+            $config['wm_font_path'] = ROOTPATH.'config/font/'.$data['wm_font_path'];
             $config['wm_font_size'] = $data['wm_font_size'];
             $config['wm_font_color'] = $data['wm_font_color'];
         } else {
             // 图片水印
             $config['wm_type'] = 'overlay';
-            $config['wm_overlay_path'] = WEBPATH.'config/watermark/'.$data['wm_overlay_path'];
+            $config['wm_overlay_path'] = ROOTPATH.'config/watermark/'.$data['wm_overlay_path'];
             $config['wm_opacity'] = $data['wm_opacity'];
         }
 
@@ -1631,7 +1628,7 @@ class Image
                 $data['dynamic_output'] = false;
                 $this->watermark($data);
             } else {
-                log_message('error', '网站没有设置水印数据，thumb函数中的水印参数将无效');
+                log_message('error', '网站没有设置水印数据, thumb函数中的水印参数将无效');
             }
         }
 
@@ -1668,7 +1665,7 @@ class Image
                     $image_wp = imagecreatetruecolor($new_width, $new_height);
                     $image = imagecreatefromjpeg($imgsrc);
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-                    //90代表的是质量、压缩图片容量大小
+                    //90代表的是质量, 压缩图片容量大小
                     imagejpeg($image_wp, $imgsrc, 100);
                     imagedestroy($image_wp);
                     imagedestroy($image);
@@ -1678,7 +1675,7 @@ class Image
                     $image_wp = imagecreatetruecolor($new_width, $new_height);
                     $image = imagecreatefrompng($imgsrc);
                     imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-                    //90代表的是质量、压缩图片容量大小
+                    //90代表的是质量, 压缩图片容量大小
                     imagejpeg($image_wp, $imgsrc, 100);
                     imagedestroy($image_wp);
                     imagedestroy($image);

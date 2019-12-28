@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
@@ -50,7 +50,7 @@ class Run extends \Phpcmf\Common
                         foreach ($times as $t) {
                             $rt = $this->content_model->post_time($t);
                             if (!$rt['code']) {
-                                log_message('error', '定时发布（'.$t['id'].'）失败：'.$rt['msg']);
+                                log_message('error', '定时发布（'.$t['id'].'）失败:'.$rt['msg']);
                             }
                         }
                     }
@@ -102,7 +102,7 @@ class Run extends \Phpcmf\Common
 
         $file = WRITEPATH.'thread/'.dr_safe_filename(\Phpcmf\Service::L('input')->get('auth')).'.auth';
         if (!is_file($file)) {
-            log_message('error', '线程任务auth文件不存在：'.FC_NOW_URL);
+            log_message('error', '线程任务auth文件不存在:'.FC_NOW_URL);
             exit('线程任务auth文件不存在'.$file);
         }
 
@@ -110,7 +110,7 @@ class Run extends \Phpcmf\Common
         @unlink($file);
         if (SYS_TIME - $time > 500) {
             // 500秒外无效
-            log_message('error', '线程任务auth过期：'.FC_NOW_URL);
+            log_message('error', '线程任务auth过期:'.FC_NOW_URL);
             exit('线程任务auth过期');
         }
 
@@ -139,7 +139,7 @@ class Run extends \Phpcmf\Common
                 $id = intval(\Phpcmf\Service::L('input')->get('id'));
                 $rt = \Phpcmf\Service::M('cron')->do_cron_id($id);
                 if (!$rt['code']) {
-                    log_message('error', '任务查询失败（'.$rt['msg'].'）：'.FC_NOW_URL);
+                    log_message('error', '任务查询失败（'.$rt['msg'].'）:'.FC_NOW_URL);
                     exit('任务查询失败（'.$rt['msg'].'）');
                 }
 

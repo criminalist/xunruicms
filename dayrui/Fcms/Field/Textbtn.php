@@ -1,10 +1,7 @@
 <?php namespace Phpcmf\Field;
 
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Textbtn extends \Phpcmf\Library\A_Field {
 	
@@ -31,7 +28,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-				<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+				<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 			</div>
 		</div>
 		<div class="form-group">
@@ -70,7 +67,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 			<div class="col-md-9">
 				<label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
 				<label>'.$this->member_field_select().'</label>
-				<span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
+				<span class="help-block">'.dr_lang('也可以设置会员表字段, 表示用当前登录会员信息来填充这个值').'</span>
 			</div>
 		</div>
 		';
@@ -102,7 +99,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
                 }
 
 			} else {
-				log_message('error', '扩展函数方法 '.$field['setting']['option']['extend_function'].' 不存在！');
+				log_message('error', '扩展函数方法 '.$field['setting']['option']['extend_function'].' 不存在!');
 			}
 		}
 
@@ -141,7 +138,7 @@ class Textbtn extends \Phpcmf\Library\A_Field {
 		// 字段提示信息
 		$tips = $field['setting']['validate']['tips'] ? '<span class="help-block" id="dr_'.$field['fieldname'].'_tips">'.$field['setting']['validate']['tips'].'</span>' : '';
 
-		// 当字段必填时，加入html5验证标签
+		// 当字段必填时, 加入html5验证标签
 		$required =  $field['setting']['validate']['required'] ? ' required="required"' : '';
 
 		// 按钮颜色

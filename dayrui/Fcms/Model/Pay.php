@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 支付类
@@ -555,7 +552,7 @@ class Pay extends \Phpcmf\Model
 
                         \Phpcmf\Hooks::trigger('donation_success', $data);
                     } else {
-                        log_message('error', '打赏付款(#'.$id.')回调失败：'.$rt['msg']);
+                        log_message('error', '打赏付款(#'.$id.')回调失败:'.$rt['msg']);
                     }
                     break;
 
@@ -581,7 +578,7 @@ class Pay extends \Phpcmf\Model
                     // 来自收款
                     $row = $this->table($c)->get($b);
                     if (!$row) {
-                        log_message('error', '收款(#'.$id.')回调失败：主题#'.$c.'不存在');
+                        log_message('error', '收款(#'.$id.')回调失败:主题#'.$c.'不存在');
                     } else {
                         // 更新表
                         $row['nums'] = $row['nums'] + 1;
@@ -693,8 +690,8 @@ class Pay extends \Phpcmf\Model
                     return dr_return_data(0, dr_lang('付款账号不存在'));
                 }
                 $money = (int)$post['money'];
-                $title = dr_lang('用户（%s）充值%s：%s', $post['username'], SITE_SCORE, $money);
-                $touid = 0; // 属于消费，收款方为系统
+                $title = dr_lang('用户（%s）充值%s:%s', $post['username'], SITE_SCORE, $money);
+                $touid = 0; // 属于消费, 收款方为系统
                 $tousername = '';
                 $money = - $money / \Phpcmf\Service::C()->member_cache['pay']['convert'];
                 break;
@@ -770,7 +767,7 @@ class Pay extends \Phpcmf\Model
 
                     case 'order':
                         // 来自单用户商城订单系统
-                        $title = dr_lang('订单编号：%s', $post['sn']);
+                        $title = dr_lang('订单编号:%s', $post['sn']);
                         $money = -(float)$post['money'];
                         $touid = 0; // 收款方为统系
                         $tousername = ''; // 收款方为统系
@@ -778,7 +775,7 @@ class Pay extends \Phpcmf\Model
 
                     case 'orders':
                         // 来自多用户商城订单系统
-                        $title = dr_lang('订单编号：%s', $post['sn']);
+                        $title = dr_lang('订单编号:%s', $post['sn']);
                         $money = -(float)$post['money'];
                         $touid = 0; // 收款方为统系
                         $tousername = ''; // 收款方为统系

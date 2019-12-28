@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 // 公共类
@@ -39,6 +39,9 @@ abstract class Common extends \CodeIgniter\Controller
     public function __construct(...$params)
     {
         //parent::initController(...$params);
+
+        // 部分虚拟主机会报500错误
+        //\Config\Services::response()->removeHeader('Content-Type');
 
         self::$instance =& $this;
 
@@ -119,9 +122,14 @@ abstract class Common extends \CodeIgniter\Controller
         define('SITE_LANGUAGE', strlen($this->site_info[SITE_ID]['SITE_LANGUAGE']) ? $this->site_info[SITE_ID]['SITE_LANGUAGE'] : 'zh-cn');
         define('SITE_TIME_FORMAT', strlen($this->site_info[SITE_ID]['SITE_TIME_FORMAT']) ? $this->site_info[SITE_ID]['SITE_TIME_FORMAT'] : 'Y-m-d H:i:s');
 
+        // 设置时区
+        if (strlen($this->site_info[SITE_ID]['SITE_TIMEZONE']) > 0) {
+            date_default_timezone_set('Etc/GMT'.($this->site_info[SITE_ID]['SITE_TIMEZONE'] > 0 ? '-' : '+').abs($this->site_info[SITE_ID]['SITE_TIMEZONE'])); // 设置时区
+        }
+
         // 全局URL
         define('ROOT_URL', $this->site_info[1]['SITE_URL']); // 主站URL
-        define('LANG_PATH', ROOT_URL.'config/language/'.SITE_LANGUAGE.'/'); // 语言包
+        define('LANG_PATH', ROOT_URL.'api/language/'.SITE_LANGUAGE.'/'); // 语言包
 
         !defined('THEME_PATH') && define('THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'); // 系统风格
         !defined('ROOT_THEME_PATH') && define('ROOT_THEME_PATH', ROOT_URL.'static/'); // 系统风格绝对路径
@@ -134,7 +142,7 @@ abstract class Common extends \CodeIgniter\Controller
             // 本地资源
             define('HOME_THEME_PATH', (SYS_THEME_ROOT ? SITE_URL : ROOT_URL).'static/'.SITE_THEME.'/'); // 站点风格
             if (!defined('IS_MOBILE') && ($this->_is_mobile() && $this->site_info[SITE_ID]['SITE_AUTO'])) {
-                // 当开启自适应移动端，没有绑定域名时
+                // 当开启自适应移动端, 没有绑定域名时
                 define('MOBILE_THEME_PATH', SITE_URL.'mobile/static/'.SITE_THEME.'/'); // 移动端站点风格
             } else {
                 define('MOBILE_THEME_PATH', SITE_MURL.'static/'.SITE_THEME.'/'); // 移动端站点风格
@@ -196,12 +204,6 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        // 加载UCSSO客户端
-        /*
-        if ($this->member_cache['config']['ucsso'] && is_file(ROOTPATH.'api/ucsso/config.php')) {
-            include ROOTPATH.'api/ucsso/client.php';
-        }*/
-
         // 网站常量
         define('SITE_ICP', $this->get_cache('site', SITE_ID, 'config', 'SITE_ICP'));
         define('SITE_TONGJI', $this->get_cache('site', SITE_ID, 'config', 'SITE_TONGJI'));
@@ -216,20 +218,7 @@ abstract class Common extends \CodeIgniter\Controller
             && \Phpcmf\Service::L('input')->request('appsecret')) {
             define('IS_API_HTTP', 1);
             $this->_api_auth();
-            // 获取当前的登录记录
-            $auth = \Phpcmf\Service::L('input')->request('api_auth_code');
-            if ($auth) {
-                // 通过接口的post认证
-                $this->uid = (int)\Phpcmf\Service::L('input')->get('api_auth_uid');
-                $this->member = \Phpcmf\Service::M('member')->get_member($this->uid);
-                // 表示登录成功
-                if (!$this->member) {
-                    // 不存在的账号
-                    $this->_json(0, dr_lang('api_auth_uid 账号不存在'));
-                } elseif (md5($this->member['passowrd'].$this->member['salt']) != $auth) {
-                    $this->_json(0, dr_lang('登录超时，请重新登录'));
-                }
-            }
+            \Phpcmf\Service::M('http', 'httpapi')->check_auth();
         } else {
             define('IS_API_HTTP', 0);
             $this->uid = (int)\Phpcmf\Service::M('member')->member_uid();
@@ -244,7 +233,7 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        // 开启自动跳转手机端(api、admin、member不跳转)
+        // 开启自动跳转手机端(api, admin, member不跳转)
         if (!IS_API // api不跳转
             && !IS_ADMIN // 后台不跳转
             && !IS_MEMBER // 会员中心不跳
@@ -321,16 +310,16 @@ abstract class Common extends \CodeIgniter\Controller
                 // 获取操作名称
                 switch ($action) {
                     case 'add':
-                        $name = dr_lang('【增】');
+                        $name = dr_lang('[增]');
                         break;
                     case 'edit':
-                        $name = dr_lang('【改】');
+                        $name = dr_lang('[改]');
                         break;
                     case 'del':
-                        $name = dr_lang('【删】');
+                        $name = dr_lang('[删]');
                         break;
                     default:
-                        $name = dr_lang('【使用】');
+                        $name = dr_lang('[使用]');
                         break;
                 }
                 $this->_admin_msg(0, dr_lang('没有%s权限（#%s）', $name, $uri));
@@ -359,7 +348,7 @@ abstract class Common extends \CodeIgniter\Controller
                     && \Phpcmf\Service::L('Router')->class == 'home' && \Phpcmf\Service::L('Router')->method == 'add') {
                     // 游客发布权限
                 } else {
-                    // 会话超时，请重新登录
+                    // 会话超时, 请重新登录
                     if (IS_API_HTTP) {
                         $this->_json(0, dr_lang('无法获取到登录用户信息'));
                     } else {
@@ -462,7 +451,7 @@ abstract class Common extends \CodeIgniter\Controller
             // 网站关闭状态时不进行缓存页面
             return;
         } elseif ($this->site_info[SITE_ID]['SITE_AUTO']) {
-            // 开启了自动识别移动端，不进行缓存
+            // 开启了自动识别移动端, 不进行缓存
             return;
         }
         parent::cachePage($time);
@@ -498,12 +487,12 @@ abstract class Common extends \CodeIgniter\Controller
         if (!$this->module) {
             if (IS_ADMIN) {
                 if ($dirname == 'share') {
-                    $this->_admin_msg(0, dr_lang('系统未安装共享模块，无法使用栏目'));
+                    $this->_admin_msg(0, dr_lang('系统未安装共享模块, 无法使用栏目'));
                 } else {
-                    $this->_admin_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                    $this->_admin_msg(0, dr_lang('模块[%s]不存在', $dirname));
                 }
             } else {
-                $this->_msg(0, dr_lang('模块【%s】不存在', $dirname));
+                $this->_msg(0, dr_lang('模块[%s]不存在', $dirname));
             }
             return;
         }
@@ -709,7 +698,7 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 引用404页面
      */
-    protected function goto_404_page($msg) {
+    public function goto_404_page($msg) {
 
         IS_API_HTTP && exit($this->_json(0, $msg));
 
@@ -729,10 +718,11 @@ abstract class Common extends \CodeIgniter\Controller
     /**
      * 生成静态时的跳转提示
      */
-    protected function _html_msg($code, $msg, $url = '') {
+    protected function _html_msg($code, $msg, $url = '', $note = '') {
         \Phpcmf\Service::V()->assign([
             'msg' => $msg,
             'url' => $url,
+            'note' => $note,
             'mark' => $code
         ]);
         \Phpcmf\Service::V()->display('html_msg.html', 'admin');exit;
@@ -769,30 +759,24 @@ abstract class Common extends \CodeIgniter\Controller
             }
         }
 
-        (IS_API_HTTP || IS_POST) && $call = 1;
-
         if (!$this->member['is_verify']) {
             // 审核
-            $call && $this->_json(0, dr_lang('账号还没有通审核'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('api/verify'), 'auto');
+            $this->_msg(0, dr_lang('账号还没有通审核'), dr_member_url('api/verify'));
         } elseif ($this->member_cache['config']['complete']
             && !$this->member['is_complete']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制完善资料
-            $call && $this->_json(0, dr_lang('账号必须完善资料'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/index'), 'auto');
+            $this->_msg(0, dr_lang('账号必须完善资料'), dr_member_url('account/index'));
         } elseif ($this->member_cache['config']['mobile']
             && !$this->member['is_mobile']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制手机认证
-            $call && $this->_json(0, dr_lang('账号必须手机认证'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/mobile'), 'auto');
+            $this->_msg(0, dr_lang('账号必须手机认证'), dr_member_url('account/mobile'));
         } elseif ($this->member_cache['config']['avatar']
             && !$this->member['is_avatar']
             &&\Phpcmf\Service::L('Router')->class != 'account') {
             // 强制头像上传
-            $call && $this->_json(0, dr_lang('账号必须上传头像'));
-            dr_redirect(\Phpcmf\Service::L('Router')->member_url('account/avatar'), 'auto');
+            $this->_msg(0, dr_lang('账号必须上传头像'), dr_member_url('account/avatar'));
         }
     }
 
@@ -929,7 +913,7 @@ abstract class Common extends \CodeIgniter\Controller
                 return true;
             }
         }
-        // 协议法，因为有可能不准确，放到最后判断
+        // 协议法, 因为有可能不准确, 放到最后判断
         if (isset ($_SERVER['HTTP_ACCEPT'])) {
             // 如果只支持wml并且不支持html那一定是移动设备
             // 如果支持wml和html但是wml在html之前则是移动设备
@@ -971,7 +955,7 @@ abstract class Common extends \CodeIgniter\Controller
             $data = require APPPATH.'Config/Clink.php';
         }
 
-        $local = dr_dir_map(APPSPATH, 1);
+        $local = dr_dir_map(dr_get_app_list(), 1);
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
             if (is_file($path.'install.lock') && is_file($path.'Config/Clink.php')) {
@@ -979,10 +963,10 @@ abstract class Common extends \CodeIgniter\Controller
                 if ($_clink) {
                     if (is_file($path.'Models/Auth.php')) {
                         if (\Phpcmf\Service::M('auth', $dir)->is_link_auth(APP_DIR)) {
-                            $data = array_merge($data , $_clink);
+                            $data = array_merge($data , $_clink) ;
                         }
                     } else {
-                        $data = array_merge($data , $_clink);
+                        $data = array_merge($data , $_clink) ;
                     }
                 }
             }
@@ -990,9 +974,16 @@ abstract class Common extends \CodeIgniter\Controller
 
         if ($data) {
             foreach ($data as $i => $t) {
-                if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
-                    unset($data[$i]); // 无权限的不要
+                if (IS_ADMIN) {
+                    if (!$t['uri'] || ($t['uri'] && !$this->_is_admin_auth($t['uri']))) {
+                        unset($data[$i]); // 无权限的不要
+                    }
+                } else {
+                    if (!$t['murl']) {
+                        unset($data[$i]); // 非后台必须验证murl
+                    }
                 }
+
             }
         }
 
@@ -1020,12 +1011,14 @@ abstract class Common extends \CodeIgniter\Controller
                 'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发布到其他栏目").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=1\')',
             ];
         }
-        $data[] = [
-            'icon' => 'fa fa-weixin',
-            'name' => dr_lang('发送到微信公众号'),
-            'uri' => APP_DIR.'/home/edit',
-            'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发送到微信公众号").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=2\')',
-        ];
+        if (dr_is_app('weixin')) {
+            $data[] = [
+                'icon' => 'fa fa-weixin',
+                'name' => dr_lang('发送到微信公众号'),
+                'uri' => APP_DIR.'/home/edit',
+                'url' => 'javascript:;" onclick="dr_module_send(\''.dr_lang("发送到微信公众号").'\', \''.dr_url(APP_DIR.'/home/tui_edit').'&page=2\')',
+            ];
+        }
         $data[] = [
             'icon' => 'fa fa-clock-o',
             'name' => dr_lang('更新时间'),

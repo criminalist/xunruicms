@@ -1,8 +1,8 @@
 {template "header.html"}
 <div class="note note-danger">
     <p>本功能用于检测本地核心文件与服务器最新版文件的差异</p>
-    <p>本次检测中的文件强烈建议开发者不要去修改，否则会引起系统不稳定或者系统崩溃</p>
-    <p>如果二次开发中需要变更核心文件的逻辑，需要提前向官方说明，再为你单独开放钩子或继承类，可提交建议类工单或者邮件finecms@qq.com</p>
+    <p>本次检测中的文件强烈建议开发者不要去修改, 否则会引起系统不稳定或者系统崩溃</p>
+    <p>如果二次开发中需要变更核心文件的逻辑, 需要提前向官方说明, 再为你单独开放钩子或继承类, 可提交建议类工单或者邮件finecms@qq.com</p>
 </div>
 
 <div class="text-center">
@@ -68,8 +68,8 @@
                     $('#dr_check_div').show();
                     $('#dr_check_result').show();
                     $('#dr_check_button').attr('disabled', true);
-                    $('#dr_check_bf').append('<p style="color: green">本网站程序下载时间：{$cms_version.downtime}</p>');
-                    $('#dr_check_bf').append('<p style="color: green">服务端最近更新时间：'+json.msg+'</p>');
+                    $('#dr_check_bf').append('<p style="color: green">本网站程序下载时间:{$cms_version.downtime}</p>');
+                    $('#dr_check_bf').append('<p style="color: green">服务端最近更新时间:'+json.msg+'</p>');
                     dr_ajax2ajax(1);
                 }
             },

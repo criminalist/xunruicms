@@ -8,7 +8,6 @@
                     这里是演示数据模块单独的内容页, 以下有各个常用字段输出的写法
                 </div>
             </div>
-
         </div>
         <div class="page-content">
 
@@ -16,7 +15,7 @@
 
                 <ul class="page-breadcrumb breadcrumb">
                     <li>
-                        <a href="{SITE_URL}"> Главная </a>
+                        <a href="{SITE_URL}">网站首页</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
@@ -101,7 +100,7 @@
                                     </a>
                                     <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
                                         <i class="fa fa-thumbs-o-up"></i>
-                                        <div>Понравилось</div>
+                                        <div> 有帮助 </div>
                                         <span class="badge badge-danger" id="module_digg_{$id}_1"> {intval($support)} </span>
                                     </a>
                                     <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 0);" class="icon-btn">
@@ -328,7 +327,7 @@
 
                         </div>
                         <div class="portlet-body">
-                            {dr_baidu_map($baiduditu, 17, '100%', '400')}
+                            {dr_baidu_map($baiduditu, 17, '100%', '400', '', '', '<h3>这里是标注显示信息:'.$title.'</h3>')}
                         </div>
                     </div>
 

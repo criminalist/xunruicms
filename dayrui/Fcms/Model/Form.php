@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 模型类
@@ -43,7 +40,7 @@ class Form extends \Phpcmf\Model
                 $size = @file_put_contents($file, str_replace('$NAME$', $name, $c));
                 if (!$size && $call) {
                     @unlink($file);
-                    return dr_return_data(0, dr_lang('文件%s创建失败，无可写权限', str_replace(FCPATH, '', $file)));
+                    return dr_return_data(0, dr_lang('文件%s创建失败, 无可写权限', str_replace(FCPATH, '', $file)));
                 }
                 $ok ++;
             }

@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Image extends \Phpcmf\Library\A_Field {
@@ -58,7 +55,7 @@ class Image extends \Phpcmf\Library\A_Field {
 			<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 			<div class="col-md-9">
 				<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-				<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+				<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 			</div>
 		</div>'];
     }
@@ -130,7 +127,7 @@ class Image extends \Phpcmf\Library\A_Field {
 
         // 剩下的情况就是删除旧文件增加新文件
 
-        // 新旧附件的交集，表示固定的
+        // 新旧附件的交集, 表示固定的
         $intersect = @array_intersect($data, $_data);
 
         return array(
@@ -202,10 +199,13 @@ class Image extends \Phpcmf\Library\A_Field {
             }
         }
         $ucount = $count - $i;
+        $ts = dr_lang('单击上传图片, 每张图片最大%s, 最多上传%s张图片', intval($field['setting']['option']['size']) . 'MB', intval($field['setting']['option']['count']));
 
         // 表单输出
         $str = '
 			 <div class="dropzone dropzone-file-area" id="my-dropzone-'.$name.'" style="width:'.$width.(is_numeric($width) ? 'px' : '').';">
+                            
+                                <p style="text-align: center;color:#d9dbdd"> '.$ts.' </p>
                             </div>
 		';
 
@@ -216,8 +216,6 @@ class Image extends \Phpcmf\Library\A_Field {
 			';
             define('POSCMS_FIELD_IMAGES', 1);//防止重复加载JS
         }
-
-        $ext = !$field['setting']['option']['ext'] || $field['setting']['option']['ext'] == '*' ? '' : 'acceptFileTypes: /(\.|\/)('.str_replace(',', '|', $field['setting']['option']['ext']).')$/i,';
 
         $str.= '
 		
@@ -233,7 +231,7 @@ $(function() {
         acceptedFiles: "image/*",
         dictMaxFilesExceeded: "'.dr_lang("您最多只能上传%s张图片", $count).'",
         dictResponseError: \'文件上传失败!\',
-        dictInvalidFileType: "你不能上传该类型文件,文件类型只能是*.jpg,*.gif,*.png。",
+        dictInvalidFileType: "你不能上传该类型文件,文件类型只能是*.jpg,*.gif,*.png.",
         dictFallbackMessage:"浏览器不受支持",
         dictFileTooBig:"文件过大上传文件最大支持.",
         url: "'.$url.'",

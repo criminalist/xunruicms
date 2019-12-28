@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 后台权限控制模型
@@ -11,6 +8,23 @@
 class Auth extends \Phpcmf\Model {
 
     private $_is_post_user = -1;
+
+    // 验证操作其他用户身份权限
+    public function cleck_edit_member($uid) {
+
+        // 超管不验证
+        if (in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+            return true;
+        } elseif ($this->uid == $uid) {
+            // 自己不验证
+            return true;
+        } elseif (\Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->counts()) {
+            // 此账号属于管理账号, 禁止操作
+            return false;
+        }
+
+        return true;
+    }
 
     // 编辑时的获取自定义面板
     public function edit_main_table($table, $name, $tid = 12) {
@@ -88,7 +102,7 @@ class Auth extends \Phpcmf\Model {
 
     // 存储授权登录信息
     public function save_login_auth($name, $uid) {
-        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, SYS_TIME, 300);
+        \Phpcmf\Service::L('cache')->set_data('admin_auth_login_'.$name.'_'.$uid, SYS_TIME, 300);
     }
 
     // 后台管理员登录
@@ -109,15 +123,18 @@ class Auth extends \Phpcmf\Model {
             return dr_return_data(0, dr_lang('密码不正确'));
         }
 
-        $uid = (int)$data['id'];
+        $data['uid'] = $uid = (int)$data['id'];
         // 查询角色组
-        $role = $this->_role($uid);
+        $data['role'] = $role = $this->_role($uid);
         if (!$role) {
             return dr_return_data(0, dr_lang('此账号不是管理员'));
         }
 
         // 保存会话
         $this->login_session($data);
+
+        // 登录后的钩子
+        \Phpcmf\Hooks::trigger('admin_login_after', $data);
 
         return dr_return_data($uid);
     }
@@ -207,7 +224,7 @@ class Auth extends \Phpcmf\Model {
         if (!$data) {
             return dr_return_data(0, dr_lang('管理员账号不存在'));
         } elseif ($member['is_lock'] && !IS_DEV) {
-            return dr_return_data(0, dr_lang('账号被锁定，禁止登陆'));
+            return dr_return_data(0, dr_lang('账号被锁定, 禁止登陆'));
         }
 
         // 查询角色组
@@ -380,10 +397,8 @@ class Auth extends \Phpcmf\Model {
         if (!$member || $uid != $member['uid']) {
             // 登录超时
             if (\Phpcmf\Service::L('router')->class == 'api') {
-                if (\Phpcmf\Service::L('router')->method == 'search_help') {
-                    return FALSE;
-                } elseif (\Phpcmf\Service::L('router')->method == 'oauth') {
-                    return FALSE;
+                if (in_array(\Phpcmf\Service::L('router')->method, ['oauth', 'search_help'])) {
+                    return FALSE; // 跳过的控制器
                 }
                 \Phpcmf\Service::C()->_admin_msg(0, dr_lang('登录失效'));
             }
@@ -401,7 +416,7 @@ class Auth extends \Phpcmf\Model {
      * 判断是否具有操作权限
      *
      * @param	string	$uri
-     * @return	bool	有权限返回TRUE，否则返回FALSE
+     * @return	bool	有权限返回TRUE, 否则返回FALSE
      */
     public function _is_admin_auth($uri = '') {
 
@@ -598,6 +613,7 @@ class Auth extends \Phpcmf\Model {
         $this->_is_admin_auth($module['dirname'].'/draft/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/draft/index').'"> <i class="fa fa-pencil"></i> '.dr_lang('草稿箱管理').' </a></li>';
         $this->_is_admin_auth($module['dirname'].'/recycle/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/recycle/index').'"> <i class="fa fa-trash-o"></i> '.dr_lang('回收站管理').' </a></li>';
         $this->_is_admin_auth($module['dirname'].'/time/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/time/index').'"> <i class="fa fa-clock-o"></i> '.dr_lang('待发布管理').' </a></li>';
+        $this->_is_admin_auth($module['dirname'].'/verify/index') && $module_menu.= '<li><a href="'.\Phpcmf\Service::L('router')->url($module['dirname'].'/verify/index').'"> <i class="fa fa-edit"></i> '.dr_lang('待审核管理').' </a></li>';
         $module_menu.= '</ul>';
 
         // 显示菜单
@@ -645,7 +661,6 @@ class Auth extends \Phpcmf\Model {
         $menu.= '<li> <a href="javascript:dr_iframe(\'save\', \''.\Phpcmf\Service::L('router')->url('navigator/home/config_edit').'\');"> <i class="fa fa-save"></i> '.dr_lang('链接分类').'</a> <i class="fa fa-circle"></i> </li>';
         // 选中判断
         strpos($menu, 'class="on"') === false && $menu = str_replace('{ON}', 'on', $menu);
-
 
 
         return $menu;

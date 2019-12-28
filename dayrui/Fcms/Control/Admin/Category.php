@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 模块栏目操作类 基于 Ftable
@@ -29,14 +26,14 @@ class Category extends \Phpcmf\Table
         if ($this->is_scategory) {
             // 共享栏目时显示单页内容字段
             if ($this->module['share'] && $dir != 'share') {
-                // 当共享模块进入了独立模块的栏目，就跳转条共享模块
+                // 当共享模块进入了独立模块的栏目, 就跳转条共享模块
                 dr_redirect(dr_url('category/index'));
             }
         } else {
             unset($this->module['category_field']['content']);
             // 独立模块
             if (isset($this->module['config']['hcategory']) && $this->module['config']['hcategory']) {
-                $this->_admin_msg(0, dr_lang('模块【%s】禁止使用栏目', $dir));
+                $this->_admin_msg(0, dr_lang('模块[%s]禁止使用栏目', $dir));
             }
         }
 
@@ -209,7 +206,7 @@ class Category extends \Phpcmf\Table
         ];
 
         if ($pid) {
-            !$this->module['category'][$pid] && $this->_admin_msg(0, dr_lang('栏目【%s】缓存不存在', $pid));
+            !$this->module['category'][$pid] && $this->_admin_msg(0, dr_lang('栏目[%s]缓存不存在', $pid));
             $value['setting'] = $this->module['category'][$pid]['setting'];
         }
 
@@ -266,7 +263,7 @@ class Category extends \Phpcmf\Table
 
             $pid = intval($post['pid']);
             if ($pid && !$this->module['category'][$pid]) {
-                $this->_json(0, dr_lang('栏目【%s】缓存不存在', $pid));
+                $this->_json(0, dr_lang('栏目[%s]缓存不存在', $pid));
             } elseif ($this->module['category'][$pid]['tid'] == 2) {
                 $this->_json(0, dr_lang('外部地址类型不允许添加子栏目'));
             }
@@ -551,7 +548,7 @@ class Category extends \Phpcmf\Table
             } elseif ($this->is_scategory && $category[$topid]['child'] == 0 && $category[$topid]['tid'] == 1) {
                 $mid = $category[$topid]['mid'] ? $category[$topid]['mid'] : APP_DIR;
                 if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $topid)->counts()) {
-                    $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $category[$topid]['name']));
+                    $this->_json(0, dr_lang('目标栏目[%s]存在内容数据, 无法作为父栏目', $category[$topid]['name']));
                 }
             }
             /*
@@ -559,13 +556,13 @@ class Category extends \Phpcmf\Table
             if ($mid) {
                 // 本身有模块属性的栏目
                 if ($category[$id]['mid'] && $category[$id]['mid'] != $mid) {
-                    $this->_json(0, dr_lang('所选栏目【%s】与目标栏目的模块不一致', $category[$id]['name']));
+                    $this->_json(0, dr_lang('所选栏目[%s]与目标栏目的模块不一致', $category[$id]['name']));
                 }
             } else {
                 // 本身没有模块属性的栏目
                 !$mmid && $category[$id]['mid'] && $mmid = $category[$id]['mid'];
                 if ($category[$id]['mid'] && $category[$id]['mid'] != $mmid) {
-                    $this->_json(0, dr_lang('所选栏目【%s】与其他栏目的模块不一致', $category[$id]['name']));
+                    $this->_json(0, dr_lang('所选栏目[%s]与其他栏目的模块不一致', $category[$id]['name']));
                 }
             }
             // 批量更新内容栏目
@@ -614,7 +611,7 @@ class Category extends \Phpcmf\Table
             // 共享模块
             $row['setting'] = dr_string2array($row['setting']);
             if (!$row['setting']['urlrule']) {
-                $this->_json(0, dr_lang('此栏目是动态地址，无法开启静态'));
+                $this->_json(0, dr_lang('此栏目是动态地址, 无法开启静态'));
             }
             $html = (int)$row['setting']['html'];
             $v = $html ? 0 : 1;
@@ -637,7 +634,7 @@ class Category extends \Phpcmf\Table
             $site = dr_string2array($module['site']);
             $site[SITE_ID]['html'] = $v;
             if (!$site[SITE_ID]['urlrule']) {
-                $this->_json(0, dr_lang('此模块是动态地址，无法开启静态'));
+                $this->_json(0, dr_lang('此模块是动态地址, 无法开启静态'));
             }
             \Phpcmf\Service::M()->db->table('module')->where('id', $this->module['id'])->update([
                 'site' => dr_array2string($site)
@@ -689,7 +686,7 @@ class Category extends \Phpcmf\Table
         }
         $row['setting'] = dr_string2array($row['setting']);
         if ($row['setting']['getchild']) {
-            $this->_admin_msg(0, dr_lang('本栏目已开启【继承下级】请编辑它下级第一个单页面数据'));
+            $this->_admin_msg(0, dr_lang('本栏目已开启[继承下级]请编辑它下级第一个单页面数据'));
         }
 
         if (IS_POST) {
@@ -804,7 +801,7 @@ class Category extends \Phpcmf\Table
                         if ($save['tid'] == 1 && !$save['mid']) {
                             return dr_return_data(0, dr_lang('必须选择一个模块'));
                         } elseif ($save['pid'] && $save['tid'] != 2 && $this->module['category'][$save['pid']]['tid'] == 2) {
-                            return dr_return_data(0, dr_lang('父级栏目是外部地址类型，下级栏目只能选择外部地址'));
+                            return dr_return_data(0, dr_lang('父级栏目是外部地址类型, 下级栏目只能选择外部地址'));
                         } elseif ($save['tid'] == 2 && !$save['setting']['linkurl']) {
                             return dr_return_data(0, dr_lang('外部地址类型必须填写地址'));
                         }
@@ -835,7 +832,7 @@ class Category extends \Phpcmf\Table
                     } elseif ($this->is_scategory && $this->module['category'][$save['pid']]['child'] == 0 && $this->module['category'][$save['pid']]['tid'] == 1) {
                         $mid = $this->module['category'][$save['pid']]['mid'] ? $this->module['category'][$save['pid']]['mid'] : APP_DIR;
                         if (dr_is_module($mid) && \Phpcmf\Service::M()->table(dr_module_table_prefix($mid))->where('catid', $save['pid'])->counts()) {
-                            $this->_json(0, dr_lang('目标栏目【%s】存在内容数据，无法作为父栏目', $this->module['category'][$save['pid']]['name']));
+                            $this->_json(0, dr_lang('目标栏目[%s]存在内容数据, 无法作为父栏目', $this->module['category'][$save['pid']]['name']));
                         }
                     }
                 }

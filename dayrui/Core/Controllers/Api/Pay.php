@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 // 付款
@@ -37,7 +37,7 @@ class Pay extends \Phpcmf\Common
 		
 		$data['html'] = $rt['data'];
 		if (SITE_IS_MOBILE && $this->_is_mobile()) {
-		    // 开启了移动端时，支付判断模板是否是移动端的
+		    // 开启了移动端时, 支付判断模板是否是移动端的
             \Phpcmf\Service::V()->init('mobile');
         }
 
@@ -100,7 +100,7 @@ class Pay extends \Phpcmf\Common
         }
 
         if (SITE_IS_MOBILE && $this->_is_mobile()) {
-            // 开启了移动端时，支付判断模板是否是移动端的
+            // 开启了移动端时, 支付判断模板是否是移动端的
             \Phpcmf\Service::V()->init('mobile');
         }
 

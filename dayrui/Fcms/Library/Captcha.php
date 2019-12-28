@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 /**
  * 验证码类
@@ -22,18 +19,22 @@ class Captcha
     private $randstring = ['*', '@', '$', '%', '&', '!'];
 
     public function __construct(...$params) {
-        $this->font = WEBPATH.'config/font/1.ttf';
+        $this->font = ROOTPATH.'config/font/1.ttf';
     }
 
     // todo
     public function create($width = 120, $height = 32) {
+
         $this->_code();
-        $this->width = $width;
-        $this->height = $height - 2;
+
+        $this->width = min(200, $width);
+        $this->height = min(100, $height - 2);
+
         $this->_bg();
         $this->_line();
         $this->_font();
         $this->_show();
+
         return $this->code;
     }
 
@@ -96,7 +97,7 @@ class Captcha
     //显示
     private function _show() {
         @ob_start();
-        @ob_clean(); //关键代码，防止出现'图像因其本身有错无法显示'的问题。
+        @ob_clean(); //关键代码, 防止出现'图像因其本身有错无法显示'的问题.
         header('Content-type:image/png');
         imagepng($this->img);
         imagedestroy($this->img);

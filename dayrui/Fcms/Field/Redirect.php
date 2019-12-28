@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -36,7 +33,7 @@ class Redirect extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="10" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-					<span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+					<span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
 				</div>
 			</div>
 				'];
@@ -90,7 +87,7 @@ class Redirect extends \Phpcmf\Library\A_Field {
         // 字段默认值
 		$value = strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']);
 
-		// 当字段必填时，加入html5验证标签
+		// 当字段必填时, 加入html5验证标签
         isset($field['setting']['validate']['required']) && $field['setting']['validate']['required'] == 1 && $attr.= ' required="required"';
 
 		$str = '<input class="form-control" type="text" name="data['.$name.']" id="dr_'.$name.'" value="'.$value.'" '.$style.' '.$attr.' />'.$tips;

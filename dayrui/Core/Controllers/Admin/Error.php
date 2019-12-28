@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Error extends \Phpcmf\Common
 {
@@ -77,7 +74,7 @@ class Error extends \Phpcmf\Common
         !$time && $time = date('Y-m-d');
         $file = WRITEPATH.'error/log-'.$time.'.php';
         if (!$file) {
-            exit('文件不存在：'.$file);
+            exit('文件不存在:'.$file);
         }
         $code = file_get_contents($file);
         \Phpcmf\Service::V()->assign([

@@ -2,17 +2,15 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Module extends \Phpcmf\Common
 {
 
     private $dir;
     private $form;
-    private $jname = ['case', 'class', 'extends', 'new', 'var'];
+    
 
     public function __construct(...$params) {
         parent::__construct(...$params);
@@ -68,8 +66,8 @@ class Module extends \Phpcmf\Common
 
         if (!preg_match('/^[a-z]+$/U', $dir)) {
             $this->_json(0, dr_lang('模块目录[%s]格式不正确', $dir));
-        } elseif (in_array($dir, $this->jname)) {
-            $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称，请重命名', $dir));
+        } elseif (\Phpcmf\Service::M('app')->is_sys_dir($dir)) {
+            $this->_json(0, dr_lang('模块目录[%s]名称是系统保留名称, 请重命名', $dir));
         }
 
         $path = dr_get_app_dir($dir);
@@ -140,8 +138,7 @@ class Module extends \Phpcmf\Common
             foreach ($module as $t) {
                 $dir = $t['dirname'];
                 if ($list[$dir]) {
-                    $t['key'] = $t['key'];
-                    $t['name'] = $list[$dir]['name'];
+                    $t['name'] = dr_lang($list[$dir]['name']);
                     $t['mtype'] = $list[$dir]['mtype'];
                     $t['system'] = $list[$dir]['system'];
                     $t['version'] = $list[$dir]['version'];
@@ -216,7 +213,24 @@ class Module extends \Phpcmf\Common
         }
 
         if (IS_AJAX_POST) {
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+            $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post['setting']['list_field']) {
+                $order = [];
+                foreach ($post['setting']['list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
+            if ($post['setting']['comment_list_field']) {
+                foreach ($post['setting']['comment_list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
             $rt = \Phpcmf\Service::M('Module')->config($data, $post);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
@@ -235,8 +249,7 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'catid', 'author', 'inputtime', 'updatetime', 'hits']);
-        sort($sys_field);
-        $field = dr_array2array($sys_field, $field);
+        $field = dr_list_field_value($data['setting']['list_field'], $sys_field, $field);
 
         // 评论字段
         $comment_field = \Phpcmf\Service::M()->db->table('field')
@@ -246,7 +259,7 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['content', 'author', 'inputtime']);
-        $comment_field = dr_array2array($sys_field, $comment_field);
+		$comment_field = dr_list_field_value($data['setting']['comment_list_field'], $sys_field, $field);
 
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
@@ -313,13 +326,18 @@ class Module extends \Phpcmf\Common
     public function form_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
+            if (!preg_match('/^[a-z]+[a-z0-9\_]+$/i', $data['table'])) {
+                $this->_json(0, dr_lang('表单别名不规范'));
+            } elseif (\Phpcmf\Service::M('app')->is_sys_dir($data['table'])) {
+                $this->_json(0, dr_lang('名称[%s]是系统保留名称, 请重命名', $data['table']));
+            }
             $this->_validation(0, $data);
             \Phpcmf\Service::L('input')->system_log('创建模块['.$this->dir.']表单('.$data['name'].')');
             $rt = \Phpcmf\Service::M('Module')->create_form($this->dir, $data);
             if ($rt['code']) {
                 \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-                $this->_json(1, dr_lang('操作成功，请刷新后台页面'));
+                $this->_json(1, dr_lang('操作成功, 请刷新后台页面'));
             } else {
                 $this->_json(0, $rt['msg']);
             }
@@ -367,7 +385,15 @@ class Module extends \Phpcmf\Common
         ];
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('data', true);
+            $data = \Phpcmf\Service::L('input')->post('data');
+            if ($data['setting']['list_field']) {
+                foreach ($data['setting']['list_field'] as $t) {
+                    if ($t['func']
+                        && !method_exists(\Phpcmf\Service::L('Function_list'), $t['func']) && !function_exists($t['func'])) {
+                        $this->_json(0, dr_lang('列表回调函数[%s]未定义', $t['func']));
+                    }
+                }
+            }
             \Phpcmf\Service::M('Module')->table('module_form')->update($id,
                 [
                     'name' => $data['name'],
@@ -389,7 +415,6 @@ class Module extends \Phpcmf\Common
             ->orderBy('displayorder ASC,id ASC')
             ->get()->getResultArray();
         $sys_field = \Phpcmf\Service::L('Field')->sys_field(['id', 'author', 'inputtime']);
-        sort($sys_field);
 
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
 
@@ -397,7 +422,7 @@ class Module extends \Phpcmf\Common
             'data' => $data,
             'page' => $page,
             'form' => dr_form_hidden(['page' => $page]),
-            'field' => dr_array2array($sys_field, $field),
+			'field' => dr_list_field_value($data['setting']['list_field'], $sys_field, $field),
         ]);
         \Phpcmf\Service::V()->display('module_form_edit.html');
     }
@@ -458,7 +483,7 @@ class Module extends \Phpcmf\Common
         }
 
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-        $this->_json(1, dr_lang('本站点共（%s）个表单，重建（%s）个文件', $ct, $file));
+        $this->_json(1, dr_lang('本站点共（%s）个表单, 重建（%s）个文件', $ct, $file));
     }
 
 

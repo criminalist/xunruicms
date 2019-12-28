@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
@@ -11,6 +11,7 @@
 class View {
 
     private $_is_admin; // 是否后台模板
+    private $_is_return; // 是否返回模板名称不输出模板
     private $_disp_dir; // display传人的目录参数
 
     private $_dir; // 模板目录
@@ -32,6 +33,7 @@ class View {
     private $_include_file; // 引用计数
 
     private $pos_order; // 是否包含有地图定位的排序
+    private $pos_baidu; // 百度地图定位坐标
 
     private $action; // 指定action
 
@@ -136,7 +138,6 @@ class View {
         return $this->_dir;
     }
 
-
     /**
      * 强制设置为当前默认的模板目录(一般用于api外部接入)
      */
@@ -151,6 +152,12 @@ class View {
         $this->_dir = $this->_mdir = $path;
     }
 
+    /**
+     * 设置是否返回模板名称不显示
+     */
+    public function set_return($is) {
+        $this->_is_return = $is;
+    }
 
     /**
      * 强制设置为后台模板目录
@@ -170,6 +177,10 @@ class View {
      */
     public function display($_name, $_dir = '') {
 
+        if ($this->_is_return) {
+            return $_name;
+        }
+
         $start = microtime(true);
 
 		// 定义当前模板的url地址
@@ -182,7 +193,7 @@ class View {
 			$this->_options['get'] = \Phpcmf\Service::L('input')->xss_clean($_GET);
 		}
 
-        // 如果是来自api就不解析模板，直接输出变量
+        // 如果是来自api就不解析模板, 直接输出变量
         if (IS_API_HTTP) {
             $call = \Phpcmf\Service::L('input')->request('api_call_function');
             if ($call) {
@@ -205,7 +216,7 @@ class View {
         $_view_name = str_replace([TPLPATH, FCPATH, APPSPATH], ['TPLPATH/', 'FCPATH/', 'APPSPATH/'], $_view_file);
 
         if (IS_DEV || (IS_ADMIN && SYS_DEBUG)) {
-            echo "<!--当前页面的模板文件是：$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
+            echo "<!--当前页面的模板文件是:$_view_file （本代码只在开发者模式下显示）-->".PHP_EOL;
         } else {
             $this->_options = null;
         }
@@ -244,7 +255,7 @@ class View {
         $file = str_replace('..', '', $file); // 安全规范化模板名称引入
 
         if ($dir == 'admin' || $this->_is_admin) {
-            // 后台操作时，不需要加载风格目录，如果文件不存在可以尝试调用主项目模板
+            // 后台操作时, 不需要加载风格目录, 如果文件不存在可以尝试调用主项目模板
             $adir = APPPATH.'Views/';
             if (APP_DIR && is_file(MYPATH.'View/'.APP_DIR.'/'.$file)) {
                 return MYPATH.'View/'.APP_DIR.'/'.$file;
@@ -259,7 +270,7 @@ class View {
             }
             $error = $adir.$file;
         } elseif (IS_MEMBER || $dir == 'member') {
-            // 会员操作时，需要加载风格目录，如果文件不存在可以尝试调用主项目模板
+            // 会员操作时, 需要加载风格目录, 如果文件不存在可以尝试调用主项目模板
             if ($dir === '/' && is_file($this->_root.$file)) {
                 return $this->_root.$file;
             } elseif (is_file($this->_dir.$file)) {
@@ -301,13 +312,11 @@ class View {
             return TPLPATH.'pc/default/home/msg.html';
         }
 
-
         if (CI_DEBUG) {
-            echo FC_NOW_URL.PHP_EOL.'<hr>';
-            exit('模板文件 ('.$error.') 不存在');
+            dr_show_error('模板文件 ('.$error.') 不存在');
+        } else {
+            dr_show_error('模板文件不存在');
         }
-
-        exit('模板文件 ('.str_replace(TPLPATH, '/', $error).') 不存在');
     }
 
 
@@ -357,7 +366,7 @@ class View {
      * 模板标签include/template
      *
      * @param	string	$name	模板文件
-     * @param	string	$dir	应用、模块目录
+     * @param	string	$dir	应用, 模块目录
      * @return  bool
      */
     public function _include($name, $dir = '') {
@@ -368,7 +377,7 @@ class View {
         $fname = md5($file);
         isset($this->_include_file[$fname]) ? $this->_include_file[$fname] ++ : $this->_include_file[$fname] = 0;
 
-        $this->_include_file[$fname] > 500 && exit('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签template引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }
@@ -384,7 +393,7 @@ class View {
         $fname = md5($file);
         $this->_include_file[$fname] ++;
 
-        $this->_include_file[$fname] > 500 && exit('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
+        $this->_include_file[$fname] > 500 && dr_show_error('模板文件 ('.str_replace(TPLPATH, '/', $file).') 标签load引用文件目录结构错误');
 
         return $this->load_view_file($file);
     }
@@ -403,7 +412,7 @@ class View {
         // 开发者模式下关闭缓存
         if (IS_DEV || !is_file($cache_file) || (is_file($cache_file) && is_file($name) && filemtime($cache_file) < filemtime($name))) {
             $content = $this->handle_view_file(file_get_contents($name));
-            @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && show_error('请将模板缓存目录（/cache/template/）权限设为777', 404, '无写入权限');
+            @file_put_contents($cache_file, $content, LOCK_EX) === FALSE && dr_show_error('请将模板缓存目录（/cache/template/）权限设为777');
         }
 
         return $cache_file;
@@ -545,7 +554,6 @@ class View {
             $replace_array[] = "<?php } } ?>";
         }
 
-
         $view_content = preg_replace($regex_array, $replace_array, $view_content);
 
         $view_content = preg_replace_callback("/_get_var\('(.*)'\)/Ui", function ($match) {
@@ -556,17 +564,17 @@ class View {
             return "list_tag(\"".preg_replace('#\[\'(\w+)\'\]#Ui', '[\\1]', $match[1])."\")";
         }, $view_content);
 
-        // 替换$ci  IS_PC   IS_MOBILE
+        // 替换$ci  IS_PC   IS_MOBILE  USER
         $view_content = str_replace([
             '$ci->',
             'IS_PC',
+            'IS_MOBILE_USER',
             'IS_MOBILE',
-            'IS_MOBILE2',
         ], [
             '\Phpcmf\Service::C()->',
             '\Phpcmf\Service::IS_PC()',
+            '\Phpcmf\Service::C()->_is_mobile()',
             '\Phpcmf\Service::IS_MOBILE()',
-            '\Phpcmf\Service::IS_MOBILE2()',
         ], $view_content);
 
         return $view_content;
@@ -616,7 +624,7 @@ class View {
             'site' => '', // 站点id
             'flag' => '', // 推荐位id
             'more' => '', // 是否显示栏目模型表
-            'catid' => '', // 栏目id，支持多id
+            'catid' => '', // 栏目id, 支持多id
             'field' => '', // 显示字段
             'order' => '', // 排序
             'space' => '', // 空间uid
@@ -648,7 +656,7 @@ class View {
         $sysadj = [
 			'IN', 'BEWTEEN', 'BETWEEN', 'LIKE', 'NOTIN', 'NOT', 'BW', 
 			'GT', 'EGT', 'LT', 'ELT',
-			'DAY', 'MONTH',
+			'DAY', 'MONTH', 'MAP',
 			'JSON', 'FIND'
 		];
         foreach ($params as $t) {
@@ -661,7 +669,7 @@ class View {
             if ($var == 'fid' && !$val) {
                 continue;
             }
-            if (isset($system[$var])) { // 系统参数，只能出现一次，不能添加修饰符
+            if (isset($system[$var])) { // 系统参数, 只能出现一次, 不能添加修饰符
                 $system[$var] = dr_safe_replace($val);
             } else {
                 if (preg_match('/^([A-Z_]+)(.+)/', $var, $match)) { // 筛选修饰符参数
@@ -694,7 +702,7 @@ class View {
         );
 
         $action = $system['action'];
-        // 当hits动作时，定位到moule动作
+        // 当hits动作时, 定位到moule动作
         $system['action'] == 'hits' && $system['action'] = 'module';
         // 默认站点参数
         $system['site'] = !$system['site'] ? SITE_ID : $system['site'];
@@ -703,11 +711,13 @@ class View {
         // 开发者模式下关闭缓存
         IS_DEV && $system['cache'] = 0;
 
-        $cache_name = 'cache_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url());
+        $cache_name = 'cache_view_'.md5(dr_array2string($system)).'_'.md5(dr_array2string($param)).'_'.md5(dr_now_url().$this->_tname);
         if ($system['cache']) {
             $cache_data = \Phpcmf\Service::L('cache')->get_data($cache_name);
             if ($cache_data) {
-                return $this->_return($system['return'], $cache_data, '这是缓存数据');
+                $this->_page_used = $cache_data['page_used'];
+                $this->_page_urlrule = $cache_data['page_urlrule'];
+                return $this->_return($system['return'], $cache_data['data'], '[缓存数据]'.$cache_data['sql'], $cache_data['total'], $cache_data['pages'], $cache_data['pagesize']);
             }
         }
 
@@ -723,13 +733,13 @@ class View {
                 }
 
                 $name = 'function-'.md5(dr_array2string($param));
-                $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+                $cache = \Phpcmf\Service::L('cache')->get_data($name);
                 if (!$cache) {
                     $rt = call_user_func($param['name'], $param['param']);
                     $cache = [
                         $rt
                     ];
-                    $system['cache'] && \Phpcmf\Service::L('cache')->init()->save($name, $cache, $system['cache']);
+                    $system['cache'] && \Phpcmf\Service::L('cache')->set_data($name, $cache, $system['cache']);
                 }
 
                 return $this->_return($system['return'], $cache, '');
@@ -752,7 +762,7 @@ class View {
 
                 $cache = $this->_cache_var($_name, $system['site']);
                 if (!$cache) {
-                    return $this->_return($system['return'], "缓存({$_name})不存在，请在后台更新缓存");
+                    return $this->_return($system['return'], "缓存({$_name})不存在, 请在后台更新缓存");
                 } elseif ($_name == 'module-content' && $system['more']) {
                     // 读取内容模块更多信息
                     foreach ($cache as $i => $t) {
@@ -821,7 +831,7 @@ class View {
 
                 $linkage = \Phpcmf\Service::L('cache')->get('linkage-'.$system['site'].'-'.$param['code']);
                 if (!$linkage) {
-                    return $this->_return($system['return'], "联动菜单{$param['code']}不存在，请在后台更新缓存");
+                    return $this->_return($system['return'], "联动菜单{$param['code']}不存在, 请在后台更新缓存");
                 }
 
                 // 通过别名找id
@@ -870,10 +880,21 @@ class View {
                     }
                 }
 
-                $return = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
-                $system['cache'] && $this->_save_cache_data($cache_name, $return, $system['cache']);
+                $data = isset($param['call']) && $param['call'] ? @array_reverse($return) : $return;
 
-                return $this->_return($system['return'], $return, '');
+                // 存储缓存
+                $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => '',
+                    'total' => '',
+                    'pages' => '',
+                    'pagesize' => '',
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
+
+
+                return $this->_return($system['return'], $data, '');
                 break;
 
             case 'category_search_field': // 栏目搜索字段筛选
@@ -1057,7 +1078,16 @@ class View {
                     }
                 }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => 0,
+                    'pages' => 0,
+                    'pagesize' => 0,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql);
                 break;
@@ -1101,11 +1131,20 @@ class View {
 
                     $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                    $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
 
                     return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 } else {
-                    return $this->_return($system['return'], '参数不正确，SQL语句必须用单引号包起来'); // 没有查询到内容
+                    return $this->_return($system['return'], '参数不正确, SQL语句必须用单引号包起来'); // 没有查询到内容
                 }
                 break;
 
@@ -1181,8 +1220,16 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $data && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1279,17 +1326,25 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app('form');
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1378,17 +1433,25 @@ class View {
                 $sql = "SELECT ".$this->_get_select_field($system['field'] ? $system['field'] : "*")." FROM $sql_from ".($sql_where ? "WHERE $sql_where" : "")." ".($system['order'] ? "ORDER BY {$system['order']}" : "")." $sql_limit";
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                // 缓存查询结果
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1476,16 +1539,25 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $dfield = \Phpcmf\Service::L('Field')->app($dirname);
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1600,7 +1672,7 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 系统字段
                     $fields['regtime'] = array('fieldtype' => 'Date');
                     // 格式化显示自定义字段内容
@@ -1608,9 +1680,18 @@ class View {
                     foreach ($data as $i => $t) {
                         $data[$i] = $dfield->format_value($fields, $t, 1);
                     }
-                }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => $data,
+                        'sql' => $sql,
+                        'total' => $total,
+                        'pages' => $pages,
+                        'pagesize' => $pagesize,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+                }
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1640,9 +1721,7 @@ class View {
                 $data = $db->get_data(intval($param['id']));
 
                 // 缓存查询结果
-                $name = 'list-action-content-'.md5($table.$param['id'].$this->_is_mobile);
-                $cache = \Phpcmf\Service::L('cache')->get_data($name);
-                if (!$cache && is_array($data)) {
+                if (is_array($data) && $data) {
                     // 模块表的系统字段
                     $fields = $module['field']; // 主表的字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
@@ -1651,16 +1730,26 @@ class View {
                     $dfield = \Phpcmf\Service::L('Field')->app($module['dirname']);
                     $data['url'] = dr_url_prefix($data['url'], $dirname, $system['site'], $this->_is_mobile);
                     $data = $dfield->format_value($fields, $data, 1);
-                    $cache = $system['cache'] ? \Phpcmf\Service::L('cache')->set_data($name, $data, $system['cache']) : $data;
-                }
 
-                return $this->_return($system['return'], [$cache ? $cache : $data]);
+                    // 存储缓存
+                    $system['cache'] && $this->_save_cache_data($cache_name, [
+                        'data' => [$data],
+                        'sql' => '',
+                        'total' => 0,
+                        'pages' => 0,
+                        'pagesize' => 0,
+                        'page_used' => $this->_page_used,
+                        'page_urlrule' => $this->_page_urlrule,
+                    ], $system['cache']);
+
+                }
+                return $this->_return($system['return'], [$data]);
                 break;
 
             case 'related': // 模块的相关文章
 
                 if (!$param['tag']) {
-                    return $this->_return($system['return'], '没有查询到内容'); // 没有查询到内容
+                    return $this->_return($system['return'], '没有传入tag参数的内容'); // 没有查询到内容
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
@@ -1670,11 +1759,14 @@ class View {
                 foreach ($array as $name) {
                     $name && $sql[] = '(`'.$table.'`.`title` LIKE "%'.dr_safe_replace($name).'%" OR `'.$table.'`.`keywords` LIKE "%'.dr_safe_replace($name).'%")';
                 }
-                $sql = $where[] = [
+                $where[] = [
                     'adj' => 'SQL',
                     'value' => '('.implode(' OR ', $sql).')'
                 ];
                 unset($param['tag']);
+                if (isset($where['tag'])) {
+                    unset($where['tag']);
+                }
                 // 跳转到module方法
                 goto module;
                 break;
@@ -1707,8 +1799,15 @@ class View {
                 }
 
                 $table = \Phpcmf\Service::M()->dbprefix($system['site'].'_'.$dirname); // 模块主表
-                $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
-                
+                $index = \Phpcmf\Service::L('cache')->get_data('search-'.$dirname.'-'.$param['id']);
+                if (!$index) {
+                    $index = $this->_query('SELECT `contentid`,`params` FROM `'.$table.'_search` WHERE `id`="'.$param['id'].'"', $system['db'], $system['cache'], 0);
+                    if ($index) {
+                        $index['params'] = dr_string2array($index['params']);
+                        $index['sql'] = $index['sql'];
+                    };
+                }
+
 				// 存在限制总数时
 				if ($module['setting']['search']['total']) {
 					$where[] = [
@@ -1716,10 +1815,9 @@ class View {
 						'value' => '(`'.$table.'`.`id` IN('.($index ? $index['contentid'] : 0).'))'
 					];	
                 } else {
-                	$p = dr_string2array($index['params']);
 					$where[] = [
 						'adj' => 'SQL',
-						'value' => '(`'.$table.'`.`id` IN('.($p['sql'] ? $p['sql'] : 0).'))'
+						'value' => '(`'.$table.'`.`id` IN('.($index['sql'] ? $index['sql'] : 0).'))'
 					];		
                 }
                
@@ -1816,6 +1914,10 @@ class View {
 				// 不是搜索标签就加上状态判断
 				if ($system['action'] != 'search') {
 					$where[] = ['adj' => '', 'name' => 'status', 'value' => 9];
+					/*
+                    if (dr_is_app('fstatus') && isset($module['field']['fstatus']) && $module['field']['fstatus']['ismain']) {
+                        $where[] = ['adj' => '', 'name' => 'fstatus', 'value' => 1];
+                    }*/
 				}
 				
                 $where = $this->_set_where_field_prefix($where, $tableinfo[$table], $table, $fields); // 给条件字段加上表前缀
@@ -1930,7 +2032,7 @@ class View {
                 $data = $this->_query($sql, $system['db'], $system['cache']);
 
                 // 缓存查询结果
-                if (is_array($data)) {
+                if (is_array($data) && $data) {
                     // 模块表的系统字段
                     $fields['inputtime'] = array('fieldtype' => 'Date');
                     $fields['updatetime'] = array('fieldtype' => 'Date');
@@ -1942,7 +2044,16 @@ class View {
                     }
                 }
 
-                $system['cache'] && $this->_save_cache_data($cache_name, $data, $system['cache']);
+                // 存储缓存
+                $system['cache'] && $this->_save_cache_data($cache_name, [
+                    'data' => $data,
+                    'sql' => $sql,
+                    'total' => $total,
+                    'pages' => $pages,
+                    'pagesize' => $pagesize,
+                    'page_used' => $this->_page_used,
+                    'page_urlrule' => $this->_page_urlrule,
+                ], $system['cache']);
 
                 return $this->_return($system['return'], $data, $sql, $total, $pages, $pagesize);
                 break;
@@ -1981,13 +2092,13 @@ class View {
         $query = $mysql->query($sql);
 
         if (!$query) {
-            return 'SQL查询解析不正确：'.$sql;
+            return 'SQL查询解析不正确:'.$sql;
         }
 
         // 查询结果
         $data = $all ? $query->getResultArray() : $query->getRowArray();
 
-        // 开启缓存时，重新存储缓存数据
+        // 开启缓存时, 重新存储缓存数据
         $cache && \Phpcmf\Service::L('cache')->set_data($cname, $data, $cache);
 
         return $data;
@@ -2012,7 +2123,7 @@ class View {
         } elseif (is_file(ROOTPATH.$file)) {
             $config = require ROOTPATH.$file;
         } else {
-            exit('无法找到分页配置文件【'.$file.'】');
+            exit('无法找到分页配置文件['.$file.']');
         }
 
         if ($this->_page_config) {
@@ -2043,8 +2154,31 @@ class View {
                     continue;
                 }
                 $join = $string ? ' AND' : '';
-                //
+                // 条件组装
                 switch ($t['adj']) {
+
+                    case 'MAP':
+                        // 百度地图
+                        if ($t['value'] == '') {
+                            $string.= $join." ".$t['name']." = ''";
+                        } else {
+                            list($a, $km) = explode('|', $t['value']);
+                            list($lng, $lat) = explode(',', $a);
+                            if ($lat && $lng) {
+                                $this->pos_baidu = [
+                                    'lng' => $lng,
+                                    'lat' => $lat,
+                                    'km' => $km,
+                                ];
+                                // 获取Nkm内的数据
+                                $squares = dr_square_point($lng, $lat, $km);
+                                $string.= $join." (".$t['prefix']."`".$t['name']."_lat` between {$squares['right-bottom']['lat']} and {$squares['left-top']['lat']}) and (".$t['prefix']."`".$t['name']."_lng` between {$squares['left-top']['lng']} and {$squares['right-bottom']['lng']})";
+                            } else {
+                                $string.= $join." ".$t['name']." = '没有定位到您的坐标'";
+                            }
+                        }
+
+                        break;
 
                     case 'JSON':
                         if ($t['value'] == '') {
@@ -2208,6 +2342,9 @@ class View {
             } elseif (!$t['name'] && $t['value']) {
                 // 标示只有where的条件查询
                 $where[$i]['use'] = 1;
+            } elseif ($t['adj'] == 'MAP' && in_array($t['name'].'_lat', $field) && in_array($t['name'].'_lng', $field)) {
+                $where[$i]['use'] = 1;
+                $where[$i]['prefix'] = "`$prefix`.";
             } else {
                 $where[$i]['use'] = $t['use'] ? 1 : 0;
             }
@@ -2253,7 +2390,7 @@ class View {
         }
 
         // 定位范围搜索
-        $this->pos_order && (\Phpcmf\Service::C()->my_position ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.\Phpcmf\Service::C()->my_position['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.\Phpcmf\Service::C()->my_position['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order : \Phpcmf\Service::C()->msg('没有定位到您的坐标'));
+        $this->pos_order && ($this->pos_baidu ? $field.= ',ROUND(6378.138*2*ASIN(SQRT(POW(SIN(('.$this->pos_baidu['lat'].'*PI()/180-'.$this->pos_order.'_lat*PI()/180)/2),2)+COS('.$this->pos_baidu['lat'].'*PI()/180)*COS('.$this->pos_order.'_lat*PI()/180)*POW(SIN(('.$this->pos_baidu['lng'].'*PI()/180-'.$this->pos_order.'_lng*PI()/180)/2),2)))*1000) AS '.$this->pos_order.'_map' : '没有定位到您的坐标');
 
         return $field;
     }
@@ -2288,11 +2425,11 @@ class View {
                 if (in_array($a, $field)) {
                     $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
                 } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                    if (\Phpcmf\Service::C()->my_position) {
-                        $my[$i] = $a.' ASC';
+                    if ($this->pos_baidu) {
+                        $my[$i] = $a.'_map ASC';
                         $this->pos_order = $a;
                     } else {
-                        \Phpcmf\Service::C()->msg('没有定位到您的坐标');
+                        exit('没有定位到您的坐标');
                     }
                 }
             }
@@ -2333,11 +2470,11 @@ class View {
                     if (in_array($a, $field)) {
                         $my[$i] = "`$prefix`.`$a` ".($b ? $b : "DESC");
                     } elseif (in_array($a.'_lat', $field) && in_array($a.'_lng', $field)) {
-                        if (\Phpcmf\Service::C()->my_position) {
+                        if ($this->pos_baidu) {
                             $my[$i] = $a.' ASC';
                             $this->pos_order = $a;
                         } else {
-                            \Phpcmf\Service::C()->msg('没有定位到您的坐标');
+                            $my[$i] = '没有定位到您的坐标';
                         }
                     }
                 }
@@ -2360,20 +2497,22 @@ class View {
             $data = [];
         }
 
+        $this->pos_baidu = $this->pos_order = null;
+
         $total = isset($total) && $total ? $total : dr_count($data);
         $page = max(1, (int)$_GET['page']);
         $nums = $pagesize ? ceil($total/$pagesize) : 0;
-        $total && $debug.= '<p>总记录：'.$total.'</p>';
+        $total && $debug.= '<p>总记录:'.$total.'</p>';
 		if ($this->_page_used) {
-            $debug.= '<p>分页：已开启</p>';
-			$debug.= '<p>总页数：'.$nums.'</p>';
-			$debug.= '<p>每页数量：'.$pagesize.'</p>';
-			$debug.= '<p>分页地址：'.$this->_page_urlrule.'</p>';
+            $debug.= '<p>分页:已开启</p>';
+			$debug.= '<p>总页数:'.$nums.'</p>';
+			$debug.= '<p>每页数量:'.$pagesize.'</p>';
+			$debug.= '<p>分页地址:'.$this->_page_urlrule.'</p>';
 		} else {
-            $debug.= '<p>分页：未开启</p>';
+            $debug.= '<p>分页:未开启</p>';
         }
 
-		isset($data[0]) && $data[0] && $debug.= '<p>可用字段：'.implode('、', array_keys($data[0])).'</p>';
+		isset($data[0]) && $data[0] && $debug.= '<p>可用字段:'.implode(', ', array_keys($data[0])).'</p>';
 		$debug.= '</pre>';
 
         // 返回数据格式

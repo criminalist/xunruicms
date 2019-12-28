@@ -185,7 +185,7 @@
 
     /**
       * 检测传入的所有input框中输入的长宽是否是正数
-      * @param nodes input框集合,
+      * @param nodes input框集合, 
       */
      function checkNum( nodes ) {
          for ( var i = 0, ci; ci = nodes[i++]; ) {
@@ -337,7 +337,7 @@
                 $queue = $wrap.find('.filelist'),
             // 状态栏, 包括进度和控制按钮
                 $statusBar = $wrap.find('.statusBar'),
-            // 文件总体选择信息。
+            // 文件总体选择信息.
                 $info = $statusBar.find('.info'),
             // 上传按钮
                 $upload = $wrap.find('.uploadBtn'),
@@ -345,7 +345,7 @@
                 $filePickerBtn = $wrap.find('.filePickerBtn'),
             // 上传按钮
                 $filePickerBlock = $wrap.find('.filePickerBlock'),
-            // 没选择文件之前的内容。
+            // 没选择文件之前的内容.
                 $placeHolder = $wrap.find('.placeholder'),
             // 总体进度条
                 $progress = $statusBar.find('.progress').hide(),

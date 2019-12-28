@@ -48,6 +48,25 @@ $(function(){
     }
 });
 
+// 是否有隐藏区域
+function dr_isEllipsis(dom) {
+	var checkDom = dom.cloneNode(), parent, flag;
+	checkDom.style.width = dom.offsetWidth + 'px';
+	checkDom.style.height = dom.offsetHeight + 'px';
+	checkDom.style.overflow = 'auto';
+	checkDom.style.position = 'absolute';
+	checkDom.style.zIndex = -1;
+	checkDom.style.opacity = 0;
+	checkDom.style.whiteSpace = "nowrap";
+	checkDom.innerHTML = dom.innerHTML;
+
+	parent = dom.parentNode;
+	parent.appendChild(checkDom);
+	flag = checkDom.scrollWidth > checkDom.offsetWidth;
+	parent.removeChild(checkDom);
+	return flag;
+};
+
 // 判断当前终端是否是移动设备
 function dr_is_mobile() {
 	var ua = navigator.userAgent,
@@ -129,6 +148,8 @@ function dr_tips(code, msg, time) {
 
     if (!time) {
         time = 3000;
+    } else {
+        time = time * 1000;
     }
     var tip = '<i class="fa fa-info-circle"></i>';
     //var theme = 'teal';
@@ -140,7 +161,7 @@ function dr_tips(code, msg, time) {
         //theme = 'ruby';
     }
 
-    layer.msg(tip+'&nbsp;&nbsp;'+msg);
+    layer.msg(tip+'&nbsp;&nbsp;'+msg, {time: time});
 }
 function dr_cmf_tips(code, msg, time) {
     dr_tips(code, msg, time);
@@ -880,6 +901,7 @@ function dr_ajax_alert_error(HttpRequest, ajaxOptions, thrownError) {
     layer.closeAll('loading');
     if (typeof is_admin != "undefined" && is_admin == 1) {
         var msg = HttpRequest.responseText;
+        console.log(HttpRequest, ajaxOptions, thrownError);
         if (!msg) {
             dr_cmf_tips(0, lang['error_admin']);
         } else {

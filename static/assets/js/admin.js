@@ -98,6 +98,28 @@ jQuery(document).ready(function() {
         });
     });
 
+	// 当存在隐藏时单击显示区域
+    $(".table td,.table th").click(function(){
+        var td = $(this);
+		if (dr_isEllipsis(td[0]) == true) {
+			var text = td.html();
+			if (text.indexOf("checkbox") != -1) {
+			    return;
+            } else if (text.indexOf("<input") != -1) {
+                return;
+            } else if (text.indexOf("class=\"btn") != -1) {
+			    // 存在按钮
+            } else if (text.indexOf("href=\"") != -1) {
+			    return;
+            }
+			layer.tips(text, td, {
+				tips: [1, '#fff'],
+				time: 5000
+			});
+		}
+    });
+	
+
     // 关闭框架的加载提示
     //if (typeof parent.layer.closeAll == 'function') {
         //parent.layer.closeAll('loading');
@@ -241,8 +263,8 @@ function dr_load_ajax(msg, url, go) {
 // 安装模块提示
 function dr_install_module_select(url) {
     layer.confirm(
-        '共享模块: 共用一个栏目，在栏目中选择模块<br>'+
-        '独立模块: 独立栏目管理，在模块中选择栏目<br>',
+        '共享模块: 共用一个栏目, 在栏目中选择模块<br>'+
+        '独立模块: 独立栏目管理, 在模块中选择栏目<br>',
         {
             shade: 0,
             title: '安装选择',
@@ -321,7 +343,7 @@ function dr_install_module(url) {
 // 安装app提示
 function dr_install_app(url) {
     layer.confirm(
-        '您在使用第三方应用程序时，官方不保证它的合法性、安全性、完整性、真实性或品质等，请用户自行判断是否安装并承担所有风险。',
+        '您在使用第三方应用程序时, 官方不保证它的合法性, 安全性, 完整性, 真实性或品质等, 请用户自行判断是否安装并承担所有风险.',
         {
             shade: 0,
             title: '免责声明',
@@ -679,12 +701,17 @@ function dr_submit_sql_todo(myform, url) {
 
 function dr_call_alert() {
     layer.alert('回调是用于在列表显示时对其值进行格式化<br>'+
-        '此处填写函数名称即可<br>函数需要开发者自己定义，函数定义格式为: <br>function($value, $param); <br>$value是传入值，$param是列表搜索参数<br><br>'+
+        '函数需要开发者自己定义<br><br>'+
         '标题: title<br>'+
         '评论: comment<br>'+
-        '多文件: files<br>'+
+        '多文件: files （只显示有或无）<br>'+
+        '单文件: file<br>'+
         'uid会员: uid<br>'+
         '地区联动: linkage_address<br>'+
+        '地区联动名称: linkage_name<br>'+
+        '单选字段名称: radio_name<br>'+
+        '下拉字段名称: select_name<br>'+
+        '复选框字段名称: checkbox_name<br>'+
         '栏目: catid<br>'+
         '时间: datetime<br>会员信息: author', {
         title: '',
@@ -695,14 +722,14 @@ function dr_call_alert() {
 }
 function dr_seo_rule() {
     layer.alert('通用标签<br>'+
-        '{join}	SEO连接符号，默认“_”<br>'+
+        '{join}	SEO连接符号, 默认“_”<br>'+
         '{modulename}	当前模型名称<br>'+
         '{keyword}	搜索时的关键字<br>'+
         '{param}	搜索时的参数<br>'+
         '[{page}]	分页页码<br>'+
         '{SITE_NAME}	网站名称<br>'+
-        '支持“对应表”任何字段，格式：{字段名}，<br>如：{title}表示标题<br>'+
-        '支持网站系统常量，格式：{大写的常量名称}，<br>如：{SITE_NAME}表示网站名称<br>'+
+        '支持“对应表”任何字段, 格式:{字段名}, <br>如:{title}表示标题<br>'+
+        '支持网站系统常量, 格式:{大写的常量名称}, <br>如:{SITE_NAME}表示网站名称<br>'+
         ''+
         '', {
         shade: 0,
@@ -734,8 +761,8 @@ function dr_url_module_list() {
         '{page}   表示分页号<br>'+
         '{dirname}   表示栏目目录名称<br>'+
         '{pdirname}   包含父级层次的目录<br>'+
-        '{modname}  表示模块目录（只能独立模块使用，共享模块不能使用）<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
+        '{modname}  表示模块目录（只能独立模块使用, 共享模块不能使用）<br>'+
+        '支持主表任何字段, 格式:{字段名}, 如:{name}表示栏目名称<br>'+
         '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
         '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
         '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
@@ -759,7 +786,7 @@ function dr_url_mform_list() {
         '{cid}   表示对应模块内容的id<br>'+
         '{form}   表示表单的别名<br>'+
         '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
+        '支持主表任何字段, 格式:{字段名}, 如:{name}表示栏目名称<br>'+
         '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
         '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
         '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
@@ -783,7 +810,7 @@ function dr_url_mform_show() {
         '{cid}   表示对应模块内容的id<br>'+
         '{form}   表示表单的别名<br>'+
         '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
+        '支持主表任何字段, 格式:{字段名}, 如:{name}表示栏目名称<br>'+
         '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
         '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
         '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+
@@ -806,7 +833,7 @@ function dr_url_mform_post() {
         '{cid}   表示对应模块内容的id<br>'+
         '{form}   表示表单的别名<br>'+
         '{modname}  表示模块目录<br>'+
-        '支持主表任何字段，格式：{字段名}，如：{name}表示栏目名称<br>'+
+        '支持主表任何字段, 格式:{字段名}, 如:{name}表示栏目名称<br>'+
         '<br><br><b>使用自定义函数方法(需要有php开发经验)</b><hr>'+
         '{自定义函数方法名($data)}	   表示用自定义函数方法来定义url<br>'+
         '<br><br><b>自定义函数举例(需要有php开发经验)</b><hr>'+

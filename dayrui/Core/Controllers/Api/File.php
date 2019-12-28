@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -19,7 +19,7 @@ class File extends \Phpcmf\Common
         $this->siteid = max(intval($_GET['siteid']), 1);
     }
 
-    // 验证上传权限，并获取上传参数
+    // 验证上传权限, 并获取上传参数
     private function _get_upload_params() {
 
         // 验证用户权限
@@ -140,16 +140,16 @@ class File extends \Phpcmf\Common
 
                 $data = [
                     'id' => $att['code'],
-                    'name' => $post['name'],
-                    'file' => $rt['data']['file'],
+                    'name' => htmlspecialchars($post['name']),
+                    'file' => htmlspecialchars($rt['data']['file']),
                     'preview' => $rt['data']['preview'],
                     'upload' => '<input type="file" name="file_data"></button>',
                 ];
             } else {
                 $data = [
                     'id' => $post['url'],
-                    'name' => $post['name'] ? $post['name'] : '',
-                    'file' => $post['url'],
+                    'name' => $post['name'] ? htmlspecialchars($post['name']) : '',
+                    'file' => htmlspecialchars($post['url']),
                     'preview' => dr_file_preview_html($post['url']),
                     'upload' => '',
                 ];
@@ -162,8 +162,8 @@ class File extends \Phpcmf\Common
         \Phpcmf\Service::V()->admin();
         \Phpcmf\Service::V()->assign([
             'one' => \Phpcmf\Service::L('input')->get('one'),
-            'file' => \Phpcmf\Service::L('input')->get('file'),
-            'name' => \Phpcmf\Service::L('input')->get('name'),
+            'file' => htmlspecialchars(\Phpcmf\Service::L('input')->get('file')),
+            'name' => htmlspecialchars(\Phpcmf\Service::L('input')->get('name')),
             'form' => dr_form_hidden()
         ]);
         \Phpcmf\Service::V()->display('api_upload_url.html');
@@ -186,7 +186,7 @@ class File extends \Phpcmf\Common
             if (!$ids) {
                 $this->_json(0, dr_lang('至少要选择一个文件'));
             } elseif (dr_count($ids) > $ct - $c) {
-                $this->_json(0, dr_lang('只能选择%s个文件，你已经选择%s个', $ct - $c, dr_count($ids)));
+                $this->_json(0, dr_lang('只能选择%s个文件, 你已经选择%s个', $ct - $c, dr_count($ids)));
             }
             $list = [];
             $temp = \Phpcmf\Service::M()->table($p ? 'attachment_data' : 'attachment_unused')->where('uid', $this->uid)->where_in('id', $ids)->getAll();
@@ -292,7 +292,7 @@ class File extends \Phpcmf\Common
                 // 不存在
                 $this->_msg(0, dr_lang('附件[%s]不存在', $id));
             } elseif (is_file($info['file'])) {
-                set_time_limit(0);  //大文件在读取内容未结束时会被超时处理，导致下载文件不全。
+                set_time_limit(0);  //大文件在读取内容未结束时会被超时处理, 导致下载文件不全.
                 $handle = fopen($info['file'],"rb");
                 if (FALSE === $handle) {
                     $this->_msg(0, dr_lang('文件已经损坏'));

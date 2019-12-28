@@ -1,7 +1,6 @@
 /*!
  * UEditor
- * version: ueditor
- * build: Thu Jun 16 2016 12:33:50 GMT+0800 (CST)
+ * version: ueditor xunruicms fix
  */
 
 (function(){
@@ -25,7 +24,7 @@ UE.I18N = {};
 
 UE._customizeUI = {};
 
-UE.version = "1.4.3";
+UE.version = "1.5.0";
 
 var dom = UE.dom = {};
 
@@ -407,7 +406,7 @@ var utils = UE.utils = {
 
     /**
      * 将source对象中的属性扩展到target对象上,  根据指定的isKeepTarget值决定是否保留目标对象中与
-     * 源对象属性名相同的属性值。
+     * 源对象属性名相同的属性值.
      * @method extend
      * @param { Object } target 目标对象,  新的属性将附加到该对象上
      * @param { Object } source 源对象,  该对象的属性会被附加到target对象上
@@ -441,8 +440,8 @@ var utils = UE.utils = {
      * 将给定的多个对象的属性复制到目标对象target上
      * @method extend2
      * @remind 该方法将强制把源对象上的属性复制到target对象上
-     * @remind 该方法支持两个及以上的参数,  从第二个参数开始,  其属性都会被复制到第一个参数上。 如果遇到同名的属性,
-     *          将会覆盖掉之前的值。
+     * @remind 该方法支持两个及以上的参数,  从第二个参数开始,  其属性都会被复制到第一个参数上. 如果遇到同名的属性,
+     *          将会覆盖掉之前的值.
      * @param { Object } target 目标对象,  新的属性将附加到该对象上
      * @param { Object... } source 源对象,  支持多个对象,  该对象的属性会被附加到target对象上
      * @return { Object } 返回target对象
@@ -516,7 +515,7 @@ var utils = UE.utils = {
      * @method bind
      * @param { Function } fn 需要绑定上下文的函数对象
      * @param { Object } content 函数fn新的上下文对象
-     * @return { Function } 一个新的函数,  该函数作为原始函数fn的代理,  将完成fn的上下文调换工作。
+     * @return { Function } 一个新的函数,  该函数作为原始函数fn的代理,  将完成fn的上下文调换工作.
      * @example
      * ```javascript
      *
@@ -549,7 +548,7 @@ var utils = UE.utils = {
      * @param { Function } fn 需要延迟执行的函数对象
      * @param { int } delay 延迟的时间,  单位是毫秒
      * @warning 该方法的时间控制是不精确的, 仅仅只能保证函数的执行是在给定的时间之后,
-     *           而不能保证刚好到达延迟时间时执行。
+     *           而不能保证刚好到达延迟时间时执行.
      * @return { Function } 目标函数fn的代理函数,  只有执行该函数才能起到延时效果
      * @example
      * ```javascript
@@ -569,14 +568,14 @@ var utils = UE.utils = {
 
     /**
      * 创建延迟指定时间后执行的函数fn, 如果在延迟时间内再次执行该方法,  将会根据指定的exclusion的值,
-     * 决定是否取消前一次函数的执行,  如果exclusion的值为true,  则取消执行, 反之, 将继续执行前一个方法。
+     * 决定是否取消前一次函数的执行,  如果exclusion的值为true,  则取消执行, 反之, 将继续执行前一个方法.
      * @method defer
      * @param { Function } fn 需要延迟执行的函数对象
      * @param { int } delay 延迟的时间,  单位是毫秒
      * @param { Boolean } exclusion 如果在延迟时间内再次执行该函数, 该值将决定是否取消执行前一次函数的执行,
-     *                     值为true表示取消执行,  反之则将在执行前一次函数之后才执行本次函数调用。
+     *                     值为true表示取消执行,  反之则将在执行前一次函数之后才执行本次函数调用.
      * @warning 该方法的时间控制是不精确的, 仅仅只能保证函数的执行是在给定的时间之后,
-     *           而不能保证刚好到达延迟时间时执行。
+     *           而不能保证刚好到达延迟时间时执行.
      * @return { Function } 目标函数fn的代理函数,  只有执行该函数才能起到延时效果
      * @example
      * ```javascript
@@ -620,7 +619,7 @@ var utils = UE.utils = {
      */
 
     /**
-     * 获取元素item数组array中首次出现的位置, 如果未找到item,  则返回-1。通过start的值可以指定搜索的起始位置。
+     * 获取元素item数组array中首次出现的位置, 如果未找到item,  则返回-1.通过start的值可以指定搜索的起始位置.
      * @method indexOf
      * @remind 该方法的匹配过程使用的是恒等“===”
      * @param { Array } array 需要查找的数组对象
@@ -701,7 +700,7 @@ var utils = UE.utils = {
     /**
      * 将字符串str以','分隔成数组后, 将该数组转换成哈希对象,  其生成的hash对象的key为数组中的元素,  value为1
      * @method listToMap
-     * @warning 该方法在生成的hash对象中, 会为每一个key同时生成一个另一个全大写的key。
+     * @warning 该方法在生成的hash对象中, 会为每一个key同时生成一个另一个全大写的key.
      * @param { String } str 该字符串将被以','分割为数组,  然后进行转化
      * @return { Object } 转化之后的hash对象
      * @example
@@ -716,7 +715,7 @@ var utils = UE.utils = {
     /**
      * 将字符串数组转换成哈希对象,  其生成的hash对象的key为数组中的元素,  value为1
      * @method listToMap
-     * @warning 该方法在生成的hash对象中, 会为每一个key同时生成一个另一个全大写的key。
+     * @warning 该方法在生成的hash对象中, 会为每一个key同时生成一个另一个全大写的key.
      * @param { Array } arr 字符串数组
      * @return { Object } 转化之后的hash对象
      * @example
@@ -864,10 +863,10 @@ var utils = UE.utils = {
      * 动态加载文件到doc中, 加载成功后执行的回调函数fn
      * @method loadFile
      * @param { DomDocument } document 需要加载资源文件的文档对象
-     * @param { Object } options 加载资源文件的属性集合,  该集合支持的值是script标签和style标签支持的所有属性。
+     * @param { Object } options 加载资源文件的属性集合,  该集合支持的值是script标签和style标签支持的所有属性.
      * @param { Function } fn 资源文件加载成功之后执行的回调
      * @warning 对于在同一个文档中多次加载同一URL的文件,  该方法会在第一次加载之后缓存该请求,
-     *           在此之后的所有同一URL的请求,  将会直接触发回调。
+     *           在此之后的所有同一URL的请求,  将会直接触发回调.
      * @example
      * ```javascript
      *
@@ -1067,7 +1066,7 @@ var utils = UE.utils = {
      */
 
     /**
-     * 深度克隆对象, 将source的属性克隆到target对象,  会覆盖target重名的属性。
+     * 深度克隆对象, 将source的属性克隆到target对象,  会覆盖target重名的属性.
      * @method clone
      * @param { Object } source 源对象
      * @param { Object } target 目标对象
@@ -1518,8 +1517,8 @@ utils.each(['String', 'Function', 'Array', 'Number', 'RegExp', 'Object', 'Date']
  */
 
 /**
- * UE采用的事件基类, 继承此类的对应类将获取addListener,removeListener,fireEvent方法。
- * 在UE中, Editor以及所有ui实例都继承了该类, 故可以在对应的ui对象以及editor对象上使用上述方法。
+ * UE采用的事件基类, 继承此类的对应类将获取addListener,removeListener,fireEvent方法.
+ * 在UE中, Editor以及所有ui实例都继承了该类, 故可以在对应的ui对象以及editor对象上使用上述方法.
  * @unfile
  * @module UE
  * @class EventBase
@@ -1546,7 +1545,7 @@ EventBase.prototype = {
      * @example
      * ```javascript
      * editor.addListener('selectionchange',function(){
-     *      console.log("选区已经变化！");
+     *      console.log("选区已经变化!");
      * })
      * editor.addListener('beforegetcontent aftergetcontent',function(type){
      *         if(type == 'beforegetcontent'){
@@ -2096,13 +2095,13 @@ var domUtils = dom.domUtils = {
     },
     /**
      * 根据给定的过滤规则filterFn,  查找符合该过滤规则的node节点的第一个祖先节点,
-     * 查找的起点是给定node节点的父节点。
+     * 查找的起点是给定node节点的父节点.
      * @method findParent
      * @param { Node } node 需要查找的节点
-     * @param { Function } filterFn 自定义的过滤方法。
+     * @param { Function } filterFn 自定义的过滤方法.
      * @warning 查找的终点是到body节点为止
-     * @remind 自定义的过滤方法filterFn接受一个Node对象作为参数,  该对象代表当前执行检测的祖先节点。 如果该
-     *          节点满足过滤条件,  则要求返回true,  这时将直接返回该节点作为findParent()的结果,  否则,  请返回false。
+     * @remind 自定义的过滤方法filterFn接受一个Node对象作为参数,  该对象代表当前执行检测的祖先节点. 如果该
+     *          节点满足过滤条件,  则要求返回true,  这时将直接返回该节点作为findParent()的结果,  否则,  请返回false.
      * @return { Node | Null } 如果找到符合过滤条件的节点,  就返回该节点,  否则返回NULL
      * @example
      * ```javascript
@@ -2123,13 +2122,13 @@ var domUtils = dom.domUtils = {
      * 如果includeSelf的值为true, 则查找的起点是给定的节点node,  否则,  起点是node的父节点
      * @method findParent
      * @param { Node } node 需要查找的节点
-     * @param { Function } filterFn 自定义的过滤方法。
+     * @param { Function } filterFn 自定义的过滤方法.
      * @param { Boolean } includeSelf 查找过程是否包含自身
      * @warning 查找的终点是到body节点为止
-     * @remind 自定义的过滤方法filterFn接受一个Node对象作为参数,  该对象代表当前执行检测的祖先节点。 如果该
-     *          节点满足过滤条件,  则要求返回true,  这时将直接返回该节点作为findParent()的结果,  否则,  请返回false。
-     * @remind 如果includeSelf为true,  则过滤器第一次执行时的参数会是节点本身。
-     *          反之,  过滤器第一次执行时的参数将是该节点的父节点。
+     * @remind 自定义的过滤方法filterFn接受一个Node对象作为参数,  该对象代表当前执行检测的祖先节点. 如果该
+     *          节点满足过滤条件,  则要求返回true,  这时将直接返回该节点作为findParent()的结果,  否则,  请返回false.
+     * @remind 如果includeSelf为true,  则过滤器第一次执行时的参数会是节点本身.
+     *          反之,  过滤器第一次执行时的参数将是该节点的父节点.
      * @return { Node | Null } 如果找到符合过滤条件的节点,  就返回该节点,  否则返回NULL
      * @example
      * ```html
@@ -2165,7 +2164,7 @@ var domUtils = dom.domUtils = {
         return null;
     },
     /**
-     * 查找node的节点名为tagName的第一个祖先节点,  查找的起点是node节点的父节点。
+     * 查找node的节点名为tagName的第一个祖先节点,  查找的起点是node节点的父节点.
      * @method findParentByTagName
      * @param { Node } node 需要查找的节点对象
      * @param { Array } tagNames 需要查找的父节点的名称数组
@@ -2181,7 +2180,7 @@ var domUtils = dom.domUtils = {
 
     /**
      * 查找node的节点名为tagName的祖先节点,  如果includeSelf的值为true, 则查找的起点是给定的节点node,
-     * 否则,  起点是node的父节点。
+     * 否则,  起点是node的父节点.
      * @method findParentByTagName
      * @param { Node } node 需要查找的节点对象
      * @param { Array } tagNames 需要查找的父节点的名称数组
@@ -2203,7 +2202,7 @@ var domUtils = dom.domUtils = {
         }, includeSelf);
     },
     /**
-     * 查找节点node的祖先节点集合,  查找的起点是给定节点的父节点, 结果集中不包含给定的节点。
+     * 查找节点node的祖先节点集合,  查找的起点是给定节点的父节点, 结果集中不包含给定的节点.
      * @method findParents
      * @param { Node } node 需要查找的节点对象
      * @return { Array } 给定节点的祖先节点数组
@@ -2215,7 +2214,7 @@ var domUtils = dom.domUtils = {
 
     /**
      * 查找节点node的祖先节点集合,  如果includeSelf的值为true,
-     * 则返回的结果集中允许出现当前给定的节点,  否则,  该节点不会出现在其结果集中。
+     * 则返回的结果集中允许出现当前给定的节点,  否则,  该节点不会出现在其结果集中.
      * @method findParents
      * @param { Node } node 需要查找的节点对象
      * @param { Boolean } includeSelf 查找的结果中是否允许包含当前查找的节点对象
@@ -2293,7 +2292,7 @@ var domUtils = dom.domUtils = {
 
     /**
      * 取得node节点的下一个兄弟节点,  如果该节点其后没有兄弟节点,  则递归查找其父节点之后的第一个兄弟节点,
-     * 直到找到满足条件的节点或者递归到BODY节点之后才会结束。
+     * 直到找到满足条件的节点或者递归到BODY节点之后才会结束.
      * @method getNextDomNode
      * @param { Node } node 需要获取其后的兄弟节点的节点对象
      * @return { Node | NULL } 如果找满足条件的节点,  则返回该节点,  否则返回NULL
@@ -2333,8 +2332,8 @@ var domUtils = dom.domUtils = {
 
     /**
      * 取得node节点的下一个兄弟节点,  如果startFromChild的值为ture, 则先获取其子节点,
-     * 如果有子节点则直接返回第一个子节点; 如果没有子节点或者startFromChild的值为false,
-     * 则执行<a href="#UE.dom.domUtils.getNextDomNode(Node)">getNextDomNode(Node node)</a>的查找过程。
+     * 如果有子节点则直接返回第一个子节点;如果没有子节点或者startFromChild的值为false,
+     * 则执行<a href="#UE.dom.domUtils.getNextDomNode(Node)">getNextDomNode(Node node)</a>的查找过程.
      * @method getNextDomNode
      * @param { Node } node 需要获取其后的兄弟节点的节点对象
      * @param { Boolean } startFromChild 查找过程是否从其子节点开始
@@ -2386,8 +2385,8 @@ var domUtils = dom.domUtils = {
      * @method  getCommonAncestor
      * @param { Node } nodeA 第一个节点
      * @param { Node } nodeB 第二个节点
-     * @remind 如果给定的两个节点是同一个节点,  将直接返回该节点。
-     * @return { Node | NULL } 如果未找到公共节点,  返回NULL,  否则返回最近的公共祖先节点。
+     * @remind 如果给定的两个节点是同一个节点,  将直接返回该节点.
+     * @return { Node | NULL } 如果未找到公共节点,  返回NULL,  否则返回最近的公共祖先节点.
      * @example
      * ```javascript
      * var commonAncestor = UE.dom.domUtils.getCommonAncestor( document.body, document.body.firstChild );
@@ -2448,7 +2447,7 @@ var domUtils = dom.domUtils = {
 
     /**
      * 清除node节点左右连续为空的兄弟inline节点,  如果ignoreNext的值为true,
-     * 则忽略对右边兄弟节点的操作。
+     * 则忽略对右边兄弟节点的操作.
      * @method clearEmptySibling
      * @param { Node } node 执行的节点对象,  如果该节点的左右连续的兄弟节点是空的inline节点,
      * @param { Boolean } ignoreNext 是否忽略忽略对右边的兄弟节点的操作
@@ -2458,7 +2457,7 @@ var domUtils = dom.domUtils = {
 
     /**
      * 清除node节点左右连续为空的兄弟inline节点,  如果ignoreNext的值为true,
-     * 则忽略对右边兄弟节点的操作,  如果ignorePre的值为true, 则忽略对左边兄弟节点的操作。
+     * 则忽略对右边兄弟节点的操作,  如果ignorePre的值为true, 则忽略对左边兄弟节点的操作.
      * @method clearEmptySibling
      * @param { Node } node 执行的节点对象,  如果该节点的左右连续的兄弟节点是空的inline节点,
      * @param { Boolean } ignoreNext 是否忽略忽略对右边的兄弟节点的操作
@@ -2513,7 +2512,7 @@ var domUtils = dom.domUtils = {
     },
 
     /**
-     * 检测文本节点textNode是否为空节点（包括空格、换行、占位符等字符）
+     * 检测文本节点textNode是否为空节点（包括空格, 换行, 占位符等字符）
      * @method  isWhitespace
      * @param { Node } node 需要检测的节点对象
      * @return { Boolean } 检测的节点是否为空
@@ -2536,7 +2535,7 @@ var domUtils = dom.domUtils = {
      * @method getXY
      * @param { Node } element 需要计算位置的节点对象
      * @return { Object } 返回形如{x:left,y:top}的一个key-value映射对象,  其中键x代表水平偏移距离,
-     *                          y代表垂直偏移距离。
+     *                          y代表垂直偏移距离.
      *
      * @example
      * ```javascript
@@ -2664,11 +2663,11 @@ var domUtils = dom.domUtils = {
     },
 
     /**
-     * 比较节点nodeA与节点nodeB是否具有相同的标签名、属性名以及属性值
+     * 比较节点nodeA与节点nodeB是否具有相同的标签名, 属性名以及属性值
      * @method  isSameElement
      * @param { Node } nodeA 需要比较的节点
      * @param { Node } nodeB 需要比较的节点
-     * @return { Boolean } 两个节点是否具有相同的标签名、属性名以及属性值
+     * @return { Boolean } 两个节点是否具有相同的标签名, 属性名以及属性值
      * @example
      * ```html
      * <span style="font-size:12px">ssss</span>
@@ -2803,7 +2802,7 @@ var domUtils = dom.domUtils = {
      * @param { Node } node 需要检测的节点对象
      * @return { Boolean } 是否是block元素节点
      * @warning 该方法的判断规则如下: 如果该元素原本是block元素,  则不论该元素当前的css样式是什么都会返回true;
-     *          否则, 检测该元素的css样式,  如果该元素当前是block元素,  则返回true。 其余情况下都返回false。
+     *          否则, 检测该元素的css样式,  如果该元素当前是block元素,  则返回true. 其余情况下都返回false.
      * @example
      * ```html
      * <span id="test1" style="display: block"></span>
@@ -2846,7 +2845,7 @@ var domUtils = dom.domUtils = {
      * 拆分形成的两个节点之间是node节点
      * @method breakParent
      * @param { Node } node 作为分界的节点对象
-     * @param { Node } parent 该节点必须是node节点的祖先节点,  且是block节点。
+     * @param { Node } parent 该节点必须是node节点的祖先节点,  且是block节点.
      * @return { Node } 给定的node分界节点
      * @example
      * ```javascript
@@ -2908,7 +2907,7 @@ var domUtils = dom.domUtils = {
      * 检查节点node是否是空inline节点
      * @method  isEmptyInlineElement
      * @param { Node } node 需要检测的节点对象
-     * @return { Number }  如果给定的节点是空的inline节点,  则返回1, 否则返回0。
+     * @return { Number }  如果给定的节点是空的inline节点,  则返回1, 否则返回0.
      * @example
      * ```html
      * <b><i></i></b> => 1
@@ -3116,7 +3115,7 @@ var domUtils = dom.domUtils = {
      */
 
     /**
-     * 合并节点node的左右兄弟节点,  可以根据给定的条件选择是否忽略合并左节点。
+     * 合并节点node的左右兄弟节点,  可以根据给定的条件选择是否忽略合并左节点.
      * @method mergeSibling
      * @param { Element } node 需要合并的目标节点
      * @param { Boolean } ignorePre 是否忽略合并左节点
@@ -3134,7 +3133,7 @@ var domUtils = dom.domUtils = {
      */
 
     /**
-     * 合并节点node的左右兄弟节点, 可以根据给定的条件选择是否忽略合并左右节点。
+     * 合并节点node的左右兄弟节点, 可以根据给定的条件选择是否忽略合并左右节点.
      * @method mergeSibling
      * @param { Element } node 需要合并的目标节点
      * @param { Boolean } ignorePre 是否忽略合并左节点
@@ -4122,7 +4121,7 @@ var domUtils = dom.domUtils = {
      * @method isCustomeNode
      * @private
      * @param { Node } node 需要检测的节点
-     * @remind 辅助节点是指编辑器要完成工作临时添加的节点,  在输出的时候将会从编辑器内移除,  不会影响最终的结果。
+     * @remind 辅助节点是指编辑器要完成工作临时添加的节点,  在输出的时候将会从编辑器内移除,  不会影响最终的结果.
      * @return { Boolean } 给定的节点是否是一个辅助节点
      */
     isCustomeNode:function (node) {
@@ -4285,7 +4284,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
  */
 
 /**
- * Range实现类, 本类是UEditor底层核心类, 封装不同浏览器之间的Range操作。
+ * Range实现类, 本类是UEditor底层核心类, 封装不同浏览器之间的Range操作.
  * @unfile
  * @module UE.dom
  * @class Range
@@ -4781,7 +4780,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 设置Range的开始位置到node节点内的第一个子节点之前
          * @method  setStartAtFirst
          * @remind 选区的开始容器将变成给定的节点,  且偏移量为0
-         * @remind 如果给定的节点是元素节点,  则该节点必须是允许包含子节点的元素。
+         * @remind 如果给定的节点是元素节点,  则该节点必须是允许包含子节点的元素.
          * @param { Node } node 目标节点
          * @see UE.dom.Range:setStartBefore(Node)
          * @return { UE.dom.Range } 当前range对象
@@ -4809,7 +4808,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 设置Range的开始位置到node节点内的最后一个节点之后
          * @method setStartAtLast
          * @remind 选区的开始容器将变成给定的节点,  且偏移量为该节点的子节点数
-         * @remind 如果给定的节点是元素节点,  则该节点必须是允许包含子节点的元素。
+         * @remind 如果给定的节点是元素节点,  则该节点必须是允许包含子节点的元素.
          * @param { Node } node 目标节点
          * @see UE.dom.Range:setStartAtFirst(Node)
          * @return { UE.dom.Range } 当前range对象
@@ -4823,7 +4822,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * @method  setEndAtFirst
          * @param { Node } node 目标节点
          * @remind 选区的结束容器将变成给定的节点,  且偏移量为0
-         * @remind node必须是一个元素节点,  且必须是允许包含子节点的元素。
+         * @remind node必须是一个元素节点,  且必须是允许包含子节点的元素.
          * @see UE.dom.Range:setStartAtFirst(Node)
          * @return { UE.dom.Range } 当前range对象
          */
@@ -4836,7 +4835,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * @method  setEndAtLast
          * @param { Node } node 目标节点
          * @remind 选区的结束容器将变成给定的节点,  且偏移量为该节点的子节点数量
-         * @remind node必须是一个元素节点,  且必须是允许包含子节点的元素。
+         * @remind node必须是一个元素节点,  且必须是允许包含子节点的元素.
          * @see UE.dom.Range:setStartAtFirst(Node)
          * @return { UE.dom.Range } 当前range对象
          */
@@ -4875,7 +4874,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 选中给定节点内部的所有节点
          * @method  selectNodeContents
          * @remind 此时,  选区的开始容器和结束容器都是该节点,  其startOffset为0,
-         *          而endOffset是该节点的子节点数。
+         *          而endOffset是该节点的子节点数.
          * @param { Node } node 目标节点,  当前range将包含该节点内的所有节点
          * @return { UE.dom.Range } 当前range对象,  此时range仅包含给定节点的所有子节点
          * @example
@@ -4901,7 +4900,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
         /**
          * clone当前Range对象
          * @method  cloneRange
-         * @remind 返回的range是一个全新的range对象,  其内部所有属性与当前被clone的range相同。
+         * @remind 返回的range是一个全新的range对象,  其内部所有属性与当前被clone的range相同.
          * @return { UE.dom.Range } 当前range对象的一个副本
          */
         cloneRange:function () {
@@ -4934,7 +4933,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
 
         /**
          * 闭合当前选区, 根据给定的toStart参数项决定是向当前选区开始处闭合还是向结束处闭合,
-         * 如果toStart的值为true, 则向开始位置闭合,  反之, 向结束位置闭合。
+         * 如果toStart的值为true, 则向开始位置闭合,  反之, 向结束位置闭合.
          * @method  collapse
          * @param { Boolean } toStart 是否向选区开始处闭合
          * @return { UE.dom.Range } 当前range对象, 此时range对象处于闭合状态
@@ -5085,8 +5084,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
         /**
          * 获取当前选区所包含的所有节点的公共祖先节点,  可以根据给定的参数 includeSelf 决定获取到
          * 的公共祖先节点是否可以是当前选区的startContainer或endContainer节点,  如果 includeSelf
-         * 的取值为true,  则返回的节点可以是自身的容器节点,  否则,  则不能是容器节点;  同时可以根据
-         * ignoreTextNode 参数的取值决定是否忽略类型为文本节点的祖先节点。
+         * 的取值为true,  则返回的节点可以是自身的容器节点,  否则,  则不能是容器节点; 同时可以根据
+         * ignoreTextNode 参数的取值决定是否忽略类型为文本节点的祖先节点.
          * @method  getCommonAncestor
          * @param { Boolean } includeSelf 是否允许获取到的公共祖先节点是当前range对象的容器节点
          * @param { Boolean } ignoreTextNode 获取祖先节点的过程中是否忽略类型为文本节点的祖先节点
@@ -5290,7 +5289,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          */
 
         /**
-         * 闭合选区, 可以根据参数toEnd的值控制选区是向前闭合还是向后闭合,  并且定位光标到闭合后的位置。
+         * 闭合选区, 可以根据参数toEnd的值控制选区是向前闭合还是向后闭合,  并且定位光标到闭合后的位置.
          * @method  setCursor
          * @param { Boolean } toEnd 是否向后闭合,  如果为true,  则闭合选区时,  将向结束容器方向闭合,
          *                      反之, 则向开始容器方向闭合
@@ -5493,7 +5492,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          */
 
         /**
-         * 给range选区中的内容添加给定的inline标签,  并且为标签附加上一些初始化属性。
+         * 给range选区中的内容添加给定的inline标签,  并且为标签附加上一些初始化属性.
          * @method applyInlineStyle
          * @param { String } tagName 需要添加的标签名
          * @param { Object } attrs 跟随新添加的标签的属性
@@ -6021,8 +6020,8 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
         },
 
         /**
-         * 遍历range内的节点。每当遍历一个节点时,  都会执行参数项 doFn 指定的函数,  该函数的接受当前遍历的节点
-         * 作为其参数。
+         * 遍历range内的节点.每当遍历一个节点时,  都会执行参数项 doFn 指定的函数,  该函数的接受当前遍历的节点
+         * 作为其参数.
          * @method traversal
          * @param { Function }  doFn 对每个遍历的节点要执行的方法,  该方法接受当前遍历的节点作为其参数
          * @return { UE.dom.Range } 当前range对象
@@ -6058,16 +6057,16 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          */
 
         /**
-         * 遍历range内的节点。
+         * 遍历range内的节点.
          * 每当遍历一个节点时,  都会执行参数项 doFn 指定的函数,  该函数的接受当前遍历的节点
-         * 作为其参数。
+         * 作为其参数.
          * 可以通过参数项 filterFn 来指定一个过滤器,  只有符合该过滤器过滤规则的节点才会触
          * 发doFn函数的执行
          * @method traversal
          * @param { Function } doFn 对每个遍历的节点要执行的方法,  该方法接受当前遍历的节点作为其参数
          * @param { Function } filterFn 过滤器,  该函数接受当前遍历的节点作为参数,  如果该节点满足过滤
          *                      规则,  请返回true,  该节点会触发doFn,  否则,  请返回false,  则该节点不
-         *                      会触发doFn。
+         *                      会触发doFn.
          * @return { UE.dom.Range } 当前range对象
          * @see UE.dom.Range:traversal(Function)
          * @example
@@ -6523,7 +6522,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
  */
 
 /**
- * UEditor的核心类, 为用户提供与编辑器交互的接口。
+ * UEditor的核心类, 为用户提供与编辑器交互的接口.
  * @unfile
  * @module UE
  * @class Editor
@@ -6724,7 +6723,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
      */
 
     /**
-     * 以给定的参数集合创建一个编辑器实例, 对于未指定的参数, 将应用默认参数。
+     * 以给定的参数集合创建一个编辑器实例, 对于未指定的参数, 将应用默认参数.
      * @constructor
      * @remind 通过 改构造方法实例化的编辑器,不带ui层.需要render到一个容器,编辑器实例才能正常渲染到页面
      * @param { Object } setting 创建编辑器的参数
@@ -6778,7 +6777,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 编辑器对外提供的监听ready事件的接口,  通过调用该方法, 达到的效果与监听ready事件是一致的
          * @method ready
          * @param { Function } fn 编辑器ready之后所执行的回调, 如果在注册事件之前编辑器已经ready, 将会
-         * 立即触发该回调。
+         * 立即触发该回调.
          * @remind 需要等待编辑器加载完成后才能执行的代码,可以使用该方法传入
          * @example
          * ```javascript
@@ -6799,7 +6798,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 该方法是提供给插件里面使用, 设置配置项默认值
          * @method setOpt
          * @warning 三处设置配置项的优先级: 实例化时传入参数 > setOpt()设置 > config文件里设置
-         * @warning 该方法仅供编辑器插件内部和编辑器初始化时调用, 其他地方不能调用。
+         * @warning 该方法仅供编辑器插件内部和编辑器初始化时调用, 其他地方不能调用.
          * @param { String } key 编辑器的可接受的选项名称
          * @param { * } val  该选项可接受的值
          * @example
@@ -6812,7 +6811,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * 该方法是提供给插件里面使用, 以{key:value}集合的方式设置插件内用到的配置项默认值
          * @method setOpt
          * @warning 三处设置配置项的优先级: 实例化时传入参数 > setOpt()设置 > config文件里设置
-         * @warning 该方法仅供编辑器插件内部和编辑器初始化时调用, 其他地方不能调用。
+         * @warning 该方法仅供编辑器插件内部和编辑器初始化时调用, 其他地方不能调用.
          * @param { Object } options 将要设置的选项的键值对对象
          * @example
          * ```javascript
@@ -7210,13 +7209,13 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          */
 
         /**
-         * 获取编辑器的内容。 可以通过参数定义编辑器内置的判空规则
+         * 获取编辑器的内容. 可以通过参数定义编辑器内置的判空规则
          * @method getContent
          * @param { Function } fn 自定的判空规则,  要求该方法返回一个boolean类型的值,
          *                      代表当前编辑器的内容是否空,
-         *                      如果返回true,  则该方法将直接返回空字符串; 如果返回false, 则编辑器将返回
-         *                      经过内置过滤规则处理后的内容。
-         * @remind 该方法在处理包含有初始化内容的时候能起到很好的作用。
+         *                      如果返回true,  则该方法将直接返回空字符串;如果返回false, 则编辑器将返回
+         *                      经过内置过滤规则处理后的内容.
+         * @remind 该方法在处理包含有初始化内容的时候能起到很好的作用.
          * @warning 该方法获取到的是经过编辑器内置的过滤规则进行过滤后得到的内容
          * @return { String } 编辑器的内容字符串
          * @example
@@ -8328,36 +8327,36 @@ UE.ajax = function() {
 
     return {
         /**
-         * 根据给定的参数项, 向指定的url发起一个ajax请求。 ajax请求完成后, 会根据请求结果调用相应回调: 如果请求
+         * 根据给定的参数项, 向指定的url发起一个ajax请求. ajax请求完成后, 会根据请求结果调用相应回调: 如果请求
          * 成功,  则调用onsuccess回调,  失败则调用 onerror 回调
          * @method request
          * @param { URLString } url ajax请求的url地址
          * @param { Object } ajaxOptions ajax请求选项的键值对, 支持的选项如下:
          * @example
          * ```javascript
-         * //向sayhello.php发起一个异步的Ajax GET请求, 请求超时时间为10s,  请求完成后执行相应的回调。
+         * //向sayhello.php发起一个异步的Ajax GET请求, 请求超时时间为10s,  请求完成后执行相应的回调.
          * UE.ajax.requeset( 'sayhello.php', {
          *
-         *     //请求方法。可选值: 'GET', 'POST', 默认值是'POST'
+         *     //请求方法.可选值: 'GET', 'POST', 默认值是'POST'
          *     method: 'GET',
          *
-         *     //超时时间。 默认为5000,  单位是ms
+         *     //超时时间. 默认为5000,  单位是ms
          *     timeout: 10000,
          *
-         *     //是否是异步请求。 true为异步请求,  false为同步请求
+         *     //是否是异步请求. true为异步请求,  false为同步请求
          *     async: true,
          *
-         *     //请求携带的数据。如果请求为GET请求,  data会经过stringify后附加到请求url之后。
+         *     //请求携带的数据.如果请求为GET请求,  data会经过stringify后附加到请求url之后.
          *     data: {
          *         name: 'ueditor'
          *     },
          *
-         *     //请求成功后的回调,  该回调接受当前的XMLHttpRequest对象作为参数。
+         *     //请求成功后的回调,  该回调接受当前的XMLHttpRequest对象作为参数.
          *     onsuccess: function ( xhr ) {
          *         console.log( xhr.responseText );
          *     },
          *
-         *     //请求失败或者超时后的回调。
+         *     //请求失败或者超时后的回调.
          *     onerror: function ( xhr ) {
          *          alert( 'Ajax请求失败' );
          *     }
@@ -8367,18 +8366,18 @@ UE.ajax = function() {
          */
 
         /**
-         * 根据给定的参数项发起一个ajax请求,  参数项里必须包含一个url地址。 ajax请求完成后, 会根据请求结果调用相应回调: 如果请求
-         * 成功,  则调用onsuccess回调,  失败则调用 onerror 回调。
+         * 根据给定的参数项发起一个ajax请求,  参数项里必须包含一个url地址. ajax请求完成后, 会根据请求结果调用相应回调: 如果请求
+         * 成功,  则调用onsuccess回调,  失败则调用 onerror 回调.
          * @method request
-         * @warning 如果在参数项里未提供一个key为“url”的地址值, 则该请求将直接退出。
+         * @warning 如果在参数项里未提供一个key为“url”的地址值, 则该请求将直接退出.
          * @param { Object } ajaxOptions ajax请求选项的键值对, 支持的选项如下:
          * @example
          * ```javascript
          *
-         * //向sayhello.php发起一个异步的Ajax POST请求, 请求超时时间为5s,  请求完成后不执行任何回调。
+         * //向sayhello.php发起一个异步的Ajax POST请求, 请求超时时间为5s,  请求完成后不执行任何回调.
          * UE.ajax.requeset( 'sayhello.php', {
          *
-         *     //请求的地址,  该项是必须的。
+         *     //请求的地址,  该项是必须的.
          *     url: 'sayhello.php'
          *
          * } );
@@ -10205,7 +10204,7 @@ UE.plugins['defaultfilter'] = function () {
  * @param { String } cmd 命令字符串
  * @param { String } html 插入的html字符串
  * @remaind 插入的标签内容是在当前的选区位置上插入, 如果当前是闭合状态, 那直接插入内容,  如果当前是选中状态, 将先清除当前选中内容后, 再做插入
- * @warning 注意:该命令会对当前选区的位置, 对插入的内容进行过滤转换处理。 过滤的规则遵循html语意化的原则。
+ * @warning 注意:该命令会对当前选区的位置, 对插入的内容进行过滤转换处理. 过滤的规则遵循html语意化的原则.
  * @example
  * ```javascript
  * //xxx[BB]xxx 当前选区为非闭合选区, 选中BB这两个文本
@@ -10457,7 +10456,7 @@ UE.commands['inserthtml'] = {
  */
 
 /**
- * 对当前编辑器的内容执行自动排版,  排版的行为根据config配置文件里的“autotypeset”选项进行控制。
+ * 对当前编辑器的内容执行自动排版,  排版的行为根据config配置文件里的“autotypeset”选项进行控制.
  * @command autotypeset
  * @method execCommand
  * @param { String } cmd 命令字符串
@@ -10925,7 +10924,7 @@ UE.plugin.register('background', function () {
 
 // plugins/image.js
 /**
- * 图片插入、排版插件
+ * 图片插入, 排版插件
  * @file
  * @since 1.2.6.1
  */
@@ -10936,7 +10935,7 @@ UE.plugin.register('background', function () {
  * @method execCommand
  * @remind 值center为独占一行居中
  * @param { String } cmd 命令字符串
- * @param { String } align 对齐方式, 可传left、right、none、center
+ * @param { String } align 对齐方式, 可传left, right, none, center
  * @remaind center表示图片独占一行
  * @example
  * ```javascript
@@ -11083,7 +11082,7 @@ UE.commands['imagefloat'] = {
  * @param { String } cmd 命令字符串
  * @param { Object } opt 属性键值对, 这些属性都将被复制到当前插入图片
  * @remind 该命令第二个参数可接受一个图片配置项对象的数组, 可以插入多张图片,
- * 此时数组的每一个元素都是一个Object类型的图片属性集合。
+ * 此时数组的每一个元素都是一个Object类型的图片属性集合.
  * @example
  * ```javascript
  * editor.execCommand( 'insertimage', {
@@ -11854,7 +11853,7 @@ UE.plugins['font'] = function () {
  * @command link
  * @method execCommand
  * @param { String } cmd 命令字符串
- * @param { Object } options   设置自定义属性, 例如:url、title、target
+ * @param { Object } options   设置自定义属性, 例如:url, title, target
  * @example
  * ```javascript
  * editor.execCommand( 'link', '{
@@ -12065,7 +12064,7 @@ UE.commands['scrawl'] = {
  * @command removeformat
  * @method execCommand
  * @param { String } cmd 命令字符串
- * @param   {String}   tags     以逗号隔开的标签。如:strong
+ * @param   {String}   tags     以逗号隔开的标签.如:strong
  * @param   {String}   style    样式如:color
  * @param   {String}   attrs    属性如:width
  * @example
@@ -13926,7 +13925,7 @@ UE.plugins['pagebreak'] = function () {
      * @param { String } cmd 命令字符串
      * @remind 在表格中插入分页符会把表格切分成两部分
      * @remind 获取编辑器内的数据时,  编辑器会把分页符转换成“_ueditor_page_break_tag_”字符串,
-     *          以便于提交数据到服务器端后处理分页。
+     *          以便于提交数据到服务器端后处理分页.
      * @example
      * ```javascript
      * editor.execCommand( 'pagebreak'); //插入一个hr标签, 带有样式类名pagebreak
@@ -17151,7 +17150,7 @@ UE.plugins['fiximgclick'] = (function () {
                                 me.selection.getRange().selectNode(target).select();
                             }
                         });
-                        //TODO 有iframe的情况, mousedown不能往下传。。
+                        //TODO 有iframe的情况, mousedown不能往下传..
                         domUtils.on(imageScale.resizer, 'mousedown', function (e) {
                             me.selection.getNative().removeAllRanges();
                             var ele = e.target || e.srcElement;
@@ -17491,7 +17490,7 @@ UE.plugins['autoheight'] = function () {
 ///commandsTitle  悬浮工具栏
 /**
  *  modified by chengchao01
- *  注意: 引入此功能后, 在IE6下会将body的背景图片覆盖掉！
+ *  注意: 引入此功能后, 在IE6下会将body的背景图片覆盖掉!
  */
 UE.plugins['autofloat'] = function() {
     var me = this,
@@ -17838,8 +17837,8 @@ UE.plugins['video'] = function (){
     };
 
     /**
-     * 获取单元格或者单元格组的“对齐”状态。 如果当前的检测对象是一个单元格组,  只有在满足所有单元格的 水平和竖直 对齐属性都相同的
-     * 条件时才会返回其状态值, 否则将返回null;  如果当前只检测了一个单元格,  则直接返回当前单元格的对齐状态;
+     * 获取单元格或者单元格组的“对齐”状态. 如果当前的检测对象是一个单元格组,  只有在满足所有单元格的 水平和竖直 对齐属性都相同的
+     * 条件时才会返回其状态值, 否则将返回null; 如果当前只检测了一个单元格,  则直接返回当前单元格的对齐状态;
      * @param table cell or table cells , 支持单个单元格dom对象 或者 单元格dom对象数组
      * @return { align: 'left' || 'right' || 'center', valign: 'top' || 'middle' || 'bottom' } 或者 null
      */
@@ -18103,7 +18102,7 @@ UE.plugins['video'] = function (){
                         if (tmpEnd > end && flag) break;
                         if (cell == tmpCell || end == tmpEnd) {
                             //只获取单一的单元格
-                            //todo 仅获取单一单元格在特定情况下会造成returns为空, 从而影响后续的拖拽实现, 修正这个。需考虑性能
+                            //todo 仅获取单一单元格在特定情况下会造成returns为空, 从而影响后续的拖拽实现, 修正这个.需考虑性能
                             if (tmpCell[flag ? "colSpan" : "rowSpan"] == 1) {
                                 returns.push(tmpCell);
                             }
@@ -18209,7 +18208,7 @@ UE.plugins['video'] = function (){
                     }
                 }
             }
-            //当框选后删除行或者列后撤销, 需要重建选区。
+            //当框选后删除行或者列后撤销, 需要重建选区.
             var tds = domUtils.getElementsByTagName(this.table, "td"),
                 selectTds = [];
             utils.each(tds, function (td) {
@@ -18605,7 +18604,7 @@ UE.plugins['video'] = function (){
                     if(!isInsertTitle) replaceTdToTh(colIndex, cell, row);
                 }
             }
-            //框选时插入不触发contentchange, 需要手动更新索引。
+            //框选时插入不触发contentchange, 需要手动更新索引.
             this.update();
             return row;
         },
@@ -19803,7 +19802,7 @@ UE.plugins['video'] = function (){
             var interlaced = table.getAttribute("interlaced");
             if (cmd == "interlacetable") {
                 //TODO 待定
-                //是否需要待定, 如果设置, 则命令只能单次执行成功, 但反射具备toggle效果; 否则可以覆盖前次命令, 但反射将不存在toggle效果
+                //是否需要待定, 如果设置, 则命令只能单次执行成功, 但反射具备toggle效果;否则可以覆盖前次命令, 但反射将不存在toggle效果
                 return (interlaced === "enabled") ? -1 : 0;
             } else {
                 return (!interlaced || interlaced === "disabled") ? -1 : 0;
@@ -19890,7 +19889,7 @@ UE.plugins['table'] = function () {
         cellBorderWidth = 5,
         //鼠标偏移距离
         offsetOfTableCell = 10,
-        //记录在有限时间内的点击状态,  共有3个取值,  0, 1, 2。 0代表未初始化,  1代表单击了1次, 2代表2次
+        //记录在有限时间内的点击状态,  共有3个取值,  0, 1, 2. 0代表未初始化,  1代表单击了1次, 2代表2次
         singleClickState = 0,
         userActionStatus = null,
         //双击允许的时间范围
@@ -21927,6 +21926,9 @@ UE.plugins['tablesort'] = function () {
  */
 
 UE.plugins['contextmenu'] = function () {
+    if (typeof is_mobile_cms != "undefined" && is_mobile_cms == 1) {
+        return;
+    }
     var me = this;
     me.setOpt('enableContextMenu',true);
     if(me.getOpt('enableContextMenu') === false){
@@ -22497,7 +22499,7 @@ UE.plugins['shortcutmenu'] = function () {
 
 // plugins/basestyle.js
 /**
- * B、I、sub、super命令支持
+ * B, I, sub, super命令支持
  * @file
  * @since 1.2.6.1
  */
@@ -23035,7 +23037,7 @@ UE.plugin.register('searchreplace',function(){
  */
 
 /**
- * 根据config配置文件里“customstyle”选项的值对匹配的标签执行样式替换。
+ * 根据config配置文件里“customstyle”选项的值对匹配的标签执行样式替换.
  * @command customstyle
  * @method execCommand
  * @param { String } cmd 命令字符串
@@ -23272,7 +23274,7 @@ UE.plugins['catchremoteimage'] = function () {
                 opt = {
                     'method': 'POST',
                     'dataType': isJsonp ? 'jsonp':'',
-                    'timeout': 60000, //单位:毫秒, 回调请求超时设置。目标用户如果网速不是很快的话此处建议设置一个较大的数值
+                    'timeout': 60000, //单位:毫秒, 回调请求超时设置.目标用户如果网速不是很快的话此处建议设置一个较大的数值
                     'onsuccess': callbacks["success"],
                     'onerror': callbacks["error"]
                 };
@@ -23696,7 +23698,7 @@ UE.plugin.register('music', function (){
              * @command music
              * @method execCommand
              * @param { Object } musicOptions 插入音乐的参数项,  支持的key有: url=>音乐地址;
-             * width=>音乐容器宽度; height=>音乐容器高度; align=>音乐文件的对齐方式,  可选值有: left, center, right, none
+             * width=>音乐容器宽度;height=>音乐容器高度;align=>音乐文件的对齐方式,  可选值有: left, center, right, none
              * @example
              * ```javascript
              * //editor是编辑器实例
@@ -24224,7 +24226,7 @@ UE.plugin.register('section', function (){
             }
         },
         bindEvents:{
-            /* 初始化、拖拽、粘贴、执行setcontent之后 */
+            /* 初始化, 拖拽, 粘贴, 执行setcontent之后 */
             'ready': function (){
                 me.fireEvent('updateSections');
                 domUtils.on(me.body, 'drop paste', function(){
@@ -29548,18 +29550,7 @@ UE.registerUI('message', function(editor) {
 UE.registerUI('autosave', function(editor) {
     var timer = null,uid = null;
     editor.on('afterautosave',function(){
-        clearTimeout(timer);
-
-        timer = setTimeout(function(){
-            if(uid){
-                editor.trigger('hidemessage',uid);
-            }
-            uid = editor.trigger('showmessage',{
-                content : editor.getLang('autosave.success'),
-                timeout : 2000
-            });
-
-        },2000)
+       
     })
 
 });

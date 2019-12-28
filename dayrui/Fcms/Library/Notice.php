@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -34,7 +31,7 @@ class Notice {
             'config' => \Phpcmf\Service::C()->member_cache['notice'][$name],
         ]);
         if (!$rt['code']) {
-            log_message('error', '通知任务注册失败：'.$rt['msg']);
+            log_message('error', '通知任务注册失败:'.$rt['msg']);
         }
 
         return;
@@ -63,7 +60,7 @@ class Notice {
             'config' => $config,
         ]);
         if (!$rt['code']) {
-            log_message('error', '通知任务注册失败：'.$rt['msg']);
+            log_message('error', '通知任务注册失败:'.$rt['msg']);
         }
 
         return;
@@ -74,7 +71,7 @@ class Notice {
 
         $error = [];
         if (!$value['data']['uid']) {
-            return [['用户uid参数为空，任务不能执行'], $value];
+            return [['用户uid参数为空, 任务不能执行'], $value];
         }
 
         // 微信通知
@@ -85,12 +82,12 @@ class Notice {
             } else {
                 $xml = $this->_xml_array($rt['msg']);
                 if (!$xml || !isset($xml['xml']) || !$xml['xml']) {
-                    $error[] = 'xml解析失败，检查文件格式是否正确：'.$value['name'].'.html';
+                    $error[] = 'xml解析失败, 检查文件格式是否正确:'.$value['name'].'.html';
                 } else {
                     $content = $xml['xml'];
                     $rt = \Phpcmf\Service::M('member')->wexin_template($value['data']['uid'], $content['id'], $content['param'], $content['url']);
                     if (!$rt['code']) {
-                        $error[] = '微信消息执行错误：'.$rt['msg'];
+                        $error[] = '微信消息执行错误:'.$rt['msg'];
                     } else {
                         // 成功
                         unset($value['config']['weixin']);
@@ -108,7 +105,7 @@ class Notice {
                 $phone = $member['phone'];
             }
             if (!$phone) {
-                $error[] = 'phone参数为空，不能发送短信';
+                $error[] = 'phone参数为空, 不能发送短信';
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'mobile', $value['data']);
                 if (!$rt['code']) {
@@ -117,7 +114,7 @@ class Notice {
                     $content = $rt['msg'];
                     $rt = \Phpcmf\Service::M('member')->sendsms_text($phone, $content);
                     if (!$rt['code']) {
-                        $error[] = '短信通知执行错误：'.$rt['msg'];
+                        $error[] = '短信通知执行错误:'.$rt['msg'];
                     } else {
                         // 成功
                         unset($value['config']['mobile']);
@@ -148,7 +145,7 @@ class Notice {
                 $email = $member['email'];
             }
             if (!$email) {
-                $error[] = 'email参数为空，不能发送邮件';
+                $error[] = 'email参数为空, 不能发送邮件';
             } else {
                 $rt = $this->_get_tpl_content($siteid, $value['name'], 'email', $value['data']);
                 if (!$rt['code']) {
@@ -162,7 +159,7 @@ class Notice {
                     }
                     $rt = \Phpcmf\Service::M('member')->sendmail($email, $title ? $title : '通知', $content);
                     if (!$rt['code']) {
-                        $error[] = '邮件发送失败：'.$rt['msg'];
+                        $error[] = '邮件发送失败:'.$rt['msg'];
                     } else {
                         // 成功
                         unset($value['config']['email']);
@@ -188,7 +185,7 @@ class Notice {
 
         $content = $my ? $my : file_get_contents(ROOTPATH.'config/notice/'.$type.'/'.$name.'.html');
         if (!$content) {
-            return dr_return_data(0, '模板不存在【config/notice/'.$type.'/'.$name.'.html】');
+            return dr_return_data(0, '模板不存在[config/notice/'.$type.'/'.$name.'.html]');
         }
 
         ob_start();

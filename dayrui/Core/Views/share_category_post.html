@@ -86,7 +86,7 @@ function dr_tid(i) {
                                     {/loop}
                                     </select>
                                 </label>
-                                <span class="help-block">{dr_lang('当同一父级栏目下存在多个不同的模块栏目时，其父级栏目将自动转换为单页栏目')}</span>
+                                <span class="help-block">{dr_lang('当同一父级栏目下存在多个不同的模块栏目时, 其父级栏目将自动转换为单页栏目')}</span>
                             </div>
                         </div>
                         {/if}
@@ -101,7 +101,7 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('目录名称')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="system[dirname]" id="dr_dirname" value="{$data.dirname}"></label>
-                                <span class="help-block" id="dr_dirname_tips">{dr_lang('栏目目录确保唯一，用于url填充或者生成目录')}</span>
+                                <span class="help-block" id="dr_dirname_tips">{dr_lang('栏目目录确保唯一, 用于url填充或者生成目录')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_2 " style="display: none">
@@ -122,7 +122,7 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('继承下级')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="system[setting][getchild]" value="1" {if $data['setting']['getchild']}checked{/if} data-on-text="{dr_lang('是')}" data-off-text="{dr_lang('否')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('选择“是”时，将下级第一个页面数据作为当前的栏目，只对父级单网页有效')}</span>
+                                <span class="help-block">{dr_lang('选择“是”时, 将下级第一个页面数据作为当前的栏目, 只对父级单网页有效')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
@@ -189,7 +189,7 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('同步到其他栏目')}</label>
                             <div class="col-md-9">
                                 <label><button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url(APP_DIR.'/category/copy_edit')}&at=seo&catid={$id}')" type="button" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('同步配置')}</button></label>
-                                <label>{dr_lang('把本页的设置数据同步到其他栏目；需要保存之后再同步')}</label>
+                                <label>{dr_lang('把本页的设置数据同步到其他栏目;需要保存之后再同步')}</label>
                             </div>
                         </div>
                         {/if}
@@ -202,14 +202,14 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('电脑列表信息数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" value="{$data['setting']['template']['pagesize']}" name="system[setting][template][pagesize]"></label>
-                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
+                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量, 静态生成时调用此参数')}</span>
                             </div>
                         </div>
                         <div class="form-group dr_tid_1">
                             <label class="col-md-2 control-label">{dr_lang('手机列表信息数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control " type="text" value="{$data['setting']['template']['mpagesize']}" name="system[setting][template][mpagesize]"></label>
-                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量，静态生成时调用此参数')}</span>
+                                <span class="help-block">{dr_lang('列表页面每页显示的信息数量, 静态生成时调用此参数')}</span>
                             </div>
                         </div>
                         {if $is_scategory}
@@ -254,7 +254,7 @@ function dr_tid(i) {
                             <label class="col-md-2 control-label">{dr_lang('同步到其他栏目')}</label>
                             <div class="col-md-9">
                                 <label><button onclick="dr_iframe('{dr_lang('复制')}', '{dr_url(APP_DIR.'/category/copy_edit')}&at=tpl&catid={$id}')" type="button" class="btn green btn-sm"> <i class="fa fa-copy"></i> {dr_lang('同步配置')}</button></label>
-                                <label>{dr_lang('把本页的设置数据同步到其他栏目；需要保存之后再同步')}</label>
+                                <label>{dr_lang('把本页的设置数据同步到其他栏目;需要保存之后再同步')}</label>
                             </div>
                         </div>
                         {/if}

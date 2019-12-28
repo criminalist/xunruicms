@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
@@ -16,6 +16,7 @@ return [
 
     'member_register'           => '用户注册',
     'member_login'              => '用户登录',
+    'member_register_verify'    => '用户注册审核完成',
     'pay_success'               => '前台充值/付款',
     'pay_admin'                 => '后台管理员充值',
     'member_edit_password'      => '用户修改密码',

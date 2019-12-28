@@ -2,9 +2,8 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
 
 class Menu extends \Phpcmf\Common
 {
@@ -153,7 +152,7 @@ class Menu extends \Phpcmf\Common
 
 		\Phpcmf\Service::L('input')->system_log('初始化后台菜单');
         \Phpcmf\Service::M('cache')->sync_cache(''); // 自动更新缓存
-		exit($this->_json(1, dr_lang('初始化菜单成功，请按F5刷新整个页面')));
+		exit($this->_json(1, dr_lang('初始化菜单成功, 请按F5刷新整个页面')));
 	}
 
 	// 隐藏或者启用

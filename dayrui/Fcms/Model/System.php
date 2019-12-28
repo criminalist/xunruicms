@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 系统模型 - 后台
@@ -12,7 +9,7 @@ class System extends \Phpcmf\Model
     public $config = [
 
         'SYS_DEBUG'	=> '调试器开关',
-        'SYS_EMAIL' => '系统收件邮箱，用于接收系统信息',
+        'SYS_EMAIL' => '系统收件邮箱, 用于接收系统信息',
         'SYS_ADMIN_CODE' => '后台登录验证码开关',
         'SYS_ADMIN_LOG' => '后台操作日志开关',
         'SYS_AUTO_FORM' => '自动存储表单数据',
@@ -25,8 +22,9 @@ class System extends \Phpcmf\Model
         'SYS_KEY' => '安全密匙',
         'SYS_CSRF'	=> '开启跨站验证',
         'SYS_HTTPS'	=> 'https模式',
-        'SYS_ADMIN_LOGINS'	=> '登录失败N次后，系统将锁定登录',
+        'SYS_ADMIN_LOGINS'	=> '登录失败N次后, 系统将锁定登录',
         'SYS_ADMIN_LOGIN_TIME'	=> '登录失败锁定后在x分钟内禁止登录',
+        'SYS_ADMIN_OAUTH'    => '后台启用快捷登录',
 
         'SYS_ATTACHMENT_DB'	    => '附件归属开启模式',
         'SYS_ATTACHMENT_PATH'	=> '附件上传路径',
@@ -50,7 +48,13 @@ class System extends \Phpcmf\Model
     public function save_config($system, $data) {
 
         foreach ($this->config as $name => $s) {
-            isset($data[$name]) && $system[$name] = $data[$name];
+            if (isset($data[$name])) {
+                $value = $data[$name];
+                if ($name == 'SYS_ADMIN_PAGESIZE') {
+                    $value = min(1, $value);
+                }
+                $system[$name] = $value;
+            }
         }
 
         \Phpcmf\Service::L('config')->file(WRITEPATH.'config/system.php', '系统配置文件', 32)->to_require_one(

@@ -2,10 +2,8 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Check extends \Phpcmf\Common
 {
@@ -61,11 +59,11 @@ class Check extends \Phpcmf\Common
                 $file = intval(@ini_get("upload_max_filesize"));
 
                 if ($file > $post) {
-                    $this->_json(0,'系统配置不合理，post_max_size值('.$post.')必须大于upload_max_filesize值('.$file.')');
+                    $this->_json(0,'系统配置不合理, post_max_size值('.$post.')必须大于upload_max_filesize值('.$file.')');
                 } elseif ($file < 10) {
-                    $this->_json(1,'系统环境只允许上传'.$file.'MB文件，可以设置upload_max_filesize值提升上传大小');
+                    $this->_json(1,'系统环境只允许上传'.$file.'MB文件, 可以设置upload_max_filesize值提升上传大小');
                 } elseif ($post < 10) {
-                    $this->_json(1,'系统环境要求每次发布内容不能超过'.$post.'MB（含文件），可以设置post_max_size值提升发布大小');
+                    $this->_json(1,'系统环境要求每次发布内容不能超过'.$post.'MB（含文件）, 可以设置post_max_size值提升发布大小');
                 }
 
                 break;
@@ -74,27 +72,27 @@ class Check extends \Phpcmf\Common
             case '02':
 
 				if (!function_exists('mb_substr')) {
-                    $this->_json(0, 'PHP不支持mbstring扩展，必须开启');
+                    $this->_json(0, 'PHP不支持mbstring扩展, 必须开启');
                 } elseif (!function_exists('curl_init')) {
-                     $this->halt('PHP不支持CURL扩展，必须开启', 0);
+                     $this->halt('PHP不支持CURL扩展, 必须开启', 0);
                 } elseif (!function_exists('mb_convert_encoding')) {
-                     $this->halt('PHP的mb函数不支持，无法使用百度关键词接口', 0);
+                     $this->halt('PHP的mb函数不支持, 无法使用百度关键词接口', 0);
                 } elseif (!function_exists('imagecreatetruecolor')) {
-                     $this->halt('PHP的GD库版本太低，无法支持验证码图片', 0);
+                     $this->halt('PHP的GD库版本太低, 无法支持验证码图片', 0);
 				} elseif (!function_exists('ini_get')) {
-                    $this->_json(0, '系统函数ini_get未启用，将无法获取到系统环境参数');
+                    $this->_json(0, '系统函数ini_get未启用, 将无法获取到系统环境参数');
                 } elseif (!function_exists('gzopen')) {
-                    $this->halt('zlib扩展未启用，您将无法进行在线升级、无法下载应用插件等', 0);
+                    $this->halt('zlib扩展未启用, 您将无法进行在线升级, 无法下载应用插件等', 0);
                 } elseif (!function_exists('gzinflate')) {
-                     $this->halt('函数gzinflate未启用，您将无法进行在线升级、无法下载应用插件等', 0);
+                     $this->halt('函数gzinflate未启用, 您将无法进行在线升级, 无法下载应用插件等', 0);
                 } elseif (!function_exists('fsockopen')) {
-                     $this->halt('PHP不支持fsockopen，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                     $this->halt('PHP不支持fsockopen, 可能充值接口无法使用, 手机短信无法发送, 电子邮件无法发送, 一键登录无法登录等', 0);
                 } elseif (!function_exists('openssl_open')) {
-                     $this->halt('PHP不支持openssl，可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                     $this->halt('PHP不支持openssl, 可能充值接口无法使用, 手机短信无法发送, 电子邮件无法发送, 一键登录无法登录等', 0);
                 } elseif (!ini_get('allow_url_fopen')) {
-                     $this->halt('allow_url_fopen未启用，远程图片无法保存、网络图片无法上传、可能充值接口无法使用、手机短信无法发送、电子邮件无法发送、一键登录无法登录等', 0);
+                     $this->halt('allow_url_fopen未启用, 远程图片无法保存, 网络图片无法上传, 可能充值接口无法使用, 手机短信无法发送, 电子邮件无法发送, 一键登录无法登录等', 0);
                 } elseif (!class_exists('ZipArchive')) {
-                     $this->halt('php_zip扩展未开启，无法使用应用市场功能', 0);
+                     $this->halt('php_zip扩展未开启, 无法使用应用市场功能', 0);
                 }
                 break;
 
@@ -106,28 +104,29 @@ class Check extends \Phpcmf\Common
                 $dir = array(
                     WRITEPATH => '无法生成系统缓存文件',
                     $avatar_path => '无法上传头像',
-                    WRITEPATH.'data/' => '无法生成系统配置文件，会导致系统配置无效',
+                    WRITEPATH.'data/' => '无法生成系统配置文件, 会导致系统配置无效',
+					WRITEPATH.'caching/' => '无法生成系统缓存文件, 会导致系统无法运行',
                     $thumb_path => '无法生成缩略图缓存文件',
                     SYS_UPLOAD_PATH => '无法上传附件',
-                    APPSPATH => '无法创建模块、创建表单、下载应用插件',
+                    APPSPATH => '无法创建模块, 创建表单, 下载应用插件',
                     TPLPATH => '无法创建模块模板和应用插件模板',
                 );
 
                 foreach ($dir as $path => $note) {
                     if (!dr_check_put_path($path)) {
-                        $this->_json(0, $note.'【'.$path.'】');
+                        $this->_json(0, $note.'['.$path.']');
                     }
                 }
 
                 if (!is_dir(WEBPATH.'api/ueditor/')) {
-                    $this->halt('百度编辑器目录不存在：'.WEBPATH.'api/ueditor/', 0);
+                    $this->halt('百度编辑器目录不存在:'.WEBPATH.'api/ueditor/', 0);
                 }
 
                 break;
 
             case '04':
                 if (SELF == 'admin.php') {
-                    $this->halt('为了系统安全，请修改根目录admin.php的文件名', 0);
+                    $this->halt('为了系统安全, 请修改根目录admin.php的文件名', 0);
                 }
                 break;
 
@@ -135,42 +134,47 @@ class Check extends \Phpcmf\Common
 
                 $list = \Phpcmf\Service::M()->db->query('show table status')->getResultArray();
                 if (!$list) {
-                    $this->halt("无法获取到数据表结构，需要为Mysql账号开启SHOW TABLE STATUS权限", 0);
+                    $this->halt("无法获取到数据表结构, 需要为Mysql账号开启SHOW TABLE STATUS权限", 0);
                 }
 
                 $field = \Phpcmf\Service::M()->db->query('SHOW FULL COLUMNS FROM `'.\Phpcmf\Service::M()->dbprefix('admin').'`')->getResultArray();
                 if (!$field) {
-                    $this->halt("无法通获取到数据表字段结构，需要为Mysql账号开启SHOW FULL COLUMNS权限", 0);
+                    $this->halt("无法通获取到数据表字段结构, 需要为Mysql账号开启SHOW FULL COLUMNS权限", 0);
                 }
 
                 break;
 
             case '06':
 
+                // 语言文件兼容处理
+                if (is_dir(ROOTPATH.'config/language/') && !is_dir(ROOTPATH.'api/language/')) {
+                    \Phpcmf\Service::L('file')->copy_dir(ROOTPATH.'config/language/', ROOTPATH.'config/language/', ROOTPATH.'api/language/');
+                }
+
                 // 语言文件
                 $lang = file_get_contents(LANG_PATH.'lang.js');
                 if (strlen($lang) < 10) {
-                    $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
+                    $this->halt('网站语言JS文件异常:'.LANG_PATH.'lang.js', 0);
                 } elseif (strpos($lang, 'finecms_datepicker_lang') === false) {
-                    $this->halt('网站语言JS文件异常：'.LANG_PATH.'lang.js', 0);
+                    $this->halt('网站语言JS文件异常:'.LANG_PATH.'lang.js', 0);
                 }
 
                 $lang = file_get_contents(LANG_PATH.'ueditor.js');
                 if (strlen($lang) < 10) {
-                    $this->halt('百度编辑器语言JS文件异常：'.SITE_LANGUAGE.'ueditor.js', 0);
+                    $this->halt('百度编辑器语言JS文件异常:'.SITE_LANGUAGE.'ueditor.js', 0);
                 } elseif (strpos($lang, 'UE.I18N[\''.SITE_LANGUAGE.'\']') === false) {
-                    $this->halt('百度编辑器语言JS文件异常：'.LANG_PATH.'ueditor.js', 0);
+                    $this->halt('百度编辑器语言JS文件异常:'.LANG_PATH.'ueditor.js', 0);
                 }
 
                 // 模板文件
                 if (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/home/index.html')) {
-                    $this->halt('网站前端模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
+                    $this->halt('网站前端模板[电脑版]不存在:TPLPATH/pc/'.SITE_TEMPLATE.'/home/index.html', 0);
                 } elseif (!is_file(TPLPATH.'pc/'.SITE_TEMPLATE.'/member/index.html')) {
-                    $this->halt('用户中心模板【电脑版】不存在：TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html', 0);
+                    $this->halt('用户中心模板[电脑版]不存在:TPLPATH/pc/'.SITE_TEMPLATE.'/member/index.html', 0);
                 } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/home/index.html')) {
-                    $this->halt('网站前端模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
+                    $this->halt('网站前端模板[手机版]不存在:TPLPATH/mobile/'.SITE_TEMPLATE.'/home/index.html', 1);
                 } elseif (!is_file(TPLPATH.'mobile/'.SITE_TEMPLATE.'/member/index.html')) {
-                    $this->halt('用户中心模板【手机版】不存在：TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
+                    $this->halt('用户中心模板[手机版]不存在:TPLPATH/mobile/'.SITE_TEMPLATE.'/member/index.html', 1);
                 }
                 break;
 
@@ -294,11 +298,11 @@ class Check extends \Phpcmf\Common
                 foreach ($local as $file) {
                     $ext = strtolower(substr(strrchr($file, '.'), 1));
                     if (in_array($ext, ['zip', 'rar', 'sql'])) {
-                        $this->halt('文件不安全【/'.$file.'】请及时清理', 0);
+                        $this->halt('文件不安全[/'.$file.']请及时清理', 0);
                     }
                     $size = file_get_contents(WEBPATH.$file, 0, null, 0, 9286630);
                     if (strlen($size) >= 9286630) {
-                        $this->halt('存在大文件文件【/'.$file.'】请及时清理', 0);
+                        $this->halt('存在大文件文件[/'.$file.']请及时清理', 0);
                     }
                 }
                 $this->_json(1,'通过');
@@ -338,7 +342,7 @@ class Check extends \Phpcmf\Common
 
                 // 域名检测
                 if (!function_exists('stream_context_create')) {
-                    $this->halt('函数没有被启用：stream_context_create', 0);
+                    $this->halt('函数没有被启用:stream_context_create', 0);
                 }
 
                 $error = $tips = [];
@@ -350,7 +354,7 @@ class Check extends \Phpcmf\Common
                             if ($domain) {
                                 $url = dr_http_prefix($domain) . '/api.php';
                             } else {
-                                $tips[] = '当前站点没有绑定手机域名，可能无法使用移动端界面';
+                                $tips[] = '当前站点没有绑定手机域名, 可能无法使用移动端界面';
                             }
                         } elseif (strpos($name, 'module_') === 0) {
                             // 模块
@@ -367,12 +371,12 @@ class Check extends \Phpcmf\Common
                         if ($url) {
                             $context = stream_context_create(array(
                                 'http' => array(
-                                    'timeout' => 5 //超时时间，单位为秒
+                                    'timeout' => 5 //超时时间, 单位为秒
                                 )
                             ));
                             $code = file_get_contents($url, 0, $context);
                             if ($code != 'phpcmf ok') {
-                                $error[] = '域名绑定异常，无法访问：' . $url . '，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功，<a href="'.dr_url('site_domain/index').'">查看详情</a>';
+                                $error[] = '域名绑定异常, 无法访问:' . $url . ', 可以尝试手动访问此地址, 如果提示phpcmf ok就表示成功, <a href="'.dr_url('site_domain/index').'">查看详情</a>';
                             }
                         }
                     }
@@ -392,12 +396,12 @@ class Check extends \Phpcmf\Common
                     }
                     $context = stream_context_create(array(
                         'http' => array(
-                            'timeout' => 5 //超时时间，单位为秒
+                            'timeout' => 5 //超时时间, 单位为秒
                         )
                     ));
                     $code = file_get_contents($t['url'].'api.html', 0, $context);
                     if ($code != 'phpcmf ok') {
-                        $error[] = '['.$t['name'].']异常，无法访问：' . $t['url'] . 'api.html，可以尝试手动访问此地址，如果提示phpcmf ok就表示成功';
+                        $error[] = '['.$t['name'].']异常, 无法访问:' . $t['url'] . 'api.html, 可以尝试手动访问此地址, 如果提示phpcmf ok就表示成功';
                     }
                 }
                 
@@ -418,7 +422,7 @@ class Check extends \Phpcmf\Common
                     if (strpos(FC_NOW_URL, 'https://') !== false) {
                         $this->_json(1,'正常');
                     } else {
-                        $this->_json(0,'服务器无法识别HTTPS证书，<a href="javascript:dr_help(751);">查看解决方案</a>');
+                        $this->_json(0,'服务器无法识别HTTPS证书, <a href="javascript:dr_help(751);">查看解决方案</a>');
                     }
                 } else {
                     $this->_json(0,'系统没有开启HTTPS服务');
@@ -442,14 +446,14 @@ class Check extends \Phpcmf\Common
                                     continue;
                                 }
                                 if (isset($func[$name]) && $func[$name]) {
-                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']存在于'.$func[$name].'之中，不能被重复定义');
+                                    $this->_json(0,'应用['.$dir.']中的函数['.$name.']存在于'.$func[$name].'之中, 不能被重复定义');
                                 }
                                 $func[$name] = $dir;
                                 if (function_exists($name)) {
                                     if (preg_match("/\s+function ".$name."\(/", $custom)) {
                                         // 存在于自定义函数库中
                                     } else {
-                                        $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数，不能定义');
+                                        $this->_json(0,'应用['.$dir.']中的函数['.$name.']是系统函数, 不能定义');
                                     }
                                 }
                             }
@@ -488,11 +492,11 @@ class Check extends \Phpcmf\Common
 
 	    $ptable = \Phpcmf\Service::M()->dbprefix($table);
 	    if (!\Phpcmf\Service::M()->db->tableExists($ptable)) {
-            return '数据表【'.$name.'/'.$ptable.'】不存在，请创建';
+            return '数据表['.$name.'/'.$ptable.']不存在, 请创建';
         }
 	    $counts = \Phpcmf\Service::M()->table($table)->counts();
 	    if ($counts > 100000) {
-            return '<font color="green">数据表【'.$name.'/'.$ptable.'】数据量超过10万，会影响加载速度，建议对其进行数据优化</font>';
+            return '<font color="green">数据表['.$name.'/'.$ptable.']数据量超过10万, 会影响加载速度, 建议对其进行数据优化</font>';
         }
     }
 

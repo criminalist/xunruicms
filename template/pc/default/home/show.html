@@ -5,7 +5,7 @@
         <div class="page-head">
             <div class="container">
                 <div class="page-title">
-                   {$title}
+                   这里是{MODULE_NAME}模块栏目内容页
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
 
                 <ul class="page-breadcrumb breadcrumb">
                     <li>
-                        <a href="{SITE_URL}"> Главная </a>
+                        <a href="{SITE_URL}">网站首页</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     {if !IS_SHARE}
@@ -87,7 +87,7 @@
                                             </a>
                                             <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 1);" class="icon-btn">
                                                 <i class="fa fa-thumbs-o-up"></i>
-                                                <div>Понравилось</div>
+                                                <div> 有帮助 </div>
                                                 <span class="badge badge-danger" id="module_digg_{$id}_1"> {intval($support)} </span>
                                             </a>
                                             <a href="javascript:dr_module_digg('{MOD_DIR}', '{$id}', 0);" class="icon-btn">

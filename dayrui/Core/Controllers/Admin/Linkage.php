@@ -2,10 +2,8 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 // 联动菜单
 class Linkage extends \Phpcmf\Common
@@ -104,7 +102,7 @@ class Linkage extends \Phpcmf\Common
 		}
 
         \Phpcmf\Service::M('cache')->sync_cache('linkage', '', 1); // 自动更新缓存
-		$this->_json(1, dr_lang('共%s条数据，导入成功%s条', dr_count($data), $count));
+		$this->_json(1, dr_lang('共%s条数据, 导入成功%s条', dr_count($data), $count));
 	}
 	
 	

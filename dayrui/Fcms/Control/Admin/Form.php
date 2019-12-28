@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 网站表单操作类 基于 Ftable
@@ -21,7 +18,7 @@ class Form extends \Phpcmf\Table
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)];
         if (!$this->form) {
-            $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
+            $this->_admin_msg(0, dr_lang('网站表单[%s]不存在', str_replace('_verify', '',\Phpcmf\Service::L('Router')->class)));
         }
         // 支持附表存储
         $this->is_data = 1;
@@ -67,7 +64,7 @@ class Form extends \Phpcmf\Table
     // 后台添加表单内容
     protected function _Admin_Add() {
         list($tpl) = $this->_Post(0);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台修改表单内容
@@ -97,7 +94,7 @@ class Form extends \Phpcmf\Table
     // 后台查看表单列表
     protected function _Admin_List() {
         list($tpl) = $this->_List();
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台删除表单内容

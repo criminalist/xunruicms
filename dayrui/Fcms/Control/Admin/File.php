@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 文件操作控制器
@@ -116,7 +113,7 @@ class File extends \Phpcmf\Common
                 mkdir($file, 0777);
             }
 
-            \Phpcmf\Service::L('input')->system_log('创建文件：'.$file);
+            \Phpcmf\Service::L('input')->system_log('创建文件:'.$file);
             $this->_json(1, dr_lang('操作成功'));
         }
 
@@ -235,7 +232,7 @@ class File extends \Phpcmf\Common
                     $dir = md5($filename);
                     $bfile = intval(\Phpcmf\Service::L('input')->get('bfile'));
                     if ($bfile && is_file($this->backups_path.$dir.'/'.$bfile)) {
-                        $name = dr_lang('对比历史文件：%s（左边是当前文件；右边是历史文件）', dr_date($bfile));
+                        $name = dr_lang('对比历史文件:%s（左边是当前文件;右边是历史文件）', dr_date($bfile));
                         $is_diff = 1;
                         $diff_content = file_get_contents($this->backups_path.$dir.'/'.$bfile);
                     } else {
@@ -549,7 +546,7 @@ class File extends \Phpcmf\Common
 
         file_put_contents($ini, json_encode($data));
 
-        \Phpcmf\Service::L('input')->system_log('修改文件别名['.$file.']：'.$value);
+        \Phpcmf\Service::L('input')->system_log('修改文件别名['.$file.']:'.$value);
     }
 
     // 获取单个文件别名

@@ -3,8 +3,8 @@
 /**
  * 
  * JSAPI支付实现类
- * 该类实现了从微信公众平台获取code、通过code获取openid和access_token、
- * 生成jsapi支付js接口所需的参数、生成获取共享收货地址所需的参数
+ * 该类实现了从微信公众平台获取code, 通过code获取openid和access_token,
+ * 生成jsapi支付js接口所需的参数, 生成获取共享收货地址所需的参数
  * 
  * 该类是微信支付提供的样例程序, 商户可根据自己的需求修改, 或者使用lib中的api自行开发
  * 
@@ -33,8 +33,8 @@ class JsApiPay
 	/**
 	 * 
 	 * 通过跳转获取用户的openid, 跳转流程如下:
-	 * 1、设置自己需要调回的url及其其他参数, 跳转到微信服务器https://open.weixin.qq.com/connect/oauth2/authorize
-	 * 2、微信服务处理完成之后会跳转回用户redirect_uri地址, 此时会带上一些参数, 如:code
+	 * 1, 设置自己需要调回的url及其其他参数, 跳转到微信服务器https://open.weixin.qq.com/connect/oauth2/authorize
+	 * 2, 微信服务处理完成之后会跳转回用户redirect_uri地址, 此时会带上一些参数, 如:code
 	 * 
 	 * @return 用户的openid
 	 */
@@ -55,14 +55,7 @@ class JsApiPay
 		}
 	}
 	
-	/**
-	 * 
-	 * 获取jsapi支付的参数
-	 * @param array $UnifiedOrderResult 统一支付接口返回的数据
-	 * @throws WxPayException
-	 * 
-	 * @return json数据, 可直接填入js函数作为参数
-	 */
+
 	public function GetJsApiParameters($UnifiedOrderResult)
 	{
 		if(!array_key_exists("appid", $UnifiedOrderResult)
@@ -83,19 +76,13 @@ class JsApiPay
 		return $parameters;
 	}
 	
-	/**
-	 * 
-	 * 通过code从工作平台获取openid机器access_token
-	 * @param string $code 微信跳转回来带上的code
-	 * 
-	 * @return openid
-	 */
+
 	public function GetOpenidFromMp($code)
 	{
 		$url = $this->__CreateOauthUrlForOpenid($code);
-		//初始化curl
+
 		$ch = curl_init();
-		//设置超时
+
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->curl_timeout);
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,FALSE);
@@ -107,23 +94,22 @@ class JsApiPay
 			curl_setopt($ch,CURLOPT_PROXY, CURL_PROXY_HOST);
 			curl_setopt($ch,CURLOPT_PROXYPORT, CURL_PROXY_PORT);
 		}
-		//运行curl, 结果以jason形式返回
+
 		$res = curl_exec($ch);
 		curl_close($ch);
-		//取出openid
 		$data = json_decode($res,true);
 		$this->data = $data;
+        if (!$data) {
+            exit($res.'Недействительные данные JSON');
+        } elseif (isset($data['errcode']) && $data['errcode']) {
+            exit('Код ошибки（'.$data['errcode'].'）:'.$data['errmsg']);
+        }
+
 		$openid = $data['openid'];
 		return $openid;
 	}
 	
-	/**
-	 * 
-	 * 拼接签名字符串
-	 * @param array $urlObj
-	 * 
-	 * @return 返回已经拼接好的字符串
-	 */
+
 	private function ToUrlParams($urlObj)
 	{
 		$buff = "";

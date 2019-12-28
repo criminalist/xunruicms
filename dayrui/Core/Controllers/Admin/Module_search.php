@@ -3,7 +3,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -75,6 +75,7 @@ class Module_search extends \Phpcmf\Common
 
         // 搜索字段
         $data['search_field'] = [
+            'catid' => dr_lang('栏目'),
             'keyword' => dr_lang('关键词'),
             'order' => dr_lang('排序'),
             'page' => dr_lang('分页'),

@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -26,7 +26,7 @@ class Site_client extends \Phpcmf\Common
                         if (!$t['domain']) {
                             $this->_json(0, dr_lang('域名必须填写'));
                         } elseif (strpos($t['domain'], '//') !== false) {
-                            $this->_json(0, dr_lang('域名只能填写纯域名，不能加http://'));
+                            $this->_json(0, dr_lang('域名只能填写纯域名, 不能加http://'));
                         }
                         $save[$i-1]['domain'] = $t['domain'];
                     }
@@ -38,7 +38,9 @@ class Site_client extends \Phpcmf\Common
                 'client',
                 $save
             );
-            !is_array($rt) && $this->_json(0, dr_lang('网站终端(#%s)不存在', SITE_ID));
+            if (!is_array($rt)) {
+                $this->_json(0, dr_lang('网站终端(#%s)不存在', SITE_ID));
+            }
             \Phpcmf\Service::M('cache')->sync_cache('');
 			\Phpcmf\Service::L('input')->system_log('设置网站自定义终端参数');
 			exit($this->_json(1, dr_lang('操作成功')));

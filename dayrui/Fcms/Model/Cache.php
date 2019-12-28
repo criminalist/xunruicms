@@ -1,30 +1,22 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 系统缓存
 class Cache extends \Phpcmf\Model
 {
-    private $is_sync_cache;
     private $site_cache;
     private $module_cache;
+    private $is_sync_cache;
 
     // 更新附件缓存
     public function update_attachment() {
 
         $page = intval($_GET['page']);
         if (!$page) {
-			/*
-            if (!SYS_CACHE) {
-                exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未开启缓存功能').'</a>', 1));
-            } elseif (!SYS_CACHE_ATTACH) {
-                exit(\Phpcmf\Service::C()->_json(0, '<a href="'.dr_url('system_cache/index').'">'.dr_lang('系统未设置附件缓存时间').'</a>', 1));
-            }*/
-			dr_mkdirs(WRITEPATH.'attach');
+            dr_mkdirs(WRITEPATH.'attach');
+            dr_dir_delete(WRITEPATH.'attach');
             exit(\Phpcmf\Service::C()->_json(1, dr_lang('正在检查附件'), 1));
         }
 
@@ -101,13 +93,18 @@ class Cache extends \Phpcmf\Model
 
         // 按站点更新的缓存
         $cache = [
-            'linkage' => '',
             'form' => '',
+            'linkage' => '',
         ];
 
         if (is_file(MYPATH.'/Config/Cache.php')) {
             $_cache = require MYPATH.'/Config/Cache.php';
             $_cache && $cache = dr_array22array($cache, $_cache);
+        }
+        if (is_file(MYPATH . 'Config/License.php')) {
+            $cmf = require MYPATH . 'Config/Li'.'ce'.'nse.php';
+        } else {
+            $cmf = [];
         }
 
         // 执行插件自己的缓存程序
@@ -115,6 +112,12 @@ class Cache extends \Phpcmf\Model
         $app_cache = [];
         foreach ($local as $dir) {
             $path = dr_get_app_dir($dir);
+            if (is_file($path.'Config/Version.php')) {
+                $vsn = require $path.'Config/Version.php';
+                if (!IS_DEV && $cmf && strlen($vsn['license']) > 20 && $vsn['license'] != $cmf['license']) {
+                    continue;
+                }
+            }
             if (is_file($path.'install.lock')
                 && is_file($path.'Config/Cache.php')) {
                 $_cache = require $path.'Config/Cache.php';

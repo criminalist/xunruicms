@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Ueditor extends \Phpcmf\Library\A_Field {
 
@@ -36,7 +33,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         $option['width'] = isset($option['width']) ? $option['width'] : '100%';
         $option['height'] = isset($option['height']) ? $option['height'] : 300;
         $option['fieldtype'] = isset($option['fieldtype']) ? $option['fieldtype'] : '';
-        $option['autofloat'] = isset($option['autoheight']) ? $option['autoheight'] : 0;
+        $option['autofloat'] = isset($option['autofloat']) ? $option['autofloat'] : 0;
         $option['autoheight'] = isset($option['autoheight']) ? $option['autoheight'] : 0;
         $option['fieldlength'] = isset($option['fieldlength']) ? $option['fieldlength'] : '';
         $option['watermark'] = isset($option['watermark']) ? $option['watermark'] : '';
@@ -67,7 +64,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img]" '.($option['down_img'] == 1 ? 'checked' : '').' > '.dr_lang('自动').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img]" '.($option['down_img'] == 0 ? 'checked' : '').' > '.dr_lang('手动').'</label>
                         </div>
-						<span class="help-block">自动模式下每一次编辑内容时都会下载图片；手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
+						<span class="help-block">自动模式下每一次编辑内容时都会下载图片;手动模式可以在编辑器下放工具栏中控制“是否下载”</span>
                     </div>
                 </div>
 				<div class="form-group">
@@ -77,7 +74,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 1 ? 'checked' : '').' > '.dr_lang('异步').'（Beta）</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][down_img_type]" '.($option['down_img_type'] == 0 ? 'checked' : '').' > '.dr_lang('同步').'</label>
                         </div>
-						<span class="help-block">同步模式是在编辑内容时一次性下载完图片，图片多的时候容易卡死；<br>异步模式是在编辑内容时不会马上下载图片，他会进入任务队列中进行延迟下载</span>
+						<span class="help-block">同步模式是在编辑内容时一次性下载完图片, 图片多的时候容易卡死;<br>异步模式是在编辑内容时不会马上下载图片, 他会进入任务队列中进行延迟下载</span>
                     </div>
                 </div>'.$wm.
             '
@@ -88,7 +85,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][show_bottom_boot]" '.($option['show_bottom_boot'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
-						<span class="help-block">编辑器底部工具栏，有截取字符选择、提取缩略图、下载远程图等控制按钮</span>
+						<span class="help-block">编辑器底部工具栏, 有截取字符选择, 提取缩略图, 下载远程图等控制按钮</span>
                     </div>
                 </div>
                 <div class="form-group hidden">
@@ -107,7 +104,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                             <label class="radio-inline"><input type="radio" value="1" name="data[setting][option][autofloat]" '.($option['autofloat'] == 1 ? 'checked' : '').' > '.dr_lang('开启').'</label>
                             <label class="radio-inline"><input type="radio" value="0" name="data[setting][option][autofloat]" '.($option['autofloat'] == 0 ? 'checked' : '').' > '.dr_lang('关闭').'</label>
                         </div>
-						<span class="help-block">编辑器图标栏会固定在页面，不会随浏览器滚动</span>
+						<span class="help-block">编辑器图标栏会固定在页面, 不会随浏览器滚动</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -188,7 +185,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <div class="col-md-9">
                         <label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
                         <label>'.$this->member_field_select().'</label>
-                        <span class="help-block">'.dr_lang('也可以设置会员表字段，表示用当前登录会员信息来填充这个值').'</span>
+                        <span class="help-block">'.dr_lang('也可以设置会员表字段, 表示用当前登录会员信息来填充这个值').'</span>
                     </div>
                 </div>
                 '.$this->field_type($option['fieldtype'], $option['fieldlength']),
@@ -197,7 +194,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('控件宽度').'</label>
                     <div class="col-md-9">
                         <label><input type="text" class="form-control" name="data[setting][option][width]" value="'.$option['width'].'"></label>
-                        <span class="help-block">'.dr_lang('[整数]表示固定宽带；[整数%]表示百分比').'</span>
+                        <span class="help-block">'.dr_lang('[整数]表示固定宽带;[整数%]表示百分比').'</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -272,7 +269,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
 											'image_reduce' => $field['setting']['option']['image_reduce'],
 										]);
 										if (!$rt['code']) {
-											log_message('error', '远程图片下载-任务注册失败：'.$rt['msg']);
+											log_message('error', '远程图片下载-任务注册失败:'.$rt['msg']);
 										}
 
 										$value = str_replace($img, ROOT_THEME_PATH.'assets/images/down_img.jpg?id='.$rt['code'], $value);
@@ -318,7 +315,13 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 替换分页
         $value = str_replace('_ueditor_page_break_tag_', '<hr class="pagebreak">', $value);
 
-        \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
+        // 入库操作
+        if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
+            // 来自批量审核内容
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = ($value);
+        } else {
+            \Phpcmf\Service::L('Field')->data[$field['ismain']][$field['fieldname']] = htmlspecialchars($value);
+        }
     }
 
     /**
@@ -359,15 +362,20 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             return $this->show($field, $value);
         }
 
-        $is_mobile = \Phpcmf\Service::C()->_is_mobile();
-
         // 字段存储名称
         $name = $field['fieldname'];
 
         // 字段显示名称
         $text = ($field['setting']['validate']['required'] ? '<span class="required" aria-required="true"> * </span>' : '').$field['name'];
 
+        if (isset($_GET['is_verify_iframe']) && $_GET['is_verify_iframe']) {
+            // 来自批量审核内容
+            $str = '<textarea class="form-control"  name="data['.$name.']" id="dr_'.$name.'">'.htmlspecialchars($value).'</textarea>';
+            return $this->input_format($field['fieldname'], $text, $str);
+        }
+
         // 表单宽度设置
+        $is_mobile = \Phpcmf\Service::C()->_is_mobile();
         $width = $is_mobile ? '100%' : ($field['setting']['option']['width'] ? $field['setting']['option']['width'] : '100%');
 
         // 表单高度设置
@@ -379,20 +387,17 @@ class Ueditor extends \Phpcmf\Library\A_Field {
         // 字段默认值
         $value = htmlspecialchars_decode(strlen($value) ? $value : $this->get_default_value($field['setting']['option']['value']));
 
-        // 输出
-        $str = '';
-
         $uri = \Phpcmf\Service::L('router')->uri();
         APP_DIR != 'member' && $uri = str_replace('member/', '', $uri);
 
-        $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
-
+        // 输出
+        $str = '';
 
         // 防止重复加载JS
         if (!defined('PHPCMF_FIELD_UEDITOR')) {
             $str.= '
             <script type="text/javascript" src="/api/ueditor/ueditor.config.js"></script>
-            <script type="text/javascript" src="/api/ueditor/ueditor.all.min.js"></script>
+            <script type="text/javascript" src="/api/ueditor/ueditor.'.(IS_DEV ? 'all' : 'all.min').'.js"></script>
             ';
             define('PHPCMF_FIELD_UEDITOR', 1);
         }
@@ -412,7 +417,9 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             }
 
         }
+
         // 编辑器工具
+        $pagebreak = (int)$field['setting']['option']['page'] ? ', \'pagebreak\'' : '';
         switch ($mode) {
             case 3: // 自定义
                 $tool.= trim($field['setting']['option']['tool'], ',').$pagebreak;
@@ -430,7 +437,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
             'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
             'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
             'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'attachment', 'map', 'insertframe', 'insertcode', 'template', 'background', '|',
-            'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+            'horizontal', 'date', 'time', 'spechars', '|',
             'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
             'print', 'preview', 'searchreplace', 'drafts'$pagebreak";
                 break;
@@ -443,7 +450,7 @@ class Ueditor extends \Phpcmf\Library\A_Field {
                 UEDITOR_HOME_URL: \"/api/ueditor/\",
                 serverUrl:\"/index.php?s=api&c=file&m=ueditor&image_reduce=".intval($field['setting']['option']['image_reduce'])."&attachment=".intval($field['setting']['option']['attachment'])."&is_wm=".$field['setting']['option']['watermark']."&rid=".($uri.'/id:'.(int)$_GET['id'])."&\",
                 lang: \"".SITE_LANGUAGE."\",
-                langPath: \"".ROOT_URL."config/language/\",
+                langPath: \"".ROOT_URL."api/language/\",
                 toolbars: [
                     [ $tool ]
                 ],

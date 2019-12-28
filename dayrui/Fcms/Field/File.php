@@ -1,10 +1,7 @@
 <?php namespace Phpcmf\Field;
 
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -41,7 +38,7 @@ class File extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('扩展名').'</label>
 				<div class="col-md-9">
 					<label><input type="text" class="form-control" size="40" name="data[setting][option][ext]" value="'.$option['ext'].'"></label>
-					<span class="help-block">'.dr_lang('格式：jpg,gif,png,exe,html,php,rar,zip').'</span>
+					<span class="help-block">'.dr_lang('格式:jpg,gif,png,exe,html,php,rar,zip').'</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -160,7 +157,7 @@ class File extends \Phpcmf\Library\A_Field {
         // 表单附加参数
         $attr = $field['setting']['validate']['formattr'];
 
-		$ts = dr_lang('上传格式要求：%s（%s）', str_replace(',', '、', $field['setting']['option']['ext']), intval($field['setting']['option']['size']).'MB');
+		$ts = dr_lang('上传格式要求:%s（%s）', str_replace(',', ', ', $field['setting']['option']['ext']), intval($field['setting']['option']['size']).'MB');
 		$size = intval($field['setting']['option']['size']) * 1024 * 1024;
 
         $p = dr_authcode([
@@ -433,7 +430,7 @@ $(function() {
         },
 		fail: function (e, data) {
 			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
+			dr_tips(0, "系统故障:"+data.errorThrown);
 			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},
@@ -474,7 +471,7 @@ function fileupload_'.$name.'_edit() {
         },
 		fail: function (e, data) {
 			//console.log(data.errorThrown);
-			dr_tips(0, "系统故障："+data.errorThrown);
+			dr_tips(0, "系统故障:"+data.errorThrown);
 			$("#fileupload_'.$name.' .fileupload-progress").addClass("fade");
 			$("#fileupload_'.$name.' .fileupload-progress").hide();
 		},

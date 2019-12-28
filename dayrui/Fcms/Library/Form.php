@@ -1,10 +1,7 @@
 <?php namespace Phpcmf\Library;
 
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -174,17 +171,22 @@ class Form
                     return [[], ['name' => $name, 'error' => $frt]];
                 }
                 // 验证必填字段
-                if (!IS_ADMIN && $field['fieldtype'] != 'Group' && $validate['required']) {
-                    if ($value == '') {
-                        // 验证值为空
-                        return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
-                    } elseif ($field['fieldtype'] == 'Linkage' && !$value) {
-                        // 当类别为联动时判定0值
-                        return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
-                    }
-                    // 正则验证
-                    if (!is_array($value) && $validate['pattern'] && !preg_match($validate['pattern'], $value)) {
-                        return [[], ['name' => $name, 'error' => $field['name'].'：'.($validate['errortips'] ? $validate['errortips'] : dr_lang('格式不正确'))]];
+                if ($field['fieldtype'] != 'Group' && $validate['required']) {
+                    if (IS_ADMIN && in_array(1, \Phpcmf\Service::C()->admin['roleid'])) {
+                        // 后台超管不验证必填
+                    } else {
+                        // 开始验证必填字段
+                        if ($value == '') {
+                            // 验证值为空
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                        } elseif ($field['fieldtype'] == 'Linkage' && !$value) {
+                            // 当类别为联动时判定0值
+                            return [[], ['name' => $name, 'error' => $validate['errortips'] ? $validate['errortips'] : dr_lang('%s不能为空', $field['name'])]];
+                        }
+                        // 正则验证
+                        if (!is_array($value) && $validate['pattern'] && !preg_match($validate['pattern'], $value)) {
+                            return [[], ['name' => $name, 'error' => $field['name'].':'.($validate['errortips'] ? $validate['errortips'] : dr_lang('格式不正确'))]];
+                        }
                     }
                 }
                 // 编辑器长度判断
@@ -217,7 +219,7 @@ class Form
                                 return [[], ['name' => $name, 'error' => $rt['msg']]];
                             }
                         } else {
-                            log_message('error', "校验函数 $func 不存在！".FC_NOW_URL);
+                            log_message('error', "校验函数 $func 不存在!".FC_NOW_URL);
                         }
                     }
                 }
@@ -230,7 +232,7 @@ class Form
                             // 开始过滤
                             $post[$name] = call_user_func_array(array($this, $method), [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤方法 $method 不存在！".FC_NOW_URL);
+                            log_message('error', "过滤方法 $method 不存在!".FC_NOW_URL);
                         }
                     } else {
                         // 函数格式
@@ -239,7 +241,7 @@ class Form
                             // 开始过滤
                             $post[$name] = call_user_func_array($func, [$value, $data, $old]);
                         } else {
-                            log_message('error', "过滤函数 $func 不存在！".FC_NOW_URL);
+                            log_message('error', "过滤函数 $func 不存在!".FC_NOW_URL);
                         }
                     }
                 }
@@ -253,10 +255,10 @@ class Form
                                 return [[], ['name' => $name, 'error' => dr_lang('%s已经存在', $field['name'])]];
                             }
                         } else {
-                            log_message('error', "字段唯一性验证失败：表".$table."中字段".$name."不存在！".FC_NOW_URL);
+                            log_message('error', "字段唯一性验证失败:表".$table."中字段".$name."不存在!".FC_NOW_URL);
                         }
                     } else {
-                        log_message('error', "字段唯一性验证失败：数据表不存在！".FC_NOW_URL);
+                        log_message('error', "字段唯一性验证失败:数据表不存在!".FC_NOW_URL);
                     }
                 }
             }
@@ -294,18 +296,18 @@ class Form
 	
 	// 获取已发短信验证码
 	public function get_mobile_code($phone) {
-		return \Phpcmf\Service::L('cache')->init()->get('phone-code-'.$phone);
+		return \Phpcmf\Service::L('cache')->get_data('phone-code-'.$phone);
 	}
 	
 	// 储存已发短信验证码
 	public function set_mobile_code($phone, $code) {
-		return \Phpcmf\Service::L('cache')->init()->save('phone-code-'.$phone, $code, 60);
+		return \Phpcmf\Service::L('cache')->set_data('phone-code-'.$phone, $code, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 	}
 
     // 验证码类
     public function check_captcha($id) {
 
-		// API请求时，是否进行验证图片
+		// API请求时, 是否进行验证图片
 		if (IS_API_HTTP && defined('SYS_API_CODE') && !SYS_API_CODE) {
 			return true;
 		}
@@ -324,10 +326,10 @@ class Form
         return false;
     }
 
-    // 验证码类：只比较不删除
+    // 验证码类:只比较不删除
     public function check_captcha_value($data) {
 
-		// API请求时，是否进行验证图片
+		// API请求时, 是否进行验证图片
 		if (IS_API_HTTP && defined('SYS_API_CODE') && !SYS_API_CODE) {
 			return true;
 		} elseif (!$data) {
@@ -388,6 +390,18 @@ class Form
         return true;
     }
 
+    // 验证姓名
+    public function check_name($value) {
+
+        if (!$value) {
+            return false;
+        } elseif (\Phpcmf\Service::C()->member_cache['register']['cutname'] && mb_strlen($value) > \Phpcmf\Service::C()->member_cache['register']['cutname']) {
+            return false;
+        }
+
+        return true;
+    }
+
 
 
     //=====校验方法=========
@@ -406,7 +420,7 @@ class Form
             if (IS_ADMIN && isset($_POST['no_author']) && $_POST['no_author']) {
                 return dr_return_data(1);
             }
-            return dr_return_data(0, dr_lang('账号【%s】不存在', $value));
+            return dr_return_data(0, dr_lang('账号[%s]不存在', $value));
         }
 
         return dr_return_data(1);

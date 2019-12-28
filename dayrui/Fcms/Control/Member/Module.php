@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Member;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 内容模块操作类 基于 Ftable
 class Module extends \Phpcmf\Table
@@ -61,9 +58,9 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'mcid' => 'list',
             'mform' => $mform,
-            'clink' => [], //$this->_app_clink()这里后面做权限判断
+            'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 添加内容
@@ -103,7 +100,7 @@ class Module extends \Phpcmf\Table
             }
             $this->is_post_code = dr_member_auth($this->member_authid, $this->member_cache['auth_module'][SITE_ID][$this->module['dirname']]['category'][$catid]['code']);
         } else {
-            // 不走栏目权限，走自定义权限
+            // 不走栏目权限, 走自定义权限
             $this->content_model->_hcategory_member_add_auth();
             $this->is_post_code = $this->content_model->_hcategory_member_post_code();
         }
@@ -173,7 +170,7 @@ class Module extends \Phpcmf\Table
                 $category,
                 $data['catid'],
                 'id=\'dr_catid\' name=\'catid\' onChange="show_category_field(this.value)"',
-                '', 1, 1
+                '--', 1, 1
             ),
             'is_verify' => defined('IS_MODULE_VERIFY') ? 1 : 0,
             'is_sync_cat' => defined('IS_MODULE_VERIFY') ? $data['sync_cat'] : '',
@@ -210,7 +207,11 @@ class Module extends \Phpcmf\Table
         }
 
         $rt = $this->content_model->delete_to_recycle([$id]);
-        $rt['code'] ? $this->_json(1, dr_lang('删除成功')) : $this->_json(0, $rt['msg']);
+       if ($rt['code']) {
+            $this->_json(1, dr_lang('删除成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
 
@@ -230,9 +231,10 @@ class Module extends \Phpcmf\Table
         $this->_List();
 
         \Phpcmf\Service::V()->assign([
-            'mcid' => 'verify'
+            'mcid' => 'verify',
+            'clink' => $this->_app_clink(), //)这里后面做权限判断
         ]);
-        \Phpcmf\Service::V()->display('module_verify.html');
+        return \Phpcmf\Service::V()->display('module_verify.html');
     }
 
     // 修改审核内容
@@ -260,6 +262,7 @@ class Module extends \Phpcmf\Table
             foreach ($rows as $t) {
                 // 删除索引
                 $t['isnew'] && \Phpcmf\Service::M()->table(SITE_ID.'_'.$this->module['dirname'].'_index')->delete($t['id']);
+				\Phpcmf\Service::M('member')->delete_admin_notice($this->module['dirname'].'/verify/edit:id/'.$t['id'], SITE_ID);
             }
             return dr_return_data(1, 'ok');
         });
@@ -274,8 +277,9 @@ class Module extends \Phpcmf\Table
         $this->_init([
             'db' => SITE_ID,
             'table' => SITE_ID.'_'.$this->module['dirname'].'_draft',
-            'date_field' => 'inputtime',
+           
             'order_by' => 'inputtime desc',
+            'date_field' => 'inputtime',
             'where_list' => 'uid='.$this->uid,
         ]);
 
@@ -284,7 +288,7 @@ class Module extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'mcid' => 'draft'
         ]);
-        \Phpcmf\Service::V()->display('module_draft.html');
+        return \Phpcmf\Service::V()->display('module_draft.html');
     }
 
     // 删除草稿内容
@@ -470,7 +474,7 @@ class Module extends \Phpcmf\Table
                     // 判断是否来至审核
                     if (defined('IS_MODULE_VERIFY')) {
                         if ($old['status'] != 0) {
-                            return dr_return_data(0, dr_lang('内容正在审核之中，无法再次修改'));
+                            return dr_return_data(0, dr_lang('内容正在审核之中, 无法再次修改'));
                         }
                     }
                     if ($this->is_hcategory) {
@@ -517,7 +521,7 @@ class Module extends \Phpcmf\Table
                             // 金币验证
                             $score = $this->_module_member_value($data[1]['catid'], $this->module['dirname'], 'score', $this->member['authid']);
                             if ($this->uid && $score + $this->member['score'] < 0) {
-                                return dr_return_data(0, dr_lang(SITE_SCORE.'不足，当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
+                                return dr_return_data(0, dr_lang(SITE_SCORE.'不足, 当前栏目[%s]需要%s'.SITE_SCORE, $this->module['category'][$data[1]['catid']]['name'], abs($score)));
                             }
                         }
                     }
@@ -551,7 +555,7 @@ class Module extends \Phpcmf\Table
             }
             $this->_json(1, dr_lang('操作成功'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid'], 'htmlfile' => $html, 'listfile' => $list]);
         } else {
-            \Phpcmf\Service::L('input')->post('is_draft') ? $this->_json(1, dr_lang('操作成功，已存储到草稿箱')) : $this->_json(1, dr_lang('操作成功，等待管理员审核'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
+            \Phpcmf\Service::L('input')->post('is_draft') ? $this->_json(1, dr_lang('操作成功, 已存储到草稿箱')) : $this->_json(1, dr_lang('操作成功, 等待管理员审核'), ['id' => $data[1]['id'], 'catid' => $data[1]['catid']]);
         }
     }
 }

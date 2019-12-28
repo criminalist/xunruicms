@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -91,7 +91,7 @@ class Urlrule extends \Phpcmf\Table
         $server = strtolower($_SERVER['SERVER_SOFTWARE']);
         if (strpos($server, 'apache') !== FALSE) {
             $name = 'Apache';
-            $note = '<font color=red><b>将以下内容保存为.htaccess文件，放到每个域名所绑定的根目录</b></font>';
+            $note = '<font color=red><b>将以下内容保存为.htaccess文件, 放到每个域名所绑定的根目录</b></font>';
             $code = 'RewriteEngine On'.PHP_EOL
                 .'RewriteBase /'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
@@ -99,7 +99,7 @@ class Urlrule extends \Phpcmf\Table
                 .'RewriteRule !.(js|ico|gif|jpe?g|bmp|png|css)$ /index.php [NC,L]';
         } elseif (strpos($server, 'nginx') !== FALSE) {
             $name = $server;
-            $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名，所绑定目录也要配置下面的代码），您懂得！</b></font>';
+            $note = '<font color=red><b>将以下代码放到Nginx配置文件中去（如果是绑定了域名, 所绑定目录也要配置下面的代码）, 您懂得!</b></font>';
             $code = 'location / { '.PHP_EOL
                 .'    if (-f $request_filename) {'.PHP_EOL
                 .'           break;'.PHP_EOL
@@ -113,7 +113,7 @@ class Urlrule extends \Phpcmf\Table
                 .'}';
         } else {
             $name = $server;
-            $note = '<font color=red><b>无法为此服务器提供伪静态规则，建议让运营商帮你把下面的Apache规则做转换</b></font>';
+            $note = '<font color=red><b>无法为此服务器提供伪静态规则, 建议让运营商帮你把下面的Apache规则做转换</b></font>';
             $code = 'RewriteEngine On'.PHP_EOL
                 .'RewriteBase /'.PHP_EOL
                 .'RewriteCond %{REQUEST_FILENAME} !-f'.PHP_EOL
@@ -170,14 +170,18 @@ class Urlrule extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->db->table('urlrule')->where('id', $id)->get()->getRowArray();
-        !$data && $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        if (!$data) {
+            $this->_josn(0, dr_lang('数据#%s不存在', $id));
+        }
 
         unset($data['id']);
         $data['name'].= '_copy';
 
         $rt = \Phpcmf\Service::M()->table('urlrule')->insert($data);
+        if (!$rt['code']) {
+            $this->_json(0, dr_lang($rt['msg']));
+        }
 
-        !$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
         \Phpcmf\Service::M('cache')->sync_cache('urlrule');
         $this->_json(1, dr_lang('复制成功'));
     }
@@ -204,7 +208,9 @@ class Urlrule extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $data = \Phpcmf\Service::M()->table('urlrule')->get($id);
-        !$data && $this->_admin_msg(0, dr_lang('URL规则（%s）不存在', $id));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('URL规则（%s）不存在', $id));
+        }
 
         \Phpcmf\Service::V()->assign([
             'data' => dr_array2string($data),
@@ -216,7 +222,7 @@ class Urlrule extends \Phpcmf\Table
     public function import_add() {
 
         if (IS_AJAX_POST) {
-            $data = \Phpcmf\Service::L('input')->post('code', true);
+            $data = \Phpcmf\Service::L('input')->post('code');
             $data = dr_string2array($data);
             if (!is_array($data)) {
                 $this->_json(0, dr_lang('导入信息验证失败'));
@@ -225,7 +231,9 @@ class Urlrule extends \Phpcmf\Table
             }
             unset($data['id']);
             $rt = \Phpcmf\Service::M()->table('urlrule')->insert($data);
-            !$rt['code'] && $this->_json(0, $rt['msg']);
+            if (!$rt['code']) {
+                $this->_json(0, $rt['msg']);
+            }
             \Phpcmf\Service::M('cache')->sync_cache('urlrule');
             exit($this->_json(1, dr_lang('操作成功')));
         }

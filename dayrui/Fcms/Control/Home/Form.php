@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Home;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 // 内容网站表单操作类 基于 Ftable
 class Form extends \Phpcmf\Table
@@ -17,7 +14,7 @@ class Form extends \Phpcmf\Table
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[\Phpcmf\Service::L('Router')->class];
         if (!$this->form) {
-            $this->_msg(0, dr_lang('网站表单【%s】不存在',\Phpcmf\Service::L('Router')->class));
+            $this->_msg(0, dr_lang('网站表单[%s]不存在',\Phpcmf\Service::L('Router')->class));
             exit;
         }
         // 支持附表存储
@@ -128,7 +125,7 @@ class Form extends \Phpcmf\Table
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = 'from_'.$this->form['table'].'_show_id_'.$id;
-        $cache = \Phpcmf\Service::L('cache')->init()->get($name);
+        $cache = \Phpcmf\Service::L('cache')->get_data($name);
         if (!$cache) {
             list($tpl, $data) = $this->_Show($id);
             !$data && $this->_msg(0, dr_lang('网站表单内容不存在'));
@@ -143,7 +140,7 @@ class Form extends \Phpcmf\Table
                     // 管理员时不进行缓存
                     \Phpcmf\Service::L('cache')->init()->delete($name);
                 } else {
-                    \Phpcmf\Service::L('cache')->init()->save($name, $cache, SYS_CACHE_SHOW * 3600);
+                    \Phpcmf\Service::L('cache')->set_data($name, $cache, SYS_CACHE_SHOW * 3600);
                 }
             }
         } else {
@@ -231,12 +228,12 @@ class Form extends \Phpcmf\Table
             if ($this->form['setting']['notice']['username']) {
                 $user = dr_member_username_info($this->form['setting']['notice']['username']);
                 if (!$user) {
-                    log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人账号['.$this->form['setting']['notice']['username'].']有误');
+                    log_message('error', '网站表单['.$this->form['name'].']已开启通知提醒, 但通知人账号['.$this->form['setting']['notice']['username'].']有误');
                 } else {
                     \Phpcmf\Service::L('Notice')->send_notice_user('form_'.$this->form['table'].'_post', $user['id'], dr_array2array($data[1], $data[0]), $this->form['setting']['notice']);
                 }
             } else {
-                log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但未设置通知人');
+                log_message('error', '网站表单['.$this->form['name'].']已开启通知提醒, 但未设置通知人');
             }
         }
 
@@ -248,7 +245,7 @@ class Form extends \Phpcmf\Table
         // 提醒
         \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
 
-        $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+        $this->_json($data[1]['id'], dr_lang('操作成功, 等待管理员审核'), $data);
     }
 
     // 前端回调处理类

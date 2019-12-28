@@ -15,7 +15,7 @@
 
                 <ul class="page-breadcrumb breadcrumb">
                     <li>
-                        <a href="{SITE_URL}"> Главная </a>
+                        <a href="{SITE_URL}">网站首页</a>
                         <i class="fa fa-circle"></i>
                     </li>
                     {if !IS_SHARE}
@@ -35,7 +35,7 @@
                         <div class="col-md-8">
                             <div class="search-container">
                                 <ul class="search-container">
-
+                                    <!--分页显示列表数据-->
                                     {module catid=$catid order=updatetime page=1}
                                     <li class="search-item clearfix">
                                         <a title="{$t.title}" href="{$t.url}">
@@ -93,7 +93,7 @@
                                 <div class="portlet-body">
                                     <div class="todo-project-list">
                                         <ul class="nav nav-stacked">
-
+                                            <!--循环输出当前栏目的同级栏目, 定义返回值return=c-->
                                             {category module=MOD_DIR pid=$cat.pid return=c}
                                             <li {if $c.id==$catid} class="active"{/if}><a href="{$c.url}">{$c.name}</a></li>
                                             {/category}
@@ -111,7 +111,7 @@
                                 <div class="portlet-body">
                                     <div class="todo-project-list">
                                         <ul class="nav nav-stacked">
-
+                                            <!--查询模块MOD_DIR在本栏目catid下点击量最高的-->
                                             {hits module=MOD_DIR catid=$catid  order=hits num=9}
                                             <li>
                                                 <a href="{$t.url}" title="{$t.title}">

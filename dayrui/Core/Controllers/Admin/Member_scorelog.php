@@ -3,7 +3,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -55,7 +55,7 @@ class Member_scorelog extends \Phpcmf\Table
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
-                    SITE_SCORE => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-diamond'],
+                    dr_lang('虚拟金币:%s', SITE_SCORE)  => [\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-diamond'],
                     'help' => [ 599 ],
                 ]
             ),

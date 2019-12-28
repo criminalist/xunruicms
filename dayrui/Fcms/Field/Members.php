@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 class Members extends \Phpcmf\Library\A_Field {
 	
@@ -29,7 +26,7 @@ class Members extends \Phpcmf\Library\A_Field {
                     <label class="col-md-2 control-label">'.dr_lang('最大显示数量').'</label>
                     <div class="col-md-9">
                     <label><input type="text" class="form-control" size="10" name="data[setting][option][limit]" value="'.$option['limit'].'"></label>
-					<span class="help-block">'.dr_lang('关联列表搜索结果最大显示数量，默认50条').'</span>
+					<span class="help-block">'.dr_lang('关联列表搜索结果最大显示数量, 默认50条').'</span>
                     </div>
                 </div>
                 <div class="form-group">

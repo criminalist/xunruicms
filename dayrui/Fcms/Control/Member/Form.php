@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Member;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 网站表单操作类 基于 Ftable
@@ -20,7 +17,7 @@ class Form extends \Phpcmf\Table
         // 判断表单是否操作
         $cache = \Phpcmf\Service::L('cache')->get('form-'.SITE_ID);
         $this->form = $cache[\Phpcmf\Service::L('Router')->class];
-        !$this->form && $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', \Phpcmf\Service::L('Router')->class));
+        !$this->form && $this->_admin_msg(0, dr_lang('网站表单[%s]不存在', \Phpcmf\Service::L('Router')->class));
         // 支持附表存储
         $this->is_data = 1;
         // 模板前缀(避免混淆)
@@ -104,7 +101,7 @@ class Form extends \Phpcmf\Table
     // 查看表单列表
     protected function _Member_List() {
         list($tpl) = $this->_List();
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 删除表单内容
@@ -229,12 +226,12 @@ class Form extends \Phpcmf\Table
                         if ($this->form['setting']['notice']['username']) {
                             $user = dr_member_username_info($this->form['setting']['notice']['username']);
                             if (!$user) {
-                                log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但通知人账号['.$this->form['setting']['notice']['username'].']有误');
+                                log_message('error', '网站表单['.$this->form['name'].']已开启通知提醒, 但通知人账号['.$this->form['setting']['notice']['username'].']有误');
                             } else {
                                 \Phpcmf\Service::L('Notice')->send_notice_user('form_'.$this->form['table'].'_post', $user['id'], dr_array2array($data[1], $data[0]), $this->form['setting']['notice']);
                             }
                         } else {
-                            log_message('error', '网站表单【'.$this->form['name'].'】已开启通知提醒，但未设置通知人');
+                            log_message('error', '网站表单['.$this->form['name'].']已开启通知提醒, 但未设置通知人');
                         }
                     }
 
@@ -243,7 +240,7 @@ class Form extends \Phpcmf\Table
                     // 审核
                     \Phpcmf\Service::M('member')->admin_notice(SITE_ID, 'content', $this->member, dr_lang('%s提交审核', $this->form['name']), 'form/'.$this->form['table'].'_verify/edit:id/'.$data[1]['id'], SITE_ID);
                     $data['url'] = $this->form['setting']['rt_url'];
-                    $this->_json($data[1]['id'], dr_lang('操作成功，等待管理员审核'), $data);
+                    $this->_json($data[1]['id'], dr_lang('操作成功, 等待管理员审核'), $data);
                 }
                 $this->_json($data[1]['id'], dr_lang('操作成功'), $data);
             }

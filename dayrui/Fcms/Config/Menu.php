@@ -3,7 +3,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 /**
@@ -503,6 +503,11 @@ return [
                             'uri' => 'member_scorelog/index',
                         ],
                         [
+                            'name' => '升级经验',
+                            'icon' => 'fa fa-compass',
+                            'uri' => 'member_explog/index',
+                        ],
+                        [
                             'name' => '用户充值',
                             'icon' => 'fa fa-plus',
                             'uri' => 'member_pay/index',
@@ -661,6 +666,11 @@ return [
                     'name' => '虚拟金币',
                     'icon' => 'fa fa-diamond',
                     'uri' => 'scorelog/index',
+                ],
+                [
+                    'name' => '升级经验',
+                    'icon' => 'fa fa-compass',
+                    'uri' => 'explog/index',
                 ],
                 [
                     'name' => '提醒消息',

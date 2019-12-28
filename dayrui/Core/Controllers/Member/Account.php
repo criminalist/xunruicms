@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 // 账号信息
@@ -92,13 +92,13 @@ class Account extends \Phpcmf\Common
                 }
                 $data = strtolower($content);
                 if (strpos($data, '<?php') !== false) {
-                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                    $this->_json(0, dr_lang('此图片不安全, 禁止上传'));
                 } elseif (strpos($data, 'eval(') !== false) {
-                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                    $this->_json(0, dr_lang('此图片不安全, 禁止上传'));
                 } elseif (strpos($data, '.php') !== false) {
-                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                    $this->_json(0, dr_lang('此图片不安全, 禁止上传'));
                 } elseif (strpos($data, 'base64_decode(') !== false) {
-                    $this->_json(0, dr_lang('此图片不安全，禁止上传'));
+                    $this->_json(0, dr_lang('此图片不安全, 禁止上传'));
                 }
                 $file = $cache_path.$this->uid.'.jpg';
                 $temp = dr_upload_temp_path().'member.'.$this->uid.'.jpg';
@@ -115,10 +115,6 @@ class Account extends \Phpcmf\Common
                 copy($temp, $file);
                 if (!is_file($file)) {
                     $this->_json(0, dr_lang('头像存储失败'));
-                }
-                if (defined('UCSSO_API')) {
-                    $rt = ucsso_avatar($this->uid, $content);
-                    !$rt['code'] && $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
                 }
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $this->member['id'])->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'), IS_API_HTTP ? \Phpcmf\Service::M('member')->get_member($this->uid) : []);
@@ -172,13 +168,13 @@ class Account extends \Phpcmf\Common
         // 是否需要认证手机号码
         $is_mobile = $this->member_cache['config']['mobile'] && !$this->member['is_mobile'] ;
 
-        // 账号已经录入了手机，且没有进行手机认证时，强制不更新，先认证
+        // 账号已经录入了手机, 且没有进行手机认证时, 强制不更新, 先认证
         //$is_mobile && $this->member['phone'] && $is_update = 0;
 
         if (IS_POST) {
             $post = \Phpcmf\Service::L('input')->post('data');
             $value = dr_safe_replace($post['phone']);
-			$cache = \Phpcmf\Service::L('cache')->init()->get('member-mobile-code-'.$this->uid);
+			$cache = \Phpcmf\Service::L('cache')->get_data('member-mobile-code-'.$this->uid);
             if (!$this->member['randcode']) {
                 $this->_json(0, dr_lang('手机验证码已过期'));
             } elseif ($post['code'] != $this->member['randcode']) {
@@ -186,7 +182,7 @@ class Account extends \Phpcmf\Common
             } elseif (!$cache) {
                 $this->_json(0, dr_lang('手机验证码储存过期'));
             } elseif ($cache != $value) {
-                // caceh存储的是手机号码，验证手机号码是否匹配
+                // caceh存储的是手机号码, 验证手机号码是否匹配
                 $this->_json(0, dr_lang('手机号码不匹配'));
             }
 
@@ -197,10 +193,6 @@ class Account extends \Phpcmf\Common
                     $this->_json(0, dr_lang('手机号码格式不正确'));
                 } elseif (\Phpcmf\Service::M()->db->table('member')->where('id<>'.$this->member['id'])->where('phone', $value)->countAllResults()) {
                     $this->_json(0, dr_lang('手机号码已经注册'));
-                } elseif (defined('UCSSO_API') && $rt = ucsso_edit_phone($this->uid, $value)) {
-                    if (!$rt['code']) {
-                        $this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
-                    }
                 }
                 \Phpcmf\Service::M()->db->table('member')->where('id', $this->member['id'])->update(['phone' => $value]);
             }
@@ -237,7 +229,7 @@ class Account extends \Phpcmf\Common
 
         // 验证操作间隔
         $name = 'member-mobile-code-'.$this->uid;
-		if (\Phpcmf\Service::L('cache')->init()->get($name)) {
+		if (\Phpcmf\Service::L('cache')->get_data($name)) {
 			$this->_json(0, dr_lang('已经发送稍后再试'));
 		} elseif ((!is_numeric($value) || strlen($value) != 11)) {
 			$this->_json(0, dr_lang('手机号码格式不正确'));
@@ -251,7 +243,7 @@ class Account extends \Phpcmf\Common
 			$this->_json(0, dr_lang('发送失败'));	
 		}
 
-		\Phpcmf\Service::L('cache')->init()->save($name, $value, 60);
+		\Phpcmf\Service::L('cache')->set_data($name, $value, defined('SYS_CACHE_SMS') && SYS_CACHE_SMS ? SYS_CACHE_SMS : 60);
 		
         $this->_json(1, dr_lang('验证码发送成功'));
     }
@@ -284,6 +276,9 @@ class Account extends \Phpcmf\Common
         foreach ($name as $key => $value) {
             if (!isset($this->member_cache['oauth'][$value]['id'])
                 || !$this->member_cache['oauth'][$value]['id']) {
+                unset($name[$key]);
+            }
+            if ($value == 'wechat' && !dr_is_app('weixin')) {
                 unset($name[$key]);
             }
         }

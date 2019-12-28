@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 程序插件管理
@@ -15,7 +12,7 @@ class App extends \Phpcmf\Model
     public function is_sys_dir($dir) {
         return in_array($dir, ['case', 'class', 'extends',
             'new', 'var', 'member', 'category',
-            'module', 'form', 'admin']);
+            'module', 'form', 'admin', 'weixin']);
     }
 
     // 开始安装app
@@ -47,10 +44,10 @@ class App extends \Phpcmf\Model
         }
 
         if (isset($config['ftype']) && $config['ftype'] == 'module') {
-            // 如果是内容模块，就进入内容模块安装模式
+            // 如果是内容模块, 就进入内容模块安装模式
             \Phpcmf\Service::M('module')->install($dir, $config, 1);
         } else {
-            // 执行sql语句，主站的才执行
+            // 执行sql语句, 主站的才执行
             if (SITE_ID == 1 && is_file($path.'Config/Install.sql')) {
                 $rt = $this->query_all(file_get_contents($path.'/Config/Install.sql'));
                 if ($rt) {
@@ -95,7 +92,7 @@ class App extends \Phpcmf\Model
 
         $config = require $path.'Config/App.php';
         if (isset($config['ftype']) && $config['ftype'] == 'module') {
-            // 如果是内容模块，就进入内容模块安装模式
+            // 如果是内容模块, 就进入内容模块安装模式
             \Phpcmf\Service::M('module')->uninstall($dir, $config, 1);
         } else {
             // 执行sql语句

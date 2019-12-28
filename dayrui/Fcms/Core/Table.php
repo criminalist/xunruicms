@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -161,7 +161,7 @@ class Table extends \Phpcmf\Common
             $this->_json(0, $rt['msg']);
         }
 
-        \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$row[$this->init['show_field']].')排序值为'.$value);
+        \Phpcmf\Service::L('input')->system_log($this->name.':修改('.$row[$this->init['show_field']].')排序值为'.$value);
 
         // 自动更新缓存
         IS_ADMIN && \Phpcmf\Service::M('cache')->sync_cache();
@@ -332,7 +332,7 @@ class Table extends \Phpcmf\Common
             // 记录日志
             $logname = isset($post[$this->init['show_field']]) && $post[$this->init['show_field']] ? $post[$this->init['show_field']] : $data[$this->init['show_field']];
             !$logname && $logname = $post['id'];
-            $id ? \Phpcmf\Service::L('input')->system_log($this->name.'：修改('.$logname.')') : \Phpcmf\Service::L('input')->system_log($this->name.'：新增('.$logname.')');
+            $id ? \Phpcmf\Service::L('input')->system_log($this->name.':修改('.$logname.')') : \Phpcmf\Service::L('input')->system_log($this->name.':新增('.$logname.')');
             // 获取新的存储id
             $id = $rt['code'];
             // 附件归档
@@ -497,7 +497,7 @@ class Table extends \Phpcmf\Common
         $after && call_user_func_array($after, [$rows]);
 
         // 写入日志
-        \Phpcmf\Service::L('input')->system_log($this->name.'：删除('.implode(', ', $ids).')');
+        \Phpcmf\Service::L('input')->system_log($this->name.':删除('.implode(', ', $ids).')');
         
         $this->_json(1, dr_lang('操作成功'));
     }
@@ -527,6 +527,7 @@ class Table extends \Phpcmf\Common
         } else {
             $size = $this->list_pagesize;
         }
+
         // 查询数据结果
         list($list, $total, $param) = \Phpcmf\Service::M()->init($this->init)->limit_page($size);
         $p && $param = $p + $param;
@@ -534,7 +535,7 @@ class Table extends \Phpcmf\Common
 
         // 分页URL格式
         $this->url_params && $param = dr_array22array($param, $this->url_params);
-        $uri =\Phpcmf\Service::L('Router')->uri();
+        $uri = \Phpcmf\Service::L('Router')->uri();
         $url = IS_ADMIN ?\Phpcmf\Service::L('Router')->url($uri, $param) :\Phpcmf\Service::L('Router')->member_url($uri, $param);
         $url = $url.'&page={page}';
 
@@ -548,7 +549,7 @@ class Table extends \Phpcmf\Common
             } elseif (is_file(ROOTPATH.$file)) {
                 $config = require ROOTPATH.$file;
             } else {
-                exit('无法找到分页配置文件【'.$file.'】');
+                exit('无法找到分页配置文件['.$file.']');
             }
         }
 
@@ -589,26 +590,6 @@ class Table extends \Phpcmf\Common
             'list_query' => urlencode(dr_authcode($sql, 'ENCODE')), // 查询列表的sql语句
             'list_table' => $list_table, // 查询列表的数据表名称
         ];
-
-        // 过滤搜索变量
-        $field = \Phpcmf\Service::V()->get_value('field');
-        if ($field) {
-            foreach ($field as $i => $t) {
-                if (!$t['fieldtype']) {
-                    continue;
-                } elseif (!in_array($t['fieldtype'], [
-                    'Text',
-                    'Textarea',
-                    'Textbtn',
-                    'Ueditor',
-                    'Select',
-                    'Radio',
-                ])) {
-                    unset($field[$i]);
-                }
-            }
-            $data['field'] = $field;
-        }
 
         \Phpcmf\Service::V()->assign($data);
 

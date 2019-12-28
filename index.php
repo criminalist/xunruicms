@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
-header('Content-Type: text/html; charset=utf-8');
+//header('Content-Type: text/html; charset=utf-8');
+header('X-Frame-Options: SAMEORIGIN');
 
 //Режим разработчика (1 вкл., 0 выкл.)
 define('IS_DEV', 1);

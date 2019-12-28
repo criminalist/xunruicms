@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Field;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -34,8 +31,8 @@ class Select extends \Phpcmf\Library\A_Field {
 				<label class="col-md-2 control-label">'.dr_lang('选项列表').'</label>
 				<div class="col-md-9">
 					<textarea class="form-control" name="data[setting][option][options]" style="height:150px;width:400px;">'.$option['options'].'</textarea>
-					<span class="help-block">'.dr_lang('格式：选项名称|选项值[回车换行]选项名称2|值2....').'</span>
-					<span class="help-block">'.dr_lang('选项值建议使用从1开始的数字，不得带符号，也可以省略不写').'</span>
+					<span class="help-block">'.dr_lang('格式:选项名称|选项值[回车换行]选项名称2|值2....').'</span>
+					<span class="help-block">'.dr_lang('选项值建议使用从1开始的数字, 不得带符号, 也可以省略不写').'</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -43,7 +40,7 @@ class Select extends \Phpcmf\Library\A_Field {
 				<div class="col-md-9">
 					<label><input id="field_default_value" type="text" class="form-control" size="20" value="'.$option['value'].'" name="data[setting][option][value]"></label>
 					<label>'.$this->member_field_select().'</label>
-					<span class="help-block">'.dr_lang('默认选中项，多个选中项用|分隔').'</span>
+					<span class="help-block">'.dr_lang('默认选中项, 多个选中项用|分隔').'</span>
 				</div>
 			</div>'
 			.

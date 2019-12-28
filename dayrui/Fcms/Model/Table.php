@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 数据表
@@ -452,7 +449,7 @@ class Table extends \Phpcmf\Model
         $this->db->simpleQuery(dr_format_create_sql("
         CREATE TABLE IF NOT EXISTS `".$this->dbprefix($siteid.'_share_category')."` (
           `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-          `tid` tinyint(1) NOT NULL COMMENT '栏目类型，0单页，1模块，2外链',
+          `tid` tinyint(1) NOT NULL COMMENT '栏目类型, 0单页, 1模块, 2外链',
           `pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '上级id',
           `mid` varchar(20) NOT NULL COMMENT '模块目录',
           `pids` varchar(255) NOT NULL COMMENT '所有上级id',

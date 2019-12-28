@@ -1,11 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
 
 class Field extends \Phpcmf\Common
 {
@@ -206,7 +204,7 @@ class Field extends \Phpcmf\Common
 				$rt = \Phpcmf\Service::M('Field')->add($data, $field);
 				!$rt['code'] && $this->_json(0, dr_lang($rt['msg']));
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
+				\Phpcmf\Service::L('input')->system_log('添加'.$this->name.'['.$data['fieldname'].']'.$data['name']); // 记录日志
 				$this->_json(1, dr_lang('操作成功'));
 			}
 		}
@@ -243,7 +241,7 @@ class Field extends \Phpcmf\Common
 			    $this->_json(0, dr_lang($rt['msg']));
             }
             $this->_cache(); // 自动更新缓存
-			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'【'.$data['fieldname'].'】'.$data['name']); // 记录日志
+			\Phpcmf\Service::L('input')->system_log('修改'.$this->name.'['.$data['fieldname'].']'.$data['name']); // 记录日志
 			exit($this->_json(1, dr_lang('操作成功')));
 		}
 
@@ -272,7 +270,7 @@ class Field extends \Phpcmf\Common
 				$value = $data['disabled'] == 1 ? 0 : 1;
 				\Phpcmf\Service::M()->table('field')->save($id, 'disabled', $value);
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log(($value ? '禁用' : '启用').$this->name.'【'.$data['fieldname'].'】'); // 记录日志
+				\Phpcmf\Service::L('input')->system_log(($value ? '禁用' : '启用').$this->name.'['.$data['fieldname'].']'); // 记录日志
 				exit($this->_json(1, dr_lang(($value ? '禁用' : '启用').'成功'), ['value' => $value]));
 				break;
 			case 'xss':
@@ -280,20 +278,20 @@ class Field extends \Phpcmf\Common
 				$data['setting']['validate']['xss'] = $value = $data['setting']['validate']['xss'] ? 0 : 1;
 				\Phpcmf\Service::M()->table('field')->save($id, 'setting', dr_array2string($data['setting']));
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '开启XSS' : '关闭XSS')); // 记录日志
+				\Phpcmf\Service::L('input')->system_log($this->name.'['.$data['fieldname'].']'.($value ? '开启XSS' : '关闭XSS')); // 记录日志
 				exit($this->_json(1, dr_lang('操作成功'), ['value' => $value]));
 				break;
 			case 'member':
 				$value = $data['ismember'] ? 0 : 1;
 				\Phpcmf\Service::M()->table('field')->save($id, 'ismember', $value);
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log($this->name.'【'.$data['fieldname'].'】'.($value ? '前端显示' : '前端隐藏')); // 记录日志
+				\Phpcmf\Service::L('input')->system_log($this->name.'['.$data['fieldname'].']'.($value ? '前端显示' : '前端隐藏')); // 记录日志
 				exit($this->_json(1, dr_lang('操作成功'), ['value' => $value]));
 				break;
 			case 'save':
 				\Phpcmf\Service::M()->table('field')->save($id, 'displayorder', dr_safe_replace(\Phpcmf\Service::L('input')->get('value')));
                 $this->_cache(); // 自动更新缓存
-				\Phpcmf\Service::L('input')->system_log('修改排序值: '. $this->name.'【'.$data['fieldname'].'】');
+				\Phpcmf\Service::L('input')->system_log('修改排序值: '. $this->name.'['.$data['fieldname'].']');
 				exit($this->_json(1, dr_lang('操作成功')));
 				break;
 		}
@@ -395,8 +393,8 @@ class Field extends \Phpcmf\Common
                 // 网站表单 form-站点id, 表单id
                 list($a, $siteid) = explode('-', $this->relatedname);
                 $this->data = \Phpcmf\Service::M()->init(['db' => $siteid, 'table' => $siteid.'_form'])->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('网站表单【%s】不存在', $this->relatedid));
-                $this->name = '网站表单【'.$this->data['name'].'】字段';
+                !$this->data && $this->_admin_msg(0, dr_lang('网站表单[%s]不存在', $this->relatedid));
+                $this->name = '网站表单['.$this->data['name'].']字段';
                 $this->backurl =\Phpcmf\Service::L('Router')->url('form/index'); // 返回uri地址
                 \Phpcmf\Service::M('Field')->func = 'form'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
@@ -453,7 +451,7 @@ class Field extends \Phpcmf\Common
             case 'table':
                 // 任意表
                 $ismain = 1;
-                $this->name = '数据表【'.\Phpcmf\Service::M()->dbprefix($a).'】';
+                $this->name = '数据表['.\Phpcmf\Service::M()->dbprefix($a).']';
                 \Phpcmf\Service::M('Field')->data = $a;
                 \Phpcmf\Service::M('Field')->func = 'table'; // 重要标识: 函数和识别码
                 break;
@@ -461,9 +459,9 @@ class Field extends \Phpcmf\Common
             case 'module':
                 // 模块字段
                 $this->data = \Phpcmf\Service::M()->table('module')->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                !$this->data && $this->_admin_msg(0, dr_lang('模块[%s]不存在', $this->relatedid));
                 $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
-                $this->name = '模块【'.$this->data['dirname'].'】字段';
+                $this->name = '模块['.$this->data['dirname'].']字段';
                 \Phpcmf\Service::M('Field')->func = 'module'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
                 $this->namespace = $this->data['dirname'];
@@ -472,9 +470,9 @@ class Field extends \Phpcmf\Common
             case 'mform':
                 // 模块表单
                 $this->data = \Phpcmf\Service::M()->table('module_form')->get($this->relatedid);
-                !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】不存在', $this->relatedid));
+                !$this->data && $this->_admin_msg(0, dr_lang('模块[%s]不存在', $this->relatedid));
                 $this->backurl =\Phpcmf\Service::L('Router')->url('module/form_index', ['dir' => $a]); // 返回uri地址
-                $this->name = '模块【'.$a.'】的表单【'.$this->data['name'].'】字段';
+                $this->name = '模块['.$a.']的表单['.$this->data['name'].']字段';
                 \Phpcmf\Service::M('Field')->func = 'mform'; // 重要标识: 函数和识别码
                 \Phpcmf\Service::M('Field')->data = $this->data;
                 $this->namespace = $this->data['module'];
@@ -495,8 +493,8 @@ class Field extends \Phpcmf\Common
                     $ismain = 1;
                     list($a, $b, $module) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-'.$module);
-                    !$cache && $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
-                    $this->name = '模块【'.$cache['dirname'].'】评论字段';
+                    !$cache && $this->_admin_msg(0, dr_lang('模块[%s]缓存不存在', $module));
+                    $this->name = '模块['.$cache['dirname'].']评论字段';
                     $this->data = $cache['dirname'];
                     $this->backurl =\Phpcmf\Service::L('Router')->url('module/index'); // 返回uri地址
                     \Phpcmf\Service::M('Field')->func = 'comment'; // 重要标识: 函数和识别码
@@ -508,25 +506,25 @@ class Field extends \Phpcmf\Common
                     $iscategory = 1;
                     list($module, $s) = explode('-', $this->relatedname);
                     $cache = \Phpcmf\Service::L('cache')->get('module-'.$s.'-'.$module);
-                    !$cache && $this->_admin_msg(0, dr_lang('模块【%s】缓存不存在', $module));
+                    !$cache && $this->_admin_msg(0, dr_lang('模块[%s]缓存不存在', $module));
                     if ($this->relatedid) {
                         $this->data = $cache['category'][$this->relatedid];
-                        !$this->data && $this->_admin_msg(0, dr_lang('模块【%s】栏目【%s】缓存不存在', $module, $this->relatedid));
+                        !$this->data && $this->_admin_msg(0, dr_lang('模块[%s]栏目[%s]缓存不存在', $module, $this->relatedid));
                         if ($module == 'share') {
                             $this->data['tid'] != 1 && $this->_admin_msg(0, dr_lang('模块栏目才支持创建'));
                             $this->data['dirname'] = $this->data['mid'];
                             $this->backurl =\Phpcmf\Service::L('Router')->url('category/index'); // 返回uri地址
-                            $this->name = '模块【'.$this->data['mid'].'】栏目【#'.$this->relatedid.'】模型字段';
+                            $this->name = '模块['.$this->data['mid'].']栏目[#'.$this->relatedid.']模型字段';
                         } else {
                             $this->data['dirname'] = $module;
                             $this->backurl =\Phpcmf\Service::L('Router')->url($module.'/category/index'); // 返回uri地址
-                            $this->name = '模块【'.$module.'】栏目【#'.$this->relatedid.'】模型字段';
+                            $this->name = '模块['.$module.']栏目[#'.$this->relatedid.']模型字段';
                         }
                     } else {
                         $this->data = [
                             'dirname' => $module,
                         ];
-                        $this->name = '模块【'.$module.'】栏目公共模型字段';
+                        $this->name = '模块['.$module.']栏目公共模型字段';
                         $this->backurl = \Phpcmf\Service::L('Router')->url('module_category/field_index', ['dir' => $module]); // 返回uri地址
                     }
 

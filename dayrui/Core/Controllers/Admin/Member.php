@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 // 会员管理
 class Member extends \Phpcmf\Table
@@ -111,9 +108,9 @@ class Member extends \Phpcmf\Table
             $p['groupid'] = $groupid;
         }
 
-        // 不是超级管理员,排除超管账号
+        // 不是超级管理员排除角色账号
         if (!in_array(1, $this->admin['roleid'])) {
-            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where roleid=1)';
+            $where[] = '`id` NOT IN (select uid from `'.\Phpcmf\Service::M()->dbprefix('admin_role_index').'` where uid <> '.$this->uid.')';
         }
         
         $where && \Phpcmf\Service::M()->set_where_list(implode(' AND ', $where));
@@ -132,11 +129,15 @@ class Member extends \Phpcmf\Table
 
         if (IS_POST) {
 
-            $name = trim(\Phpcmf\Service::L('input')->post('name', true));
+            $name = trim(dr_safe_filename(\Phpcmf\Service::L('input')->post('name')));
             if (!$name) {
-                exit($this->_json(0, dr_lang('账号不能为空')));
+                $this->_json(0, dr_lang('新账号不能为空'));
+            } elseif ($member['username'] == $name) {
+                $this->_json(0, dr_lang('新账号不能和原始账号相同'));
             } elseif (!\Phpcmf\Service::L('form')->check_username($name)) {
-                $this->_json(0, dr_lang('账号格式不正确'), ['field' => 'name']);
+                $this->_json(0, dr_lang('新账号格式不正确'), ['field' => 'name']);
+            } elseif (\Phpcmf\Service::M()->db->table('member')->where('username', $name)->countAllResults()) {
+                $this->_json(0, dr_lang('新账号%s已经注册', $name), ['field' => 'name']);
             }
 
             \Phpcmf\Service::M('member')->edit_username($uid, $name);
@@ -200,7 +201,7 @@ class Member extends \Phpcmf\Table
         if (is_file($cache_path.$uid.'.jpg')) {
             @unlink($cache_path.$uid.'.jpg');
             if (is_file($cache_path.$uid.'.jpg')) {
-                $this->_json(0, dr_lang('文件删除失败，请检查头像目录权限'));
+                $this->_json(0, dr_lang('文件删除失败, 请检查头像目录权限'));
             }
         }
 
@@ -251,13 +252,7 @@ class Member extends \Phpcmf\Table
                 copy($temp, $file);
                 if (!is_file($file)) {
 					$this->_json(0, dr_lang('头像存储失败'));
-				} 
-                if (defined('UCSSO_API')) {
-                    $rt = ucsso_avatar($uid, $content);
-                    if (!$rt['code']) {
-						$this->_json(0, dr_lang('通信失败：%s', $rt['msg']));
-					}
-                }
+				}
                 \Phpcmf\Service::M()->db->table('member_data')->where('id', $uid)->update(['is_avatar' => 1]);
                 $this->_json(1, dr_lang('上传成功'));
             } else {
@@ -312,11 +307,11 @@ class Member extends \Phpcmf\Table
                     $ok ++;
                 } else {
                     $error ++;
-                    log_message('error', dr_lang('后台批量注册会员失败（%s）：%s', trim($t), $rt['msg']));
+                    log_message('error', dr_lang('后台批量注册会员失败（%s）:%s', trim($t), $rt['msg']));
                 }
             }
 
-            $this->_json(1, dr_lang('批量注册%s个用户，失败%s个（查看系统错误日志）', $ok, $error));
+            $this->_json(1, dr_lang('批量注册%s个用户, 失败%s个（查看系统错误日志）', $ok, $error));
         }
 
         \Phpcmf\Service::V()->assign([
@@ -330,10 +325,8 @@ class Member extends \Phpcmf\Table
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
         $page = intval(\Phpcmf\Service::L('input')->get('page'));
-        // 不是超级管理员,排除超管账号
-        if (!in_array(1, $this->admin['roleid'])
-            && \Phpcmf\Service::M()->table('admin_role_index')->where('uid', $uid)->where('roleid', 1)->counts()) {
-            $this->_admin_msg(0, dr_lang('无权限编辑'));
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
         }
 
         $this->_Post($uid);
@@ -380,11 +373,14 @@ class Member extends \Phpcmf\Table
             function ($rows) {
                 $ids = [];
                 foreach ($rows as $t) {
-                    $ids[] = $id = intval($t['id']);
+                    $id = intval($t['id']);
+                    if (!\Phpcmf\Service::M('auth')->cleck_edit_member($id)) {
+                        continue;
+                    }
+                    $ids[] = $id;
                     \Phpcmf\Service::M('member')->member_delete($id);
 
                 }
-                defined('UCSSO_API') && ucsso_delete($ids);
                 return dr_return_data(1, 'ok');
             },
             \Phpcmf\Service::M()->dbprefix('member')
@@ -395,6 +391,10 @@ class Member extends \Phpcmf\Table
     public function jb_del() {
 
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $tid = dr_safe_filename(\Phpcmf\Service::L('input')->get('tid'));
 
         \Phpcmf\Service::M()->table('member_oauth')->where('uid', $uid)->where('oauth', $tid)->delete();
@@ -414,6 +414,10 @@ class Member extends \Phpcmf\Table
     public function login_index() {
         
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $list = \Phpcmf\Service::M()->table('member_login')->where('uid', $uid)->order_by('logintime desc')->getAll();
 
         \Phpcmf\Service::V()->assign([
@@ -428,6 +432,9 @@ class Member extends \Phpcmf\Table
 
         $gid = (int)\Phpcmf\Service::L('input')->get('gid');
         $uid = (int)\Phpcmf\Service::L('input')->get('uid');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_json(0, dr_lang('无权限操作其他管理员账号'));
+        }
 
         \Phpcmf\Service::M('member')->delete_group($uid, $gid, 1);
 
@@ -438,6 +445,10 @@ class Member extends \Phpcmf\Table
     public function group_edit() {
 
         $uid = (int)\Phpcmf\Service::L('input')->get('id');
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $groups = \Phpcmf\Service::M('member')->update_group(
             \Phpcmf\Service::M()->table('member')->get($uid),
             \Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()
@@ -491,6 +502,8 @@ class Member extends \Phpcmf\Table
             $uid = intval($i);
             if (!$uid) {
                 continue;
+            } elseif (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+                continue;
             } elseif (!$this->member_cache['config']['groups']
                 && dr_count(\Phpcmf\Service::M()->table('member_group_index')->where('uid', $uid)->getAll()) > 1) {
                 $this->_json(0, dr_lang('不能同时拥有多个用户组'));
@@ -542,18 +555,6 @@ class Member extends \Phpcmf\Table
                 } elseif ($member['phone'] && \Phpcmf\Service::M()->db->table('member')->where('id<>'. $id)->where('phone', $member['phone'])->countAllResults()) {
                     return dr_return_data(0, dr_lang('手机号码%s已经注册', $member['phone']), ['field' => 'phone']);
                 }
-                if (defined('UCSSO_API')) {
-                    if ($member['phone'] != $old['phone'] && $rt = ucsso_edit_phone($id, $member['phone'])) {
-                        if (!$rt['code']) {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                    if ($member['email'] != $old['email'] && $rt = ucsso_edit_email($id, $member['email'])) {
-                        if (!$rt['code']) {
-                            return dr_return_data(0, dr_lang('通信失败：%s', $rt['msg']));
-                        }
-                    }
-                }
                 // 保存附表内容
                 $status = \Phpcmf\Service::L('input')->post('status');
                 $member_data = $data[1] ? $data[1] : [];
@@ -573,7 +574,6 @@ class Member extends \Phpcmf\Table
                 if ($password) {
                     $member = \Phpcmf\Service::M()->table('member')->get($id);
                     \Phpcmf\Service::M('member')->edit_password($member, $password);
-                    defined('UCSSO_API') && ucsso_edit_password($id, $password);
                 }
                 // 审核状态
                 $status = \Phpcmf\Service::L('input')->post('status');

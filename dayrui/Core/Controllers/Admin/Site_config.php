@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 class Site_config extends \Phpcmf\Common
@@ -32,7 +32,9 @@ class Site_config extends \Phpcmf\Common
             }
 
             $rt = \Phpcmf\Service::M('Site')->config(SITE_ID, 'config', $post);
-			!is_array($rt) && $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+			if (!is_array($rt)) {
+			    $this->_json(0, dr_lang('网站信息(#%s)不存在', SITE_ID));
+            }
 
 			\Phpcmf\Service::L('input')->system_log('设置网站参数');
 
@@ -52,7 +54,7 @@ class Site_config extends \Phpcmf\Common
 			'page' => $page,
 			'data' => $data['config'],
 			'form' => dr_form_hidden(['page' => $page]),
-			'lang' => dr_dir_map(ROOTPATH.'config/language/', 1),
+			'lang' => dr_dir_map(ROOTPATH.'api/language/', 1),
 			'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
                 [
                     '网站设置' => ['site_config/index', 'fa fa-cog'],

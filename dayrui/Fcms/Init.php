@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 // 用于显示debug
@@ -24,6 +24,8 @@ define('COREPATH', FCPATH.'Core/');
 !defined('TPLPATH') && define('TPLPATH', ROOTPATH.'template/');
 // 是否可编辑后模板
 !defined('IS_EDIT_TPL') && define('IS_EDIT_TPL', 0);
+// tests
+define('TESTPATH', WRITEPATH.'tests/');
 
 // 是否来自ajax提交
 define('IS_AJAX', (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'));
@@ -35,26 +37,34 @@ define('IS_AJAX_POST', IS_POST);
 define('SYS_TIME', $_SERVER['REQUEST_TIME'] ? $_SERVER['REQUEST_TIME'] : time());
 
 // 系统变量
-$system = is_file(WRITEPATH.'config/system.php') ? require WRITEPATH.'config/system.php' : [
-    'SYS_DEBUG'                     => '0', //调试器开关
-    'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
-    'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
-    'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
-    'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
-    'SYS_CAT_RNAME'                 => '1', //栏目目录允许重复
-    'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
-    'SYS_KEY'                       => '', //安全密匙
-    'SYS_CSRF'                      => 1, //安全密匙
-    'SYS_CAT_ZSHOW'                 => 1, //安全密匙
-    'SYS_HTTPS'                     => '0', //https模式
-    'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
-    'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
-    'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-    'SYS_ATTACHMENT_URL'            => '', //附件访问地址
-];
+if (is_file(WRITEPATH.'config/system.php')) {
+    $system = require WRITEPATH.'config/system.php';
+    define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && $system['SYS_DEBUG']);
+} else {
+    // 默认系统变量
+    $system = [
+        'SYS_DEBUG'                     => '1', //调试器开关
+        'SYS_ADMIN_CODE'                => '0', //后台登录验证码开关
+        'SYS_ADMIN_LOG'                 => '0', //后台操作日志开关
+        'SYS_AUTO_FORM'                 => '0', //自动存储表单数据
+        'SYS_ADMIN_PAGESIZE'            => '10', //后台数据分页显示数量
+        'SYS_CAT_RNAME'                 => '1', //栏目目录允许重复
+        'SYS_PAGE_RNAME'                => '0', //单页目录允许重复
+        'SYS_KEY'                       => '', //安全密匙
+        'SYS_CSRF'                      => 1, //安全密匙
+        'SYS_CAT_ZSHOW'                 => 1, //安全密匙
+        'SYS_ADMIN_OAUTH'               => 0, //安全密匙
+        'SYS_HTTPS'                     => '0', //https模式
+        'SYS_ATTACHMENT_DB'             => '', //附件归属开启模式
+        'SYS_ATTACHMENT_PATH'           => '', //附件上传路径
+        'SYS_ATTACHMENT_URL'            => '', //附件访问地址
+    ];
+    define('CI_DEBUG', 1);
+}
 foreach ($system as $var => $value) {
     !defined($var) && define($var, $value);
 }
+
 // 当前URL
 $pageURL = 'http';
 ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
@@ -75,7 +85,6 @@ define('FC_NOW_URL', $pageURL.($_SERVER['REQUEST_URI'] ? $_SERVER['REQUEST_URI']
 define('FC_NOW_HOST', $pageURL.'/');
 unset($system);
 
-
 // 缓存变量
 $cache = [];
 if (is_file(WRITEPATH.'config/cache.php')) {
@@ -87,9 +96,9 @@ foreach ([
              'SYS_CACHE_TYPE',
              'SYS_CACHE_SHOW',
              'SYS_CACHE_PAGE',
-             'SYS_CACHE_ATTACH',
              'SYS_CACHE_LIST',
              'SYS_CACHE_SEARCH',
+             'SYS_CACHE_SMS',
          ] as $name) {
     define($name, (int)$cache[$name]);
 }
@@ -113,8 +122,8 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
     $routes = [];
     $routes['rewrite-test.html(.*)'] = 'index.php?s=api&c=rewrite&m=test'; // 测试规则
     $routes['sitemap.xml'] = 'index.php?s=api&c=rewrite&m=sitemap'; // 地图规则
-    if (is_file(WEBPATH.'config/rewrite.php')) {
-        $my = require WEBPATH.'config/rewrite.php';
+    if (is_file(ROOTPATH.'config/rewrite.php')) {
+        $my = require ROOTPATH.'config/rewrite.php';
         $my && $routes = array_merge($routes, $my);
     }
     // 正则匹配路由规则
@@ -145,8 +154,8 @@ if (!IS_ADMIN && $uri && !defined('IS_API')) {
         }
     }
     // 自定义路由模式
-    if ($is_404 && is_file(WEBPATH.'config/router.php')) {
-        require WEBPATH.'config/router.php';
+    if ($is_404 && is_file(ROOTPATH.'config/router.php')) {
+        require ROOTPATH.'config/router.php';
     }
     // 说明是404
     if ($is_404) {
@@ -195,6 +204,12 @@ if (is_file(MYPATH.'Dev.php')) {
     }
 }
 
+// 兼容错误提示
+function dr_show_error($msg) {
+    $url = CI_DEBUG ? '<p>'.FC_NOW_URL.'</p>' : '';
+    exit("<!DOCTYPE html><html lang=\"zh-cn\"><head><meta charset=\"utf-8\"><title>系统错误</title><style>        div.logo {            height: 200px;            width: 155px;            display: inline-block;            opacity: 0.08;            position: absolute;            top: 2rem;            left: 50%;            margin-left: -73px;        }        body {            height: 100%;            background: #fafafa;            font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;            color: #777;            font-weight: 300;        }        h1 {            font-weight: lighter;            letter-spacing: 0.8;            font-size: 3rem;            margin-top: 0;            margin-bottom: 0;            color: #222;        }        .wrap {            max-width: 1024px;            margin: 5rem auto;            padding: 2rem;            background: #fff;            text-align: center;            border: 1px solid #efefef;            border-radius: 0.5rem;            position: relative;        }        pre {            white-space: normal;            margin-top: 1.5rem;        }        code {            background: #fafafa;            border: 1px solid #efefef;            padding: 0.5rem 1rem;            border-radius: 5px;            display: block;        }        p {            margin-top: 1.5rem;        }        .footer {            margin-top: 2rem;            border-top: 1px solid #efefef;            padding: 1em 2em 0 2em;            font-size: 85%;            color: #999;        }        a:active,        a:link,        a:visited {            color: #dd4814;        }</style></head><body><div class=\"wrap\"><p>{$msg}</p>    {$url}</div></body></html>");
+}
+
 // 判断s参数,“应用程序”文件夹目录
 if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
     // 判断会员模块,排除后台调用
@@ -218,14 +233,7 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
         define('IS_MEMBER', FALSE);
     } else {
         // 不存在的应用
-        define('APPPATH', COREPATH);
-        define('APP_DIR', '');
-        define('IS_MEMBER', FALSE);
-        $_GET['s'] = '';
-        $_GET['c'] = 'home';
-        $_GET['m'] = 's404';
-        $_GET['uri'] = '应用程序('.strtolower($dir).')不存在';
-        //exit();
+        dr_show_error(CI_DEBUG ? '应用程序('.dr_get_app_dir($dir).')不存在' : '应用程序('.strtolower($dir).')不存在');
     }
 } else {
     // 系统主目录
@@ -233,9 +241,6 @@ if (!IS_API && isset($_GET['s']) && preg_match('/^[a-z]+$/i', $_GET['s'])) {
     !defined('APP_DIR') && define('APP_DIR', '');
     define('IS_MEMBER', FALSE);
 }
-
-define('CI_DEBUG', IS_DEV ? 1 : IS_ADMIN && SYS_DEBUG);
-define('TESTPATH', WRITEPATH.'tests/');
 
 // 显示错误提示
 if (CI_DEBUG) {
@@ -245,7 +250,7 @@ if (CI_DEBUG) {
 }
 
 /*
- * 重写config函数，防止modules被加载
+ * 重写config函数, 防止modules被加载
  */
 function config ($name, $getShared = true) {
 

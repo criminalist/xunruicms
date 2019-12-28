@@ -29,7 +29,7 @@
                             <label class="col-md-2 control-label">{dr_lang('缓存开关')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_CACHE]" value="1" {if $data['SYS_CACHE']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('推荐开启缓存功能，可以大大提高系统运行效率')}</span>
+                                <span class="help-block">{dr_lang('推荐开启缓存功能, 可以大大提高系统运行效率')}</span>
                             </div>
                         </div>
 
@@ -44,6 +44,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="data[SYS_CACHE_SMS]" value="{intval($data['SYS_CACHE_SMS'])}">
+
                         {loop $cache_var $value $name}
                         <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang($name)}</label>
@@ -56,7 +58,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <span class="help-inline"> {dr_lang('单位小时，0表示不缓存')} </span>
+                                <span class="help-inline"> {dr_lang('单位小时, 0表示不缓存')} </span>
                             </div>
                         </div>
                         {/loop}
@@ -71,7 +73,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <span class="help-inline"> {dr_lang('单位小时，0表示不启用缓存，开启后前端显示页面将会进行缓存加载，相当于静态HTML加载，不会有php逻辑判断')} </span>
+                                <span class="help-inline"> {dr_lang('单位小时, 0表示不启用缓存, 开启后前端显示页面将会进行缓存加载, 相当于静态HTML加载, 不会有php逻辑判断')} </span>
                             </div>
                         </div>
 

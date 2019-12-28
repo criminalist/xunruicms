@@ -29,7 +29,7 @@ $member = \Phpcmf\Service::C()->member;
 
 if (IS_API_HTTP) {
     // 客户端小程序请求
-    //①、获取用户openid
+    //①, 获取用户openid
     $oauth = $this->table('member_oauth')->where('uid', $data['uid'])->where('oauth', 'wxxcx')->getRow();
     if (!$oauth) {
         $return = dr_return_data(0, '服务器没有此用户');
@@ -59,7 +59,7 @@ if (IS_API_HTTP) {
     }
 } elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger')) {
     // 手机微信客户端调用jsapi
-    //①、获取用户openid
+    //①, 获取用户openid
     $tools = new JsApiPay();
     $openId = $tools->GetOpenid();
     if (!$openId) {

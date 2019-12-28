@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -45,7 +45,7 @@ class Security extends \CodeIgniter\Security\Security
         if (! isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]
         ) // Do the tokens match?
         {
-            //CI_DEBUG && log_message('error', '跨站验证禁止此操作：'.FC_NOW_URL);
+            //CI_DEBUG && log_message('error', '跨站验证禁止此操作:'.FC_NOW_URL);
             dr_exit_msg(0, '跨站验证禁止此操作', 'CSRFVerify');;
         }
 

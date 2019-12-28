@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -46,7 +46,10 @@ class Seo_module extends \Phpcmf\Common
 
         $dir = \Phpcmf\Service::L('input')->get('dir');
         $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
-        !$data && $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        }
+
         $data['site'] = dr_string2array($data['site']);
         $data['setting'] = dr_string2array($data['setting']);
 
@@ -63,7 +66,10 @@ class Seo_module extends \Phpcmf\Common
 
         $dir = \Phpcmf\Service::L('input')->get('dir');
         $data = \Phpcmf\Service::M()->table('module')->where('dirname', $dir)->getRow();
-        !$data && $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        if (!$data) {
+            $this->_admin_msg(0, dr_lang('模块#%s不存在', $dir));
+        }
+
         $data['site'] = dr_string2array($data['site']);
         $data['setting'] = dr_string2array($data['setting']);
 

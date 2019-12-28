@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 use \Phpcmf\View;
@@ -37,11 +37,6 @@ class Service
 
     // 当前客户端是否是移动端访问
     public static function _is_mobile() {
-        return static::C()->_is_mobile();
-    }
-
-    // 当前客户端是否是移动端访问
-    public static function IS_MOBILE2() {
         return static::C()->_is_mobile();
     }
 
@@ -159,7 +154,7 @@ class Service
         }
 
         if (!is_file($file)) {
-            defined('IS_API_HTTP') && IS_API_HTTP ? \Phpcmf\Common::json(0, '函数文件：'.str_replace(FCPATH, '', $file).'不存在') : exit('函数文件：'.str_replace(FCPATH, '', $file).'不存在');
+            defined('IS_API_HTTP') && IS_API_HTTP ? \Phpcmf\Common::json(0, '函数文件:'.str_replace(FCPATH, '', $file).'不存在') : exit('函数文件:'.str_replace(FCPATH, '', $file).'不存在');
         }
 
         static::$help[$_cname] = 1;
@@ -190,7 +185,7 @@ class Service
             }
             // 都不存在就报错
             if (!$classFile || !is_file($classFile)) {
-                defined('IS_API_HTTP') && IS_API_HTTP ? \Phpcmf\Common::json(0, '类文件：'.str_replace(FCPATH, '', $classFile).'不存在') : exit('类文件：'.str_replace(FCPATH, '', $classFile).'不存在');
+                defined('IS_API_HTTP') && IS_API_HTTP ? \Phpcmf\Common::json(0, '类文件:'.str_replace(FCPATH, '', $classFile).'不存在') : exit('类文件:'.str_replace(FCPATH, '', $classFile).'不存在');
             }
         }
 

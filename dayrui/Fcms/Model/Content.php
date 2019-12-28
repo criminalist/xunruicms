@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 模型类
@@ -76,7 +73,7 @@ class Content extends \Phpcmf\Model {
             $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
             if ($verify) {
 				// 修改审核
-                $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], [
+                $update = [
                     'catid' => $data[1]['catid'],
                     'status' => (int)$data[1]['status'],
                     'content' => dr_array2string(@array_merge($data[0], $data[1])),
@@ -87,7 +84,8 @@ class Content extends \Phpcmf\Model {
                         'optiontime' => SYS_TIME,
                         'backcontent' => $_POST['verify']['msg']
                     ]) : '',
-                ]);
+                ];
+                $rt = $this->table($this->mytable.'_verify')->update($data[1]['id'], $update);
                 if (!$rt['code']) {
                     return $rt;
                 }
@@ -96,12 +94,16 @@ class Content extends \Phpcmf\Model {
                     'status' => 3,
                     'updatetime' => SYS_TIME,
                 ]);
+
+                // 挂钩点 模块内容审核处理之后
+                $verify['old'] = $old;
+                \Phpcmf\Hooks::trigger('module_verify_after', array_merge($verify, $update));
                 // 通知管理员
                 $data[1]['status'] > 0 && \Phpcmf\Service::M('member')->admin_notice(
                     $this->siteid,
                     'content',
                     IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member,
-                    dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
+                    dr_lang('%s[%s]审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
                     $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'],  IS_ADMIN ? dr_member_info($data[1]['uid']) : \Phpcmf\Service::C()->member)
                 );
                 // 通知用户
@@ -113,7 +115,7 @@ class Content extends \Phpcmf\Model {
                 );
             } else {
 				// 新增审核
-                $verify = array(
+                $verify = [
                     'id' => (int)$data[1]['id'],
                     'uid' => (int)$data[1]['uid'],
                     'isnew' => $id ? 0 : 1,
@@ -129,13 +131,14 @@ class Content extends \Phpcmf\Model {
                         'backcontent' => $_POST['verify']['msg']
                     ]) : '',
                     'inputtime' => SYS_TIME
-                );
+                ];
                 $rt = $this->table($this->mytable.'_verify')->replace($verify);
                 if (!$rt['code']) {
                     // 删除索引
                     $this->table($this->mytable.'_index')->delete($data[1]['id']);
                     return $rt;
                 }
+
 				if (IS_ADMIN && defined('IS_MODULE_TG') && $data[1]['status'] == 0) {
 					// 后台退稿
 					if (\Phpcmf\Service::L('input')->get('clear')) {
@@ -150,13 +153,17 @@ class Content extends \Phpcmf\Model {
 						dr_lang('《%s》审核被拒绝', $data[1]['title']),
 						\Phpcmf\Service::L('router')->member_url($this->dirname.'/verify/index')
 					);
+
+                    // 挂钩点 模块内容审核处理之后
+                    $verify['old'] = $old;
+                    \Phpcmf\Hooks::trigger('module_verify_after', $verify);
 				} else {
 					// 通知管理员
 					\Phpcmf\Service::M('member')->admin_notice(
 						$this->siteid,
 						'content',
 						\Phpcmf\Service::C()->member,
-						dr_lang('%s【%s】审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
+						dr_lang('%s[%s]审核', MODULE_NAME, $data[1]['title']), $this->dirname.'/verify/edit:id/'.$data[1]['id'],
                         $this->_get_verify_roleid($data[1]['catid'], $data[1]['status'], \Phpcmf\Service::C()->member)
 					);
 				}
@@ -272,6 +279,7 @@ class Content extends \Phpcmf\Model {
         if (dr_is_app('bdts')) {
             \Phpcmf\Service::M('bdts', 'bdts')->module_bdts(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
+
         if (dr_is_app('bdxz')) {
             \Phpcmf\Service::M('bdxz', 'bdxz')->module_bdxz(MOD_DIR, dr_url_prefix($data[1]['url'], MOD_DIR, SITE_ID, 0), $id ? 'edit' : 'add');
         }
@@ -281,17 +289,26 @@ class Content extends \Phpcmf\Model {
             $this->auto_save_tag($data[1]['keywords']);
         }
 
-        // 如果来自审核页面
+        // 如果来自审核页面,表示完成审核
         if (defined('IS_MODULE_VERIFY')) {
 
             // 通知用户
             \Phpcmf\Service::L('Notice')->send_notice('module_content_verify_1', $data[1]);
 
+            $verify = $this->table($this->mytable.'_verify')->get($data[1]['id']);
+            $verify['status'] = 9;
+            $verify['content'] = dr_array2string(array_merge($data[1], $data[0]));
+            $verify['backuid'] = IS_ADMIN ? $this->uid : 0;
+            $verify['backinfo'] = dr_array2string($old['verify']['backinfo']);
+
             // 删除审核表
             $this->table($this->mytable.'_verify')->delete($data[1]['id']);
 
+            // 挂钩点 模块内容审核处理之后
+            \Phpcmf\Hooks::trigger('module_verify_after', $verify);
+
             // 执行审核后的回调
-            $this->_call_verify($data[1], $old['verify']);
+            $this->_call_verify($data[1], $verify);
         }
 
         // 表示新发布
@@ -541,7 +558,7 @@ class Content extends \Phpcmf\Model {
             'inputtime' => SYS_TIME
         ];
 
-        // 判断草稿是否存在，不存在就插入
+        // 判断草稿是否存在, 不存在就插入
         if ($id && $this->db->table($this->mytable.'_draft')->where('id', $id)->countAllResults()) {
             $rt = $this->table($this->mytable.'_draft')->update($id, $save);
         } else {
@@ -582,7 +599,7 @@ class Content extends \Phpcmf\Model {
             'inputtime' => SYS_TIME
         ];
 
-        // 判断是否存在，不存在就插入
+        // 判断是否存在, 不存在就插入
         if ($id) {
             $rt = $this->table($this->mytable.'_time')->update($id, $save);
         } else {
@@ -760,8 +777,9 @@ class Content extends \Phpcmf\Model {
         isset($data[1]['hits']) && $data[1]['hits'] = (int)$data[1]['hits'];
         !$data[1]['description'] && $data[1]['description'] = trim(dr_strcut(dr_clearhtml($data[0]['content']), 100));
 
-        if (isset($data[1]['keywords'])) {
-            !$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
+        if (isset($data[1]['keywords']) && $data[1]['keywords']) {
+			// 不要自动获取关键词, 容易卡顿, 引起发布延迟
+            //!$data[1]['keywords'] && $data[1]['keywords'] = dr_get_keywords($data[1]['title'].' '.$data[1]['description'], $this->siteid);
             $data[1]['keywords'] = str_replace('"', '', $data[1]['keywords']);
         }
 
@@ -823,8 +841,8 @@ class Content extends \Phpcmf\Model {
         // 加入队列并执行
         $rt = \Phpcmf\Service::M('cron')->add_cron($this->siteid, 'weibo', $save);
         if (!$rt['code']) {
-            log_message('error', '任务注册失败：'.$rt['msg']);
-            return dr_return_data(0, '任务注册失败：'.$rt['msg']);
+            log_message('error', '任务注册失败:'.$rt['msg']);
+            return dr_return_data(0, '任务注册失败:'.$rt['msg']);
         }
 
         return $rt;
@@ -1251,7 +1269,7 @@ class Content extends \Phpcmf\Model {
     }
 
     // 提交评论
-    // $value 主题信息和回复人；$data评论内容和点评内容；$my自定义字段
+    // $value 主题信息和回复人;$data评论内容和点评内容;$my自定义字段
     public function insert_comment($value, $data, $my = []) {
 
         $insert = [];
@@ -1334,7 +1352,7 @@ class Content extends \Phpcmf\Model {
         // 统计评论总数
         $this->comment_update_total($row);
 
-        // 回复评论时，将主题设置为存在回复状态
+        // 回复评论时, 将主题设置为存在回复状态
         $row['reply'] && $this->table($this->mytable.'_comment')->update($row['reply'], ['in_reply' => 1]);
 
         // 增减金币
@@ -1505,7 +1523,7 @@ class Content extends \Phpcmf\Model {
         }
 
         // 算法类别
-        $st = round((int)\Phpcmf\Service::C()->module['comment']['review']['score'] / 5); //显示分数制 5分，10分，百分
+        $st = round((int)\Phpcmf\Service::C()->module['comment']['review']['score'] / 5); //显示分数制 5分, 10分, 百分
         $dl = empty(\Phpcmf\Service::C()->module['comment']['review']['point']) || \Phpcmf\Service::C()->module['comment']['review']['point'] < 0 ? 0 : \Phpcmf\Service::C()->module['comment']['review']['point']; //小数点位数
 
         // 分别计算各个选项分数
@@ -1744,39 +1762,39 @@ class Content extends \Phpcmf\Model {
     }
 
 
-    ////////////////////禁用栏目时，二次开发调用////////////////////
+    ////////////////////禁用栏目时, 二次开发调用////////////////////
 
-    // 禁用栏目时，用户保存内容之前的权限验证
+    // 禁用栏目时, 用户保存内容之前的权限验证
     public function _hcategory_member_save_before($data) {
         return $data;
     }
 
-    // 禁用栏目时，用户保存内容时的内容文章状态
+    // 禁用栏目时, 用户保存内容时的内容文章状态
     public function _hcategory_member_post_status($member_authid) {
         return 9;
     }
 
-    // 禁用栏目时，用户保存内容时是否启用验证码
+    // 禁用栏目时, 用户保存内容时是否启用验证码
     public function _hcategory_member_post_code() {
         return 0;
     }
 
-    // 禁用栏目时，用户发布内容时的权限验证
+    // 禁用栏目时, 用户发布内容时的权限验证
     public function _hcategory_member_add_auth() {
 
     }
 
-    // 禁用栏目时，用户修改内容时的权限验证
+    // 禁用栏目时, 用户修改内容时的权限验证
     public function _hcategory_member_edit_auth() {
 
     }
 
-    // 禁用栏目时，用户删除内容时的权限验证
+    // 禁用栏目时, 用户删除内容时的权限验证
     public function _hcategory_member_del_auth() {
 
     }
 
-    // 禁用栏目时，用户阅读内容时的权限验证
+    // 禁用栏目时, 用户阅读内容时的权限验证
     public function _hcategory_member_show_auth() {
 
     }

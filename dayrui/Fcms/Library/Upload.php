@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Library;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 
@@ -54,24 +51,26 @@ class Upload
         // 检查系统保留文件格式
         if (in_array($file_ext, $this->notallowed)) {
             return dr_return_data(0, $this->error['ERROR_SYSTEM_TYPE_NOT_ALLOWED']);
+        } elseif (!$file_ext) {
+            return dr_return_data(0, dr_lang('无法读取文件扩展名'));
         }
 
         // 验证扩展名格式
         if (!preg_match('/^[a-z0-9]+$/i', $file_ext)) {
-            return dr_return_data(0, dr_lang('此文件扩展名不安全，禁止上传'));
+            return dr_return_data(0, dr_lang('此文件扩展名[%s]不安全, 禁止上传', $file_ext));
         }
 
         // 验证伪装图片
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
             $data = strtolower($data);
             if (strpos($data, '<?php') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此文件不安全, 禁止上传'));
             } elseif (strpos($data, 'eval(') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此文件不安全, 禁止上传'));
             } elseif (strpos($data, '.php') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此文件不安全, 禁止上传'));
             } elseif (strpos($data, 'base64_decode(') !== false) {
-                return dr_return_data(0, dr_lang('此文件不安全，禁止上传'));
+                return dr_return_data(0, dr_lang('此文件不安全, 禁止上传'));
             }
         }
 
@@ -95,7 +94,7 @@ class Upload
             return dr_return_data(0, $this->error['ERROR_TMPFILE']);
         }
 
-        $name = substr(md5(SYS_TIME.$file['name']), rand(0, 20), 15); // 随机新名字
+        $name = substr(md5(SYS_TIME.$file['name'].uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($file['name']); // 扩展名
         $file_name = $this->_file_name($file['name']); // 文件实际名字
 
@@ -201,11 +200,11 @@ class Upload
 
         $data = dr_catcher_data($config['url']);
         if (!$data) {
-            log_message('error', '服务器无法下载文件：'.$config['url']);
+            log_message('error', '服务器无法下载文件:'.$config['url']);
             return dr_return_data(0, dr_lang('文件下载失败'));
         }
 
-        $name = substr(md5(SYS_TIME), rand(0, 20), 15); // 随机新名字
+        $name = substr(md5(SYS_TIME.uniqid().$config['url']), rand(0, 20), 15); // 随机新名字
         $file_ext = $this->_file_ext($config['url']); // 扩展名
 
         // 安全验证
@@ -216,7 +215,7 @@ class Upload
 
         $file_name = $this->_file_name($config['url']); // 文件实际名字
         if (!$file_ext) {
-            log_message('error', '无法获取文件扩展名：'.$config['url']);
+            log_message('error', '无法获取文件扩展名:'.$config['url']);
             return dr_return_data(0, dr_lang('无法获取文件扩展名'));
         }
 
@@ -258,7 +257,7 @@ class Upload
 
         $data = $config['content'];
 
-        $name = substr(md5(SYS_TIME), rand(0, 20), 15); // 随机新名字
+        $name = substr(md5(SYS_TIME.$config['content'].uniqid()), rand(0, 20), 15); // 随机新名字
         $file_ext = $config['ext'] ? $config['ext'] : 'jpg'; // 扩展名
         $file_name = 'base64_image'; // 文件实际名字
 

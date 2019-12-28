@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -18,13 +18,15 @@ class Login extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $post = \Phpcmf\Service::L('input')->post('data', true);
-            // 支付回调钩子
+            // 回调钩子
             \Phpcmf\Hooks::trigger('member_login_before', $post);
             if ($this->member_cache['login']['code']
                 && !\Phpcmf\Service::L('Form')->check_captcha('code')) {
                 $this->_json(0, dr_lang('图片验证码不正确'));
-            } elseif (empty($post['username']) || empty($post['password'])) {
-                $this->_json(0, dr_lang('账号或密码必须填写'));
+            } elseif (empty($post['password'])) {
+                $this->_json(0, dr_lang('密码必须填写'));
+            } elseif (empty($post['username'])) {
+                $this->_json(0, dr_lang('账号必须填写'));
             } else {
                 $rt = \Phpcmf\Service::M('member')->login(dr_safe_username($post['username']), $post['password'], (int)$_POST['remember']);
                 if ($rt['code']) {
@@ -94,7 +96,7 @@ class Login extends \Phpcmf\Common
 
         $id = intval(\Phpcmf\Service::L('input')->get('id'));
         $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
-        $oauth_id = \Phpcmf\Service::L('cache')->init()->get('member_auth_login_'.$name.'_'.$id);
+        $oauth_id = \Phpcmf\Service::L('cache')->get_data('member_auth_login_'.$name.'_'.$id);
         if (!$oauth_id) {
             $this->_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         }
@@ -129,12 +131,17 @@ class Login extends \Phpcmf\Common
                 // 存储后台回话
                 \Phpcmf\Service::M('auth')->save_login_auth($name, $member['uid']);
                 $goto_url.= '&name='.$name.'&uid='.$member['uid'];
-                $this->_admin_msg(1, dr_lang('%s，欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
+                $this->_admin_msg(1, dr_lang('%s, 欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
             } else {
-                $this->_msg(1, dr_lang('%s，欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
+                $this->_msg(1, dr_lang('%s, 欢迎回来', dr_html2emoji($oauth['nickname'])).$sso, \Phpcmf\Service::L('input')->xss_clean($goto_url), 0);
             }
 
         } else {
+
+            if (strpos($goto_url, 'is_admin_call')) {
+                // 来自后台
+                $this->_admin_msg(0, dr_lang('%s, 没有绑定本站账号', dr_html2emoji($oauth['nickname'])));
+            }
             
             // 用户组判断
             if ($this->member_cache['register']['close']) {
@@ -290,16 +297,16 @@ class Login extends \Phpcmf\Common
 
             // 防止验证码猜测
             if (dr_is_app('xrsafe')) {
-                // 如果安装迅睿安全插件，进入插件验证机制
+                // 如果安装迅睿安全插件, 进入插件验证机制
                 \Phpcmf\Service::M('safe', 'xrsafe')->find_check($value);
             } else {
                 // 普通验证
                 $sn = 'fc_passwrod_find_'.date('Ymd', SYS_TIME).$value;
-                $count = (int)\Phpcmf\Service::L('cache')->init()->get($sn);
+                $count = (int)\Phpcmf\Service::L('cache')->get_data($sn);
                 if ($count > 20) {
                     $this->_json(0, dr_lang('今日找回密码次数达到上限'));
                 }
-                \Phpcmf\Service::L('cache')->init()->save($sn, $count + 1, 3600 * 24);
+                \Phpcmf\Service::L('cache')->set_data($sn, $count + 1, 3600 * 24);
             }
 
             if ((!$post['code'] || !$data['randcode'] || $post['code'] != $data['randcode'])) {

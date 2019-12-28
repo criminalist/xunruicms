@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 
@@ -24,7 +24,14 @@ class Member_setting extends \Phpcmf\Common
 
         if (IS_AJAX_POST) {
             $save = ['register', 'login', 'oauth', 'config'];
-            $post = \Phpcmf\Service::L('input')->post('data', true);
+           $post = \Phpcmf\Service::L('input')->post('data');
+            if ($post['register']['sms']) {
+                if (!in_array('phone', $post['register']['field'])) {
+                    $this->_json(0, dr_lang('短信验证注册必须让手机号作为注册字段'));
+                } elseif (!$post['register']['code']) {
+                    $this->_json(0, dr_lang('短信验证注册必须开启图片验证码'));
+                }
+            }
             foreach ($save as $name) {
                 \Phpcmf\Service::M()->db->table('member_setting')->replace([
                     'name' => $name,

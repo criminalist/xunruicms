@@ -2,7 +2,7 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 class Home extends \Phpcmf\Common
@@ -79,9 +79,9 @@ class Home extends \Phpcmf\Common
 
 		// 判断权限
 		if (!dr_html_auth()) {
-            $this->_json(0, '权限验证超时，请重新执行生成');
+            $this->_json(0, '权限验证超时, 请重新执行生成');
         } elseif ($this->member_cache['auth_site'][SITE_ID]['home']) {
-            $this->_json(0, '当前网站设置了访问权限，无法生成静态');
+            $this->_json(0, '当前网站设置了访问权限, 无法生成静态');
         } elseif (!$this->site_info[SITE_ID]['SITE_INDEX_HTML']) {
             $this->_json(0, '当前网站未开启首页静态功能');
         }
@@ -113,7 +113,7 @@ class Home extends \Phpcmf\Common
             $mobile = file_put_contents(\Phpcmf\Service::L('html')->get_webpath(SITE_ID, 'site', 'mobile/index.html'), $html, LOCK_EX);
         }
 
-		$this->_json(1, dr_lang('电脑端 （%s），移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
+		$this->_json(1, dr_lang('电脑端 （%s）, 移动端 （%s）', dr_format_file_size($pc), dr_format_file_size($mobile)));
 	}
 
 }

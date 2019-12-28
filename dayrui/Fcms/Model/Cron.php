@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Model;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 class Cron extends \Phpcmf\Model
@@ -41,7 +38,7 @@ class Cron extends \Phpcmf\Model
                 'status' => $cron['status'] + 1,
                 'updatetime' => SYS_TIME,
             ]);
-            return dr_return_data(0, $cron['id'].'#'.(is_array($data['error']) ? implode('、', $data['error']) : $data['error']));
+            return dr_return_data(0, $cron['id'].'#'.(is_array($data['error']) ? implode(', ', $data['error']) : $data['error']));
         }
     }
 
@@ -126,7 +123,7 @@ class Cron extends \Phpcmf\Model
                     }
                 } else {
                     return $this->save_cron($cron, [
-                        'error' => '远程图片下载失败：'.$rt['msg'],
+                        'error' => '远程图片下载失败:'.$rt['msg'],
                         'value' => $value,
                     ]);
                 }
@@ -154,7 +151,7 @@ class Cron extends \Phpcmf\Model
                                 if (!$rt['code']) {
                                     // 失败
                                     return $this->save_cron($cron, [
-                                        'error' => '任务['.$t['name'].']执行失败：'.$rt['msg'],
+                                        'error' => '任务['.$t['name'].']执行失败:'.$rt['msg'],
                                         'value' => $value,
                                     ]);
                                 } else {
@@ -170,8 +167,8 @@ class Cron extends \Phpcmf\Model
                 }
 
                 $this->table('cron')->delete($cron['id']);
-                log_message('error', '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在：'.FC_NOW_URL);
-                return dr_return_data(0, '任务查询（'.$cron['id'].'）类型【'.$cron['type'].'】不存在');
+                log_message('error', '任务查询（'.$cron['id'].'）类型['.$cron['type'].']不存在:'.FC_NOW_URL);
+                return dr_return_data(0, '任务查询（'.$cron['id'].'）类型['.$cron['type'].']不存在');
                 break;
         }
 

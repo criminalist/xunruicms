@@ -2,10 +2,8 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Seo_category extends \Phpcmf\Common
 {
@@ -13,7 +11,9 @@ class Seo_category extends \Phpcmf\Common
     public function index() {
 
         $module = \Phpcmf\Service::L('cache')->get('module-'.SITE_ID.'-content');
-        !$module && $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
+        if (!$module) {
+            $this->_admin_msg(0, dr_lang('系统没有安装内容模块'));
+        }
 
         $share = 0;
 
@@ -24,7 +24,7 @@ class Seo_category extends \Phpcmf\Common
                 unset($module[$dir]);
                 continue;
             } elseif ($t['hlist'] == 1) {
-                //1表示不出现在模块管理、评论tab、搜索tab、内容维护tab的列表之中
+                //1表示不出现在模块管理, 评论tab, 搜索tab, 内容维护tab的列表之中
                 unset($module[$dir]);
                 continue;
             } elseif ($t['hcategory']) {
@@ -145,7 +145,7 @@ class Seo_category extends \Phpcmf\Common
                 'setting' => dr_array2string($data['setting']),
             ]);
             \Phpcmf\Service::M('cache')->sync_cache('');
-            $this->_json(1, '操作成功，更新缓存生效');
+            $this->_json(1, '操作成功, 更新缓存生效');
         }
 
 

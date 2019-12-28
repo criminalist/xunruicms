@@ -730,7 +730,7 @@ return array (
                                 array (
                                     'option' =>
                                         array (
-                                            'value' => '<label>室: </label><label>{shi}</label><label>厅:</label> <label>{ting}</label>  <label>卫: </label><label>{wei}</label>  <label>面积: </label><label>{mianji}</label><label>平米，所在层: </label><label>{suozaiceng}</label>  <label>总层:</label> <label>{zongceng}</label> <br> <label>户型: </label>{huxing}  <label>朝向: </label>{chaoxiang}  <label>装修:</label> {zhuangxiu}',
+                                            'value' => '<label>室: </label><label>{shi}</label><label>厅:</label> <label>{ting}</label>  <label>卫: </label><label>{wei}</label>  <label>面积: </label><label>{mianji}</label><label>平米, 所在层: </label><label>{suozaiceng}</label>  <label>总层:</label> <label>{zongceng}</label> <br> <label>户型: </label>{huxing}  <label>朝向: </label>{chaoxiang}  <label>装修:</label> {zhuangxiu}',
                                             'css' => '',
                                         ),
                                     'validate' =>

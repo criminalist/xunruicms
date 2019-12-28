@@ -1,9 +1,6 @@
 <?php namespace Phpcmf\Admin;
 
-/**
- * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件，可以通过继承类方法来重写此文件
- **/
+
 
 
 // 内容模块操作类 基于 Ftable
@@ -66,7 +63,6 @@ class Module extends \Phpcmf\Table
             $list_field['fstatus'] = [
                 'use' => 1,
                 'order' => 1,
-                'order' => 1,
                 'width' => 60,
                 'func' => 'fstatus',
                 'name' => dr_lang('状态'),
@@ -96,7 +92,7 @@ class Module extends \Phpcmf\Table
                 '--'
             ),
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台添加内容
@@ -147,7 +143,7 @@ class Module extends \Phpcmf\Table
             ),
             'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add') : ''
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台修改内容
@@ -186,7 +182,7 @@ class Module extends \Phpcmf\Table
             ),
             'category_field_url' => $this->module['category_data_field'] ?\Phpcmf\Service::L('Router')->url(APP_DIR.'/home/edit', ['id' => $id]) : ''
         ]);
-        \Phpcmf\Service::V()->display($tpl);
+        return \Phpcmf\Service::V()->display($tpl);
     }
 
     // 后台删除内容
@@ -202,7 +198,7 @@ class Module extends \Phpcmf\Table
             $rt = $this->content_model->delete_to_recycle($ids, \Phpcmf\Service::L('input')->post('note'));
             if ($rt['code']) {
                 // 写入日志
-                \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：放入回收站('.implode(', ', $ids).')');
+                \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).':放入回收站('.implode(', ', $ids).')');
                 $this->_json(1, dr_lang('所选内容已被放入回收站中'));
             } else {
                 $this->_json(0, $rt['msg']);
@@ -246,7 +242,7 @@ class Module extends \Phpcmf\Table
 
         // 写入日志
         if ($rt['code']) {
-            \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：批量修改栏目('.implode(', ', $ids).')');
+            \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).':批量修改栏目('.implode(', ', $ids).')');
             $this->_json(1, dr_lang('操作成功'));
         }
         $this->_json(0, $rt['msg']);
@@ -484,16 +480,73 @@ class Module extends \Phpcmf\Table
     // 后台查看审核列表
     protected function _Admin_Verify_List() {
 
+        // 说明来自审核页面
+        define('IS_MODULE_VERIFY', 1);
+
         $status = \Phpcmf\Service::M('auth')->get_admin_verify_status();
+        $is_post_user = \Phpcmf\Service::M('auth')->is_post_user();
+
+        if (isset($_GET['is_all']) && intval($_GET['is_all']) == 1) {
+
+            if (IS_POST) {
+                $this->_json(1, dr_lang('操作成功'));
+            }
+
+            // 批量操作
+            $ids = \Phpcmf\Service::L('input')->get('ids');
+            if (!$ids) {
+                $this->_json(0, dr_lang('没有选中内容'));
+            } elseif ($is_post_user) {
+                $this->_json(0, dr_lang('投稿者身份不允许审核操作'));
+            }
+
+            $list = [];
+            $note = \Phpcmf\Service::L('input')->get('note');
+            foreach ($ids as $id) {
+                $row = \Phpcmf\Service::M()->table(SITE_ID.'_'.MOD_DIR.'_verify')->get($id);
+                if (!$row) {
+                    $this->_json(0, dr_lang('选中内容[#%s]不存在', $id));
+                }
+                if (intval($_GET['at']) == 1) {
+                    $url = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&id='.$id;
+                } else {
+                    if (!$note) {
+                        $this->_json(0, dr_lang('没有填写拒绝理由'));
+                    }
+                    $url = dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/edit').'&is_verify_iframe=1&note='.$note.'&id='.$id;
+                }
+                $t = dr_string2array($row['content']);
+                $list[$id] = [
+                    'url' => $url,
+                    'title' => $t['title'],
+                ];
+            }
+
+            \Phpcmf\Service::V()->assign([
+                'list' => $list,
+                'back_url' => dr_url(MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index').'&rand='.SYS_TIME,
+            ]);
+            \Phpcmf\Service::V()->display('share_list_verify_all.html');
+            exit;
+        }
+
         $this->_init([
             'db' => SITE_ID,
             'table' => SITE_ID.'_'.APP_DIR.'_verify',
             'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
-            'where_list' => ($status ? 'status IN('.implode(',', $status).')' : 'status>=0').($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
+            'where_list' => '(' . ($is_post_user ? 'uid='.$this->uid.' OR ' : '').($status ? 'status IN('.implode(',', $status).')' : 'status>=0') .')' . ($this->where_list_sql ? ' AND '.$this->where_list_sql : ''),
         ]);
 
         $this->_List();
+
+        $verify_msg = [
+            dr_lang('词文不对'),
+        ];
+        if ($this->module['setting']['verify_msg']) {
+            $msg = @explode(PHP_EOL, $this->module['setting']['verify_msg']);
+            $msg && $verify_msg = $msg;
+        }
 
         \Phpcmf\Service::V()->assign([
             'menu' => \Phpcmf\Service::M('auth')->_admin_menu(
@@ -501,6 +554,9 @@ class Module extends \Phpcmf\Table
                     '审核管理' => [MOD_DIR.'/'.\Phpcmf\Service::L('Router')->class.'/index', 'fa fa-edit'],
                 ]
             ),
+            'clink' => $this->_app_clink(),
+            'verify_msg' => $verify_msg,
+            'is_post_user' => $is_post_user,
         ]);
         \Phpcmf\Service::V()->display('share_list_verify.html');
     }
@@ -555,10 +611,11 @@ class Module extends \Phpcmf\Table
             ),
             'form' =>  dr_form_hidden(['is_draft' => 0, 'module' => MOD_DIR, 'id' => $id]),
             'select' => $select,
-            'is_sync_cat' => $data['sync_cat'],
             'is_verify' => 1,
+            'back_note' => \Phpcmf\Service::L('input')->get('note'),
             'verify_msg' => $verify_msg,
             'verify_step' => $step,
+            'is_sync_cat' => $data['sync_cat'],
             'verify_next' => dr_count($step) - 1 <= $data['status'] ? 9 : $data['status'] + 1,
         ]);
         \Phpcmf\Service::V()->display('share_post.html');
@@ -599,8 +656,8 @@ class Module extends \Phpcmf\Table
 
         $this->_init([
             'table' => SITE_ID.'_'.APP_DIR.'_time',
-            'date_field' => 'inputtime',
             'order_by' => 'inputtime desc',
+            'date_field' => 'inputtime',
             'where_list' => $this->admin['adminid'] == 1 ? '' : 'uid='.$this->uid,
         ]);
 
@@ -737,16 +794,20 @@ class Module extends \Phpcmf\Table
         $rt = $this->content_model->delete_for_recycle($ids);
 
         // 删除附件
-        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('Attachment')->id_delete(
+        SYS_ATTACHMENT_DB && \Phpcmf\Service::M('attachment')->id_delete(
             $this->member['id'],
             $ids,
             \Phpcmf\Service::M()->dbprefix($this->init['table'])
         );
 
         // 写入日志
-        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：删除('.implode(', ', $ids).')');
+        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).':删除('.implode(', ', $ids).')');
 
-        $rt['code'] ? $this->_json(1, dr_lang('操作成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            $this->_json(1, dr_lang('操作成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
     // 后台恢复查看
@@ -786,9 +847,13 @@ class Module extends \Phpcmf\Table
         $rt = $this->content_model->recovery($ids);
 
         // 写入日志
-        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).'：恢复('.implode(', ', $ids).')');
+        \Phpcmf\Service::L('input')->system_log(dr_lang('内容模块[%s]', APP_DIR).':恢复('.implode(', ', $ids).')');
 
-        $rt['code'] ? $this->_json(1, dr_lang('操作成功')) : $this->_json(0, $rt['msg']);
+        if ($rt['code']) {
+            $this->_json(1, dr_lang('操作成功'));
+        } else {
+            $this->_json(0, $rt['msg']);
+        }
     }
 
 
@@ -800,6 +865,17 @@ class Module extends \Phpcmf\Table
         $flag = intval(\Phpcmf\Service::L('input')->get('flag'));
         if (!$this->module['setting']['flag'][$flag]) {
             $this->_admin_msg(0, dr_lang('推荐位不存在: '.$flag));
+        }
+
+        if (IS_POST) {
+            $ids = \Phpcmf\Service::L('input')->get_post_ids();
+            if (!$ids) {
+                $this->_json(0, dr_lang('所选内容不存在'));
+            }
+            foreach ($ids as $id) {
+                $this->content_model->delete_flag($id, $flag);
+            }
+            $this->_json(1, dr_lang('操作成功'));
         }
 
         $this->_init([
@@ -815,6 +891,12 @@ class Module extends \Phpcmf\Table
 
         \Phpcmf\Service::V()->assign([
             'p' => ['flag' => $flag],
+            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
+                $this->module,
+                ' <i class="'.dr_icon($this->module['setting']['flag'][$flag]['icon']).'"></i>  '.dr_lang($this->module['setting']['flag'][$flag]['name']),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/flag/index', ['flag' => $flag]),
+                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
+            ),
             'category_select' => \Phpcmf\Service::L('Tree')->select_category(
                 $this->module['category'],
                 $data['param']['catid'],
@@ -825,12 +907,9 @@ class Module extends \Phpcmf\Table
                 $data['param']['catid'],
                 'name="catid"', '--', 1, 1
             ),
-            'menu' => \Phpcmf\Service::M('auth')->_module_menu(
-                $this->module,
-                ' <i class="'.dr_icon($this->module['setting']['flag'][$flag]['icon']).'"></i>  '.dr_lang($this->module['setting']['flag'][$flag]['name']),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/flag/index', ['flag' => $flag]),
-                \Phpcmf\Service::L('Router')->url(APP_DIR.'/home/add')
-            ),
+            'clink' => $this->_app_clink(),
+            'cbottom' => $this->_app_cbottom(),
+            'is_flag' => 1,
         ]);
         \Phpcmf\Service::V()->display('share_list.html');
 
@@ -1074,15 +1153,20 @@ class Module extends \Phpcmf\Table
             $html = '';
             if ($this->module['category'][$data[1]['catid']]['setting']['html']) {
                 // 生成权限文件
-                !dr_html_auth(1) && $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                if (!dr_html_auth(1)) {
+                    $this->_json(0, dr_lang('/cache/html/ 无法写入文件'));
+                }
                 $html = '/index.php?s='.MOD_DIR.'&c=html&m=showfile&id='.$data[1]['id'];
                 $list = '/index.php?s='.MOD_DIR.'&c=html&m=categoryfile&id='.$data[1]['catid'];
             }
             $this->_json(1, dr_lang('操作成功'), ['htmlfile' => $html, 'listfile' => $list]);
         } else {
-            if ($this->is_post_user) {
+            if (intval(\Phpcmf\Service::L('input')->post('is_draft'))) {
+                // 草稿
+                $this->_json(1, dr_lang('保存草稿成功'));
+            } elseif ($this->is_post_user) {
                 // 投稿者
-                $this->_json(1, dr_lang('操作成功，等待管理员审核'), [
+                $this->_json(1, dr_lang('操作成功, 等待管理员审核'), [
                     'url' => dr_url(MOD_DIR.'/verify/index')
                 ]);
             }

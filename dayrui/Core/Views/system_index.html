@@ -43,7 +43,7 @@
                             <label class="col-md-2 control-label">{dr_lang('内容临时存储')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_AUTO_FORM]" value="1" {if $data['SYS_AUTO_FORM']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('发布内容临时存储，再次发布时自动填充')}</span>
+                                <span class="help-block">{dr_lang('发布内容临时存储, 再次发布时自动填充')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -73,7 +73,7 @@
                             <label class="col-md-2 control-label">{dr_lang('系统风格目录的作用域')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_THEME_ROOT]" value="1" {if $data['SYS_THEME_ROOT']}checked{/if} data-on-text="{dr_lang('相对')}" data-off-text="{dr_lang('绝对')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('选择绝对模式时，多站点和THEME_PATH变量在引用风格时，路径为主站URL')}</span>
+                                <span class="help-block">{dr_lang('选择绝对模式时, 多站点和THEME_PATH变量在引用风格时, 路径为主站URL')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -98,7 +98,7 @@
                             <label class="col-md-2 control-label">HTTPS</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_HTTPS]" value="1" {if $data['SYS_HTTPS']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('采用https地址模式，需要网站支持https访问，才能开启此功能')}</span>
+                                <span class="help-block">{dr_lang('采用https地址模式, 需要网站支持https访问, 才能开启此功能')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -116,10 +116,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-2 control-label">{dr_lang('快捷方式登录')}</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" name="data[SYS_ADMIN_OAUTH]" value="1" {if $data['SYS_ADMIN_OAUTH']}checked{/if} data-on-text="{dr_lang('开启')}" data-off-text="{dr_lang('关闭')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
+                                <span class="help-block">{dr_lang('登录后台时使用快捷方式登录, 需要提前在用户设置中开通快捷登录参数')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-2 control-label">{dr_lang('登录失败次数')}</label>
                             <div class="col-md-9">
                                 <label><input class="form-control" type="text" name="data[SYS_ADMIN_LOGINS]" value="{intval($data['SYS_ADMIN_LOGINS'])}" ></label>
-                                <span class="help-inline"> {dr_lang('后台登录失败N次后，系统将锁定登录，0表示不限制')} </span>
+                                <span class="help-inline"> {dr_lang('后台登录失败N次后, 系统将锁定登录, 0表示不限制')} </span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -133,7 +140,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <span class="help-inline"> {dr_lang('单位分钟，后台登录失败锁定后在x分钟内禁止登录')} </span>
+                                <span class="help-inline"> {dr_lang('单位分钟, 后台登录失败锁定后在x分钟内禁止登录')} </span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -141,7 +148,7 @@
                             <div class="col-md-9">
                                 <label><input class="form-control input-large" type="text" name="data[SYS_KEY]" id="sys_key" value="{if $data['SYS_KEY']}************{/if}"  ></label>
                                 <label><button class="btn btn-sm blue" type="button" name="button" onclick="dr_to_key()"> {dr_lang('重新生成')} </button></label>
-                                <span class="help-block">{dr_lang('密钥建议定期更换，更换密钥之后本次登录将会自动退出')}</span>
+                                <span class="help-block">{dr_lang('密钥建议定期更换, 更换密钥之后本次登录将会自动退出')}</span>
                             </div>
                         </div>
                     </div>
@@ -155,7 +162,7 @@
                             <label class="col-md-2 control-label">{dr_lang('验证图片验证码')}</label>
                             <div class="col-md-9">
                                 <input type="checkbox" name="data[SYS_API_CODE]" value="1" {if $data['SYS_API_CODE']}checked{/if} data-on-text="{dr_lang('启用')}" data-off-text="{dr_lang('禁用')}" data-on-color="success" data-off-color="danger" class="make-switch" data-size="small">
-                                <span class="help-block">{dr_lang('通过API提交数据、发送短信验证码时，禁用后不进行图片验证码的验证操作')}</span>
+                                <span class="help-block">{dr_lang('通过API提交数据, 发送短信验证码时, 禁用后不进行图片验证码的验证操作')}</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -177,7 +184,7 @@
                             <div class="col-md-5">
                                 <label><input class="form-control input-large" type="text" name="data[SYS_BDNLP_SK]" value="{$data['SYS_BDNLP_SK']}"  ></label>
                                 <label><a class="btn btn-sm blue" href="javascript:dr_help(810);"> {dr_lang('立即申请')} </a></label>
-                                <span class="help-block">{dr_lang('百度自然语言处理相关接口，例如关键词获取等')}</span>
+                                <span class="help-block">{dr_lang('百度自然语言处理相关接口, 例如关键词获取等')}</span>
                             </div>
                         </div>
 

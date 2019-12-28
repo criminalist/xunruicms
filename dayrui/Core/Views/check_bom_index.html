@@ -51,7 +51,7 @@
             url: "{dr_url('check_bom/php_count_index')}",
             success: function (json) {
                 if (json.code == 0) {
-                    dr_tips(0, '没有查询到php文件，请检查目录权限');
+                    dr_tips(0, '没有查询到php文件, 请检查目录权限');
                 } else {
                     $('#dr_check_html').html("");
                     $('#dr_check_result').html($('#dr_check_ing').html());

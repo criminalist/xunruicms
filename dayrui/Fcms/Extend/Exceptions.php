@@ -2,13 +2,13 @@
 
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
 
 use Throwable;
 
 /**
- * 继承异常类，用于Services.php
+ * 继承异常类, 用于Services.php
  */
 
 class Exceptions extends \CodeIgniter\Debug\Exceptions
@@ -85,7 +85,7 @@ class Exceptions extends \CodeIgniter\Debug\Exceptions
             $message = '(null)';
         } elseif (strpos($message, 'The action you requested is not allowed') !== false) {
             $this->_save_error_file($statusCode, $title, $file, $line, $message);
-            dr_exit_msg(0, '提交验证超时，请重试', 'CSRFVerify');
+            dr_exit_msg(0, '提交验证超时, 请重试', 'CSRFVerify');
         } else {
             $this->_save_error_file($statusCode, $title, $file, $line, $message);
         }

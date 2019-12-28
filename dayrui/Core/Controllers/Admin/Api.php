@@ -1,12 +1,9 @@
 <?php namespace Phpcmf\Controllers\Admin;
 
-
 /**
  * http://www.xunruicms.com
- * 本文件是框架系统文件，二次开发时不可以修改本文件
+ * 本文件是框架系统文件, 二次开发时不可以修改本文件
  **/
-
-
 
 class Api extends \Phpcmf\Common
 {
@@ -19,7 +16,7 @@ class Api extends \Phpcmf\Common
         if (!$uid) {
             $this->_admin_msg(0, dr_lang('uid参数传递失败'));
         }
-        $oauth = \Phpcmf\Service::L('cache')->init()->get('admin_auth_login_'.$name.'_'.$uid);
+        $oauth = \Phpcmf\Service::L('cache')->get_data('admin_auth_login_'.$name.'_'.$uid);
         if (!$oauth) {
             $this->_admin_msg(0, dr_lang('授权信息(%s)获取失败', $name));
         } elseif (SYS_TIME - $oauth > 60) {
@@ -35,7 +32,7 @@ class Api extends \Phpcmf\Common
 
         // 保存会话
         \Phpcmf\Service::M('auth')->login_session($data);
-        \Phpcmf\Service::L('cache')->init()->save('admin_auth_login_'.$name.'_'.$uid, 0, 10);
+        \Phpcmf\Service::L('cache')->set_data('admin_auth_login_'.$name.'_'.$uid, 0, 10);
 
         // 转向后台
         dr_redirect(ADMIN_URL.SELF);
@@ -71,13 +68,13 @@ class Api extends \Phpcmf\Common
             if (method_exists(\Phpcmf\Service::L('form'), $call)) {
                 $this->_json(1, dr_lang('定义成功'));
             } else {
-                $this->_json(0, 'form类方法【'.$call.'】未定义');
+                $this->_json(0, 'form类方法['.$call.']未定义');
             }
         } else {
             if (function_exists($call)) {
                 $this->_json(1, dr_lang('定义成功'));
             } else {
-                $this->_json(0, '函数【'.$call.'】未定义');
+                $this->_json(0, '函数['.$call.']未定义');
             }
         }
     }
@@ -397,7 +394,7 @@ class Api extends \Phpcmf\Common
 
         // 判断站点权限
         \Phpcmf\Service::L('cache')->init('', 'site')->save('admin_login_site', $this->admin, 300);
-        $this->_msg(1, dr_lang('正在切换到【%s】...', $this->site_info[$id]['SITE_NAME']).'<script src="'.$this->site_info[$id]['SITE_URL'].'index.php?s=api&c=sso&action=slogin&code='.dr_authcode($this->admin['uid'].'-'.md5($this->admin['uid'].$this->admin['password']), 'ENCODE').'"></script>', $this->site_info[$id]['SITE_URL'].SELF, 0);
+        $this->_msg(1, dr_lang('正在切换到[%s]...', $this->site_info[$id]['SITE_NAME']).'<script src="'.$this->site_info[$id]['SITE_URL'].'index.php?s=api&c=sso&action=slogin&code='.dr_authcode($this->admin['uid'].'-'.md5($this->admin['uid'].$this->admin['password']), 'ENCODE').'"></script>', $this->site_info[$id]['SITE_URL'].SELF, 0);
         exit;
     }
 
@@ -407,6 +404,10 @@ class Api extends \Phpcmf\Common
     public function alogin() {
 
         $uid = intval(\Phpcmf\Service::L('input')->get('id'));
+        if (!\Phpcmf\Service::M('auth')->cleck_edit_member($uid)) {
+            $this->_admin_msg(0, dr_lang('无权限操作其他管理员账号'));
+        }
+
         $code = md5($this->admin['id'].$this->admin['password']);
 
         \Phpcmf\Service::L('cache')->set_data('admin_login_member', $this->admin, 300);
@@ -464,7 +465,15 @@ class Api extends \Phpcmf\Common
         $value = $data['value'][$type];
         if (!$value) {
             $this->_json(0, dr_lang('参数不存在'));
-        }
+        } elseif ($type == 0) {
+			if ((strpos($value['path'], '/') === 0 || strpos($value['path'], ':') !== false)) {
+				if (!is_dir($value['path'])) {
+					$this->_json(0, dr_lang('本地路径不存在'));
+				}
+			} else {
+				$this->_json(0, dr_lang('本地路径请填写绝对路径'));
+			}
+		} 
 
         $rt = \Phpcmf\Service::L('upload')->save_file(
             'content',
@@ -493,8 +502,8 @@ class Api extends \Phpcmf\Common
 	public function test_mobile() {
 
 	    $data = \Phpcmf\Service::L('input')->post('data');
-		if (is_file(WEBPATH.'config/mysms.php')) {
-			require_once WEBPATH.'config/mysms.php';
+		if (is_file(ROOTPATH.'config/mysms.php')) {
+			require_once ROOTPATH.'config/mysms.php';
 		}
         $method = 'my_sendsms_code';
         if (function_exists($method)) {
@@ -533,13 +542,13 @@ class Api extends \Phpcmf\Common
 		if ($uid) {
             $data = \Phpcmf\Service::M('member')->get_member($uid);
             if (!$data) {
-                $this->_json(0, dr_lang('此账号%s不存在', $uid));
+                $this->_json(0, dr_lang('账号uid[%s]不存在', $uid));
             }
         } else {
             $name = dr_safe_replace(\Phpcmf\Service::L('input')->get('name'));
             $data = \Phpcmf\Service::M('member')->get_member(0, $name);
             if (!$data) {
-                $this->_json(0, dr_lang('此账号%s不存在', $name));
+                $this->_json(0, dr_lang('账号[%s]不存在', $name));
             }
         }
 
@@ -594,6 +603,105 @@ class Api extends \Phpcmf\Common
     }
 
     /**
+     * 测试附件域名是否可用
+     */
+    public function test_attach_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('data');
+        if (!$data['SYS_ATTACHMENT_PATH']) {
+            $note = dr_lang('上传目录留空时, 采用系统默认分配的目录');
+            $data['SYS_ATTACHMENT_PATH'] = 'uploadfile';
+        } elseif (!$data['SYS_ATTACHMENT_URL']) {
+            $note = dr_lang('URL地址留空时, 采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['SYS_ATTACHMENT_PATH'], '/') === 0 || strpos($data['SYS_ATTACHMENT_PATH'], ':') !== false)
+            && is_dir($data['SYS_ATTACHMENT_PATH'])) {
+            // 相对于根目录
+            if (!$data['SYS_ATTACHMENT_URL']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置附件URL地址').'</font>');
+            }
+            // 附件上传目录
+            $path = rtrim($data['SYS_ATTACHMENT_PATH'], DIRECTORY_SEPARATOR).'/';
+            // 附件访问URL
+            $url = trim($data['SYS_ATTACHMENT_URL'], '/').'/';
+            $note = dr_lang('已使用自定义上传目录和自定义访问地址');
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
+            $url = ROOT_URL.trim($data['SYS_ATTACHMENT_PATH'], '/').'/';
+            !$note && $note = dr_lang('上传目录不是绝对的路径时采用, 系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('附件上传目录:%s', $path) .'<br>' . dr_lang('附件访问地址:%s', $url));
+    }
+
+    /**
+     * 测试缩略图域名是否可用
+     */
+    public function test_thumb_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('image');
+        if (!$data['cache_path']) {
+            $note = dr_lang('存储目录留空时, 采用系统默认分配的目录');
+            $data['cache_path'] = 'uploadfile/thumb/';
+        } elseif (!$data['cache_url']) {
+            $note = dr_lang('URL地址留空时, 采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['cache_path'], '/') === 0 || strpos($data['cache_path'], ':') !== false) && is_dir($data['cache_path'])) {
+            // 相对于根目录
+            $path = rtrim($data['cache_path'], DIRECTORY_SEPARATOR).'/';
+            if (!$data['cache_url']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
+            }
+            $url = trim($data['cache_url'], '/').'/';
+            $note = dr_lang('已使用自定义存储目录和自定义访问地址');
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['cache_path'], '/').'/';
+            $url = ROOT_URL.trim($data['cache_path'], '/').'/';
+            !$note && $note = dr_lang('存储目录不是绝对的路径时采用, 系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('存储目录:%s', $path) .'<br>' . dr_lang('访问地址:%s', $url));
+    }
+
+    /**
+     * 测试头像域名是否可用
+     */
+    public function test_avatar_domain() {
+
+        $note = '';
+        $data = \Phpcmf\Service::L('input')->post('image');
+        if (!$data['avatar_path']) {
+            $note = dr_lang('存储目录留空时, 采用系统默认分配的目录');
+            $data['avatar_path'] = 'api/member/';
+        } elseif (!$data['cache_url']) {
+            $note = dr_lang('URL地址留空时, 采用系统默认分配的URL');
+        }
+
+        if ((strpos($data['avatar_path'], '/') === 0 || strpos($data['avatar_path'], ':') !== false) && is_dir($data['avatar_path'])) {
+            // 相对于根目录
+            $path = rtrim($data['avatar_path'], DIRECTORY_SEPARATOR).'/';
+            if (!$data['avatar_url']) {
+                $this->_json(0, '<font color="red">'.dr_lang('没有设置访问URL地址').'</font>');
+            }
+            $url = trim($data['avatar_url'], '/').'/';
+            $note = dr_lang('已使用自定义存储目录和自定义访问地址');
+        } else {
+            // 在当前网站目录
+            $path = ROOTPATH.trim($data['avatar_path'], '/').'/';
+            $url = ROOT_URL.trim($data['avatar_path'], '/').'/';
+            !$note && $note = dr_lang('存储目录不是绝对的路径时采用, 系统分配的URL地址');
+        }
+
+        $this->_json(1, $note.'<br>'.dr_lang('存储目录:%s', $path) .'<br>' . dr_lang('访问地址:%s', $url));
+    }
+
+    /**
      * 测试缓存是否可用
      */
     public function test_cache() {
@@ -602,7 +710,7 @@ class Api extends \Phpcmf\Common
 
         $adapter = new $config->validHandlers[$config->handler]($config);
         if (!$adapter->isSupported()) {
-            $this->_json(0, dr_lang('缓存方式[%s]不支持', $config->handler));
+            $this->_json(0, dr_lang('缓存方式[%s], PHP环境不支持', $config->handler));
         }
 
         $adapter->initialize();
